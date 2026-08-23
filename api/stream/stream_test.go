@@ -99,6 +99,24 @@ func TestWritePingFails(t *testing.T) {
 	user.expectNoMessage()
 }
 
+func TestNotifyDoesNotPanicWhenClientIsClosed(t *testing.T) {
+	mode.Set(mode.TestDev)
+	defer leaktest.Check(t)()
+
+	server, api := bootTestServer(staticUserID())
+	defer server.Close()
+	defer api.Close()
+
+	ws, _, err := websocket.DefaultDialer.Dial(wsURL(server.URL), nil)
+	assert.Nil(t, err)
+	defer ws.Close()
+
+	waitForConnectedClients(api, 1)
+
+	clients(api, 1)[0].Close()
+	api.Notify(1, &model.MessageExternal{Message: "after close"})
+}
+
 func TestPing(t *testing.T) {
 	mode.Set(mode.TestDev)
 
