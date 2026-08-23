@@ -24,6 +24,10 @@ import (
 
 const testIssuer = "https://idp.example.com"
 
+func newIDToken(issuer string, claims map[string]any) *oidc.IDTokenClaims {
+	return &oidc.IDTokenClaims{TokenClaims: oidc.TokenClaims{Issuer: issuer}, Claims: claims}
+}
+
 func TestOIDCSuite(t *testing.T) {
 	suite.Run(t, new(OIDCSuite))
 }
@@ -159,7 +163,7 @@ func (s *OIDCSuite) Test_ResolveUser_ReturningUser_MatchedByOIDCID() {
 
 	// The username claim differs from the stored name; the binding still matches.
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "renamed"}}
-	user, status, err := s.a.resolveUser(testIssuer, info)
+	user, status, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), 0, status)
@@ -173,7 +177,7 @@ func (s *OIDCSuite) Test_ResolveUser_LinkByUsername_BindsExistingUser() {
 	s.db.NewUserWithName(1, "alice")
 
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "alice"}}
-	user, _, err := s.a.resolveUser(testIssuer, info)
+	user, _, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), uint(1), user.ID)
@@ -192,7 +196,7 @@ func (s *OIDCSuite) Test_ResolveUser_InvalidIssuer() {
 	s.db.NewUserWithName(1, "alice")
 
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "alice"}}
-	_, status, err := s.a.resolveUser("://example.org", info)
+	_, status, err := s.a.resolveUser(newIDToken("://example.org", info.Claims), info)
 
 	assert.EqualError(s.T(), err, `issuer url "://example.org" is not a valid url: parse "://example.org": missing protocol scheme`)
 	assert.Equal(s.T(), 500, status)
@@ -202,7 +206,7 @@ func (s *OIDCSuite) Test_ResolveUser_InvalidIssuer_containsFragment() {
 	s.db.NewUserWithName(1, "alice")
 
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "alice"}}
-	_, status, err := s.a.resolveUser(testIssuer+"#", info)
+	_, status, err := s.a.resolveUser(newIDToken(testIssuer+"#", info.Claims), info)
 
 	assert.EqualError(s.T(), err, `issuer url "https://idp.example.com#" may not contain a fragment`)
 	assert.Equal(s.T(), 500, status)
@@ -212,7 +216,7 @@ func (s *OIDCSuite) Test_ResolveUser_LinkDisabled_RejectsExistingUsername() {
 	s.db.NewUserWithName(1, "alice")
 
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "alice"}}
-	_, status, err := s.a.resolveUser(testIssuer, info)
+	_, status, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.EqualError(s.T(), err, "a local user with the username alice already exists and linking by username is disabled")
 	assert.Equal(s.T(), 403, status)
@@ -228,7 +232,7 @@ func (s *OIDCSuite) Test_ResolveUser_LinkByUsername_RejectsDifferentIdentity() {
 	s.db.CreateUser(&model.User{ID: 1, Name: "alice", OIDCID: &otherID})
 
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "alice"}}
-	_, status, err := s.a.resolveUser(testIssuer, info)
+	_, status, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.EqualError(s.T(), err, "the user alice is already bound to a different OIDC identity")
 	assert.Equal(s.T(), 403, status)
@@ -236,7 +240,7 @@ func (s *OIDCSuite) Test_ResolveUser_LinkByUsername_RejectsDifferentIdentity() {
 
 func (s *OIDCSuite) Test_ResolveUser_AutoRegister() {
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "newuser"}}
-	user, status, err := s.a.resolveUser(testIssuer, info)
+	user, status, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), 0, status)
@@ -257,7 +261,7 @@ func (s *OIDCSuite) Test_ResolveUser_AutoRegisterDisabled() {
 	s.a.AutoRegister = false
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "newuser"}}
 
-	_, status, err := s.a.resolveUser(testIssuer, info)
+	_, status, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.EqualError(s.T(), err, "user does not exist and auto-registration is disabled")
 	assert.Equal(s.T(), 403, status)
@@ -267,7 +271,7 @@ func (s *OIDCSuite) Test_ResolveUser_AutoRegisterDisabled() {
 func (s *OIDCSuite) Test_ResolveUser_MissingIssuer() {
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "newuser"}}
 
-	_, status, err := s.a.resolveUser("", info)
+	_, status, err := s.a.resolveUser(newIDToken("", info.Claims), info)
 
 	assert.EqualError(s.T(), err, "issuer claim was empty")
 	assert.Equal(s.T(), 500, status)
@@ -276,7 +280,7 @@ func (s *OIDCSuite) Test_ResolveUser_MissingIssuer() {
 func (s *OIDCSuite) Test_ResolveUser_MissingSubject() {
 	info := &oidc.UserInfo{Claims: map[string]any{"preferred_username": "newuser"}}
 
-	_, status, err := s.a.resolveUser(testIssuer, info)
+	_, status, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.EqualError(s.T(), err, "subject claim was empty")
 	assert.Equal(s.T(), 500, status)
@@ -285,7 +289,7 @@ func (s *OIDCSuite) Test_ResolveUser_MissingSubject() {
 func (s *OIDCSuite) Test_ResolveUser_MissingClaim() {
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{}}
 
-	_, status, err := s.a.resolveUser(testIssuer, info)
+	_, status, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.EqualError(s.T(), err, `username claim "preferred_username" is missing`)
 	assert.Equal(s.T(), 500, status)
@@ -294,7 +298,7 @@ func (s *OIDCSuite) Test_ResolveUser_MissingClaim() {
 func (s *OIDCSuite) Test_ResolveUser_EmptyClaim() {
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": ""}}
 
-	_, status, err := s.a.resolveUser(testIssuer, info)
+	_, status, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.EqualError(s.T(), err, "username claim was empty")
 	assert.Equal(s.T(), 500, status)
@@ -303,7 +307,7 @@ func (s *OIDCSuite) Test_ResolveUser_EmptyClaim() {
 func (s *OIDCSuite) Test_ResolveUser_NilClaim() {
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": nil}}
 
-	_, status, err := s.a.resolveUser(testIssuer, info)
+	_, status, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.EqualError(s.T(), err, "username claim was empty")
 	assert.Equal(s.T(), 500, status)
@@ -313,12 +317,34 @@ func (s *OIDCSuite) Test_ResolveUser_CustomClaim() {
 	s.a.UsernameClaim = "email"
 
 	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"email": "new@example.com"}}
-	user, status, err := s.a.resolveUser(testIssuer, info)
+	user, status, err := s.a.resolveUser(newIDToken(testIssuer, info.Claims), info)
 
 	assert.NoError(s.T(), err)
 	assert.Equal(s.T(), 0, status)
 	assert.Equal(s.T(), "new@example.com", user.Name)
 	assert.NotNil(s.T(), user.OIDCID)
+}
+
+func (s *OIDCSuite) Test_ResolveUser_UsernameFromIDTokenPreferred() {
+	idTokenClaims := map[string]any{"preferred_username": "from-id-token"}
+	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "from-userinfo"}}
+
+	user, status, err := s.a.resolveUser(newIDToken(testIssuer, idTokenClaims), info)
+
+	assert.NoError(s.T(), err)
+	assert.Equal(s.T(), 0, status)
+	assert.Equal(s.T(), "from-id-token", user.Name)
+}
+
+func (s *OIDCSuite) Test_ResolveUser_UsernameFromUserInfoFallback() {
+	idTokenClaims := map[string]any{"email": "unrelated@example.com"}
+	info := &oidc.UserInfo{Subject: "sub-1", Claims: map[string]any{"preferred_username": "from-userinfo"}}
+
+	user, status, err := s.a.resolveUser(newIDToken(testIssuer, idTokenClaims), info)
+
+	assert.NoError(s.T(), err)
+	assert.Equal(s.T(), 0, status)
+	assert.Equal(s.T(), "from-userinfo", user.Name)
 }
 
 // --- createClient ---

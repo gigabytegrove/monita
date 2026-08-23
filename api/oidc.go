@@ -216,7 +216,7 @@ func (a *OIDCAPI) promptURLParams() []rp.URLParamOpt {
 //	        $ref: "#/definitions/Error"
 func (a *OIDCAPI) CallbackHandler() gin.HandlerFunc {
 	callback := func(w http.ResponseWriter, r *http.Request, tokens *oidc.Tokens[*oidc.IDTokenClaims], state string, provider rp.RelyingParty, info *oidc.UserInfo) {
-		user, status, err := a.resolveUser(tokens.IDTokenClaims.GetIssuer(), info)
+		user, status, err := a.resolveUser(tokens.IDTokenClaims, info)
 		if err != nil {
 			http.Error(w, err.Error(), status)
 			return
@@ -385,7 +385,7 @@ func (a *OIDCAPI) ExternalTokenHandler(ctx *gin.Context) {
 		ctx.AbortWithError(http.StatusInternalServerError, fmt.Errorf("failed to get user info: %w", err))
 		return
 	}
-	user, status, resolveErr := a.resolveUser(tokens.IDTokenClaims.GetIssuer(), info)
+	user, status, resolveErr := a.resolveUser(tokens.IDTokenClaims, info)
 	if resolveErr != nil {
 		ctx.AbortWithError(status, resolveErr)
 		return
@@ -416,7 +416,8 @@ func (a *OIDCAPI) generateState() (string, error) {
 //     this OIDC identity, which requires GOTIFY_OIDC_LINK_BY_USERNAME and
 //     that the user is not already bound to a different identity.
 //  3. Otherwise auto-register a new user, which requires GOTIFY_OIDC_AUTOREGISTER.
-func (a *OIDCAPI) resolveUser(issuer string, info *oidc.UserInfo) (*model.User, int, error) {
+func (a *OIDCAPI) resolveUser(idToken *oidc.IDTokenClaims, info *oidc.UserInfo) (*model.User, int, error) {
+	issuer := idToken.GetIssuer()
 	if issuer == "" {
 		return nil, http.StatusInternalServerError, errors.New("issuer claim was empty")
 	}
@@ -440,7 +441,7 @@ func (a *OIDCAPI) resolveUser(issuer string, info *oidc.UserInfo) (*model.User, 
 		return user, 0, nil
 	}
 
-	usernameRaw, ok := info.Claims[a.UsernameClaim]
+	usernameRaw, ok := lookupClaim(a.UsernameClaim, idToken.Claims, info.Claims)
 	if !ok {
 		return nil, http.StatusInternalServerError, fmt.Errorf("username claim %q is missing", a.UsernameClaim)
 	}
@@ -513,4 +514,12 @@ func (a *OIDCAPI) popPendingSession(key string) (*pendingOIDCSession, bool) {
 		return session, true
 	}
 	return nil, false
+}
+
+func lookupClaim(name string, idTokenClaims, userInfoClaims map[string]any) (any, bool) {
+	if value, ok := idTokenClaims[name]; ok {
+		return value, true
+	}
+	value, ok := userInfoClaims[name]
+	return value, ok
 }
