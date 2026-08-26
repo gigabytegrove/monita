@@ -64,6 +64,9 @@ type OIDC struct {
 	ClientID       string
 	ClientSecret   string
 	UsernameClaim  string
+	GroupsClaim    string
+	GroupsUser     []string
+	GroupsAdmin    []string
 	RedirectURL    string
 	AutoRegister   bool
 	LinkByUsername bool
@@ -181,6 +184,9 @@ func Get() (*Configuration, []FutureLog) {
 	add(parseString(&c.OIDC.ClientID, EnvOIDCClientID))
 	add(parseString(&c.OIDC.ClientSecret, EnvOIDCClientSecret))
 	add(parseString(&c.OIDC.UsernameClaim, EnvOIDCUsernameClaim))
+	add(parseString(&c.OIDC.GroupsClaim, EnvOIDCGroupsClaim))
+	add(parseList(&c.OIDC.GroupsUser, EnvOIDCGroupsUser))
+	add(parseList(&c.OIDC.GroupsAdmin, EnvOIDCGroupsAdmin))
 	add(parseString(&c.OIDC.RedirectURL, EnvOIDCRedirectURL))
 	add(parseBool(&c.OIDC.AutoRegister, EnvOIDCAutoRegister))
 	add(parseBool(&c.OIDC.LinkByUsername, EnvOIDCLinkByUsername))
