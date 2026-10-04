@@ -76,7 +76,7 @@ jobs:
           docker build             --build-arg BUILD_JS=1             --build-arg RUN_TESTS=1             --build-arg GO_VERSION=1.26.0             --build-arg MONITA_VERSION=pr-${{ github.event.pull_request.number }}             --build-arg MONITA_COMMIT=${{ github.sha }}             -f docker/Dockerfile             -t monita:verify             .
 
       - name: Scan repository and dependencies
-        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # v0.33.1
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: fs
           scan-ref: .
@@ -85,7 +85,7 @@ jobs:
           exit-code: '1'
 
       - name: Scan built container
-        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # v0.33.1
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: monita:verify
           severity: HIGH,CRITICAL
