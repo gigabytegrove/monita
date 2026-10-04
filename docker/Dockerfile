@@ -3,10 +3,6 @@ ARG BUILDKIT_SBOM_SCAN_CONTEXT=true
 ARG GO_VERSION=PLEASE_PROVIDE_GO_VERSION
 ARG DEBIAN=sid-slim
 
-# Hack to normalize platform to match the chosen build image
-ARG __TARGETPLATFORM_DASHES=${TARGETPLATFORM/\//-}
-ARG __TARGETPLATFORM_GO_NOTATION=${__TARGETPLATFORM_DASHES/arm\/v7/arm-7}
-
 # --- JS Builder ---
 
 FROM --platform=${BUILDPLATFORM} node:24 AS js-builder
@@ -25,7 +21,7 @@ RUN if [ "$BUILD_JS" = "1" ]; then \
 
 # --- Go Builder ---
 
-FROM --platform=${BUILDPLATFORM} gotify/build:${GO_VERSION}-${__TARGETPLATFORM_GO_NOTATION} AS builder
+FROM --platform=${TARGETPLATFORM} golang:${GO_VERSION}-bookworm AS builder
 
 ARG BUILDPLATFORM
 ARG TARGETPLATFORM
@@ -39,7 +35,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -yq --no-install-recommends \
     ca-certificates \
-    git
+    git \
+    gcc \
+    libc6-dev
 
 COPY . /src/monita
 COPY --from=js-builder /src/monita/ui/build /ui-build
@@ -60,6 +58,11 @@ RUN cd /src/monita && \
     EFFECTIVE_LD_FLAGS="-w -s -X main.Version=${EFFECTIVE_VERSION} -X main.Commit=${EFFECTIVE_COMMIT} -X main.BuildDate=${EFFECTIVE_BUILD_DATE} -X main.Mode=prod"; \
     fi && \
     LD_FLAGS="$EFFECTIVE_LD_FLAGS" make OUTPUT=/target/app/monita-app _build_within_docker
+
+# --- Binary export ---
+
+FROM scratch AS binary-export
+COPY --from=builder /target/app/monita-app /monita
 
 # --- Runtime ---
 
