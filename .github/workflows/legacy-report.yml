@@ -1,0 +1,51 @@
+name: Legacy identity report
+
+on:
+  push:
+    branches:
+      - cleanup/zero-legacy-identity
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cleanup/zero-legacy-identity
+      - name: Write exact report
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          needle = bytes((103,111,116,105,102,121)).decode("ascii").casefold()
+          rows = []
+          for path in Path(".").rglob("*"):
+              if ".git" in path.parts or path.as_posix() == ".github/workflows/legacy-report.yml":
+                  continue
+              if needle in path.as_posix().casefold():
+                  rows.append(f"PATH {path}")
+              if not path.is_file():
+                  continue
+              try:
+                  text = path.read_text(encoding="utf-8")
+              except (UnicodeDecodeError, OSError):
+                  continue
+              for n, line in enumerate(text.splitlines(), 1):
+                  if needle in line.casefold():
+                      rows.append(f"{path}:{n}:{line}")
+          Path(".github/legacy-report.txt").write_text("\n".join(rows) + ("\n" if rows else ""))
+          PY
+      - name: Commit report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/legacy-report.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Record exact remaining server identity references"
+          git push origin HEAD:cleanup/zero-legacy-identity
