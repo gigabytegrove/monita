@@ -6,18 +6,18 @@
 
 <p align="center"><strong>Notifications · Messaging · Automation</strong></p>
 
-Monita is a self-hosted notification and messaging platform for people, teams, home automation, and connected systems. It expands on Gotify compatibility with shared Channels, chat, automation, integrations, and multi-user administration.
+Monita is a self-hosted notification and messaging platform for people, teams, home automation, and connected systems. It combines shared Channels, chat, automation, integrations, and multi-user administration in one platform.
 
-> Monita retains Gotify-compatible protocol routes where required for existing clients and upgrade compatibility.
+> Monita retains selected legacy protocol routes and identifiers where required for existing clients and non-destructive upgrades.
 
 ## Current release
 
-**Monita 1.3.5** is the current server release documented by this repository.
+**Monita 1.3.7** is the current server release documented by this repository.
 
 Companion projects:
 
-- [Monita for Android](https://github.com/gigabytegrove/monita-android) — native Android client; current testing release: **0.3.16**
-- [Monita for Home Assistant](https://github.com/gigabytegrove/monita-ha) — HACS-compatible Home Assistant integration; current release: **1.8.3**
+- [Monita for Android](https://github.com/gigabytegrove/monita-android) — native Android client; current testing release: **0.3.18**
+- [Monita for Home Assistant](https://github.com/gigabytegrove/monita-ha) — HACS-compatible Home Assistant integration; current release: **1.8.7**
 
 Release-specific changes are tracked in [CHANGELOG.md](CHANGELOG.md). Installation and update instructions are in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
@@ -34,13 +34,13 @@ You can use it to:
 - schedule notifications and escalation workflows
 - use Quiet Hours, Digests, acknowledgements, mentions, replies, reactions, and assignments
 - manage users, Groups, permissions, integrations, and security settings from the Web UI
-- continue using compatible Gotify clients and integrations
+- continue using supported legacy-compatible clients and integrations during migration
 
 ## Why Monita
 
 Traditional push-notification servers are often designed around one user or one application owner. Monita adds shared access and collaboration so the same Channel can be useful to a household, team, support group, or automation environment.
 
-Monita is designed to remain familiar to Gotify users while adding the features needed for larger and more collaborative installations.
+Monita is designed around its own server, Web, Android, Home Assistant, automation, and collaboration experience while retaining selected compatibility contracts needed by existing installations.
 
 ## Getting started
 
@@ -160,13 +160,11 @@ Monita supports both direct Home Assistant connections and native pairing with *
 
 See [Home Assistant integration](docs/HOME_ASSISTANT_NATIVE_PAIRING.md) for setup and usage.
 
-## Gotify compatibility
+## Legacy compatibility
 
-Monita maintains compatibility with common Gotify clients and integrations wherever practical.
+Monita preserves selected protocol routes, token formats, headers, configuration fallbacks, and migration behavior so existing installations and supported clients can move forward without destructive changes.
 
-Existing Gotify-style application and client tokens continue to work with supported compatibility routes. Monita-specific features are added on top of that compatibility layer.
-
-Monita is an independent project and is not an official Gotify product.
+New installs and current documentation use Monita-native names and identifiers wherever compatibility does not require otherwise.
 
 ## Documentation
 
@@ -185,4 +183,4 @@ Monita is under active development. The latest stable release and release notes 
 
 ## License
 
-Monita is licensed under the MIT License inherited from Gotify. See [LICENSE](LICENSE).
+Monita is licensed under the MIT License. See [LICENSE](LICENSE) for the full license and required historical attribution.
