@@ -3,7 +3,6 @@
 .gitignore
 CHANGELOG.md
 LICENSE
-README.md
 api/collaboration.go
 api/message.go
 api/message_test.go
