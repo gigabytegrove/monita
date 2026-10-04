@@ -1,6 +1,6 @@
 # Monita Branding
 
-Monita is the product name for the project formerly known as Gotify MU.
+Monita is the current product name. Historical release material may retain the former project name where preserving release history or compatibility context is necessary.
 
 ## Authoritative artwork
 
@@ -17,6 +17,8 @@ No alternate palette, reconstructed mark, traced copy, flattened substitute, or 
 
 Use **Monita** for current product-facing text.
 
-The phrase **formerly Gotify MU** may be used where historical context is useful during the transition.
+Do not use the former product name for current UI, runtime identity, configuration examples, filenames, or new documentation. Historical release notes and explicit compatibility references are the exceptions.
 
-Gotify may still appear in compatibility documentation where it refers to the Gotify protocol, upstream project, or supported Gotify clients.
+Gotify may still appear only where it is technically or legally required: protocol/client compatibility, legacy upgrade aliases, persisted migration paths, the upstream plugin ABI/dependencies, the external build image, release history, or license attribution.
+
+The authoritative file-level inventory is `.github/legacy-identity-allowlist.txt`. CI performs an exhaustive case-insensitive repository scan and fails if a Gotify reference appears in any file that has not been explicitly reviewed and placed on that allowlist. The narrower branding checks still reject the former product name when used as current branding, former internal server module imports, legacy-named active source files, and unexpected Web UI references.
