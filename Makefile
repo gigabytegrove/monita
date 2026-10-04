@@ -7,7 +7,6 @@ GO_VERSION=$(shell go mod edit -json | jq -r '(.Toolchain // ("go" + .Go))' | se
 DOCKER_BUILD_IMAGE=docker.io/library/golang
 DOCKER_WORKDIR=/proj
 
-DOCKER_GO_BUILD=go build -mod=readonly -a -ldflags "$LD_FLAGS"
 DOCKER_TEST_LEVEL ?= 0 # Optionally run a test during docker build
 
 test: test-coverage test-js
@@ -96,7 +95,7 @@ build-docker: build-docker-multiarch
 
 _build_within_docker: OUTPUT = monita
 _build_within_docker:
-	${DOCKER_GO_BUILD} -o ${OUTPUT}
+	go build -mod=readonly -a -ldflags "${LD_FLAGS}" -o ${OUTPUT}
 
 build-js:
 	(cd ui && yarn build)
@@ -105,7 +104,7 @@ build-linux-amd64:
 	mkdir -p ${BUILD_DIR}/linux-amd64
 	docker buildx build --platform linux/amd64 --target binary-export \
 		--build-arg GO_VERSION=$(GO_VERSION) \
-		--build-arg LD_FLAGS="$LD_FLAGS" \
+		--build-arg LD_FLAGS="${LD_FLAGS}" \
 		--output type=local,dest=${BUILD_DIR}/linux-amd64 \
 		-f docker/Dockerfile .
 	mv ${BUILD_DIR}/linux-amd64/monita ${BUILD_DIR}/monita-linux-amd64
@@ -121,7 +120,7 @@ build-linux-arm64:
 	mkdir -p ${BUILD_DIR}/linux-arm64
 	docker buildx build --platform linux/arm64 --target binary-export \
 		--build-arg GO_VERSION=$(GO_VERSION) \
-		--build-arg LD_FLAGS="$LD_FLAGS" \
+		--build-arg LD_FLAGS="${LD_FLAGS}" \
 		--output type=local,dest=${BUILD_DIR}/linux-arm64 \
 		-f docker/Dockerfile .
 	mv ${BUILD_DIR}/linux-arm64/monita ${BUILD_DIR}/monita-linux-arm64
