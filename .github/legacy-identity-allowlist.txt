@@ -3,7 +3,6 @@
 .gitignore
 CHANGELOG.md
 LICENSE
-Makefile
 README.md
 api/collaboration.go
 api/message.go
@@ -21,7 +20,6 @@ config/file.go
 config/parse.go
 connectors/manager.go
 database/database.go
-docker/Dockerfile
 docs/BRANDING.md
 docs/DEPLOYMENT.md
 docs/ROADMAP.md
