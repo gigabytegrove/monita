@@ -52,3 +52,16 @@ jobs:
             echo "::error::Unexpected legacy branding remains in the active Web UI."
             exit 1
           fi
+
+      - name: Enforce exhaustive legacy identity allowlist
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(mktemp)"
+          expected="$(mktemp)"
+          git grep -Il -i -E 'gotify' -- . ':!.github/legacy-identity-allowlist.txt' | sort > "$actual" || true
+          sort .github/legacy-identity-allowlist.txt | sed '/^[[:space:]]*$/d' > "$expected"
+          if ! diff -u "$expected" "$actual"; then
+            echo "::error::The set of files containing legacy Gotify identifiers changed. Every remaining reference must be explicitly reviewed and declared as compatibility, history, legal attribution, or an upstream dependency."
+            exit 1
+          fi
