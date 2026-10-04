@@ -1,0 +1,20 @@
+name: Monita exhaustive identity inventory
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - monita-complete-cleanup
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Inventory all remaining legacy references
+        shell: bash
+        run: |
+          set -u
+          git grep -nIi -E 'gotify' -- . ':!.github/workflows/monita-exhaustive-identity-inventory.yml' || true
+          echo '=== PATHS ==='
+          find . -path './.git' -prune -o -type f -print | sed 's#^./##' | grep -Ei 'gotify|(^|/)(mu_|.*[-_]mu([._/-]|$))' | sort || true
