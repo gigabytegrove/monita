@@ -4,10 +4,10 @@ DOCKER_DIR=./docker/
 SHELL := /bin/bash
 VERSION ?= $(shell cat VERSION 2>/dev/null)
 GO_VERSION=$(shell go mod edit -json | jq -r '(.Toolchain // ("go" + .Go))' | sed -e 's/^go//')
-DOCKER_BUILD_IMAGE=docker.io/gotify/build
+DOCKER_BUILD_IMAGE=docker.io/library/golang
 DOCKER_WORKDIR=/proj
-DOCKER_RUN=docker run --rm -e LD_FLAGS="$$LD_FLAGS" -v "$$PWD/.:${DOCKER_WORKDIR}" -v "`go env GOPATH`/pkg/mod/.:/go/pkg/mod:ro" -w ${DOCKER_WORKDIR}
-DOCKER_GO_BUILD=go build -mod=readonly -a -installsuffix cgo -ldflags "$$LD_FLAGS"
+
+DOCKER_GO_BUILD=go build -mod=readonly -a -ldflags "$LD_FLAGS"
 DOCKER_TEST_LEVEL ?= 0 # Optionally run a test during docker build
 
 test: test-coverage test-js
@@ -102,7 +102,14 @@ build-js:
 	(cd ui && yarn build)
 
 build-linux-amd64:
-	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-amd64 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-amd64
+	mkdir -p ${BUILD_DIR}/linux-amd64
+	docker buildx build --platform linux/amd64 --target binary-export \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg LD_FLAGS="$LD_FLAGS" \
+		--output type=local,dest=${BUILD_DIR}/linux-amd64 \
+		-f docker/Dockerfile .
+	mv ${BUILD_DIR}/linux-amd64/monita ${BUILD_DIR}/monita-linux-amd64
+	rmdir ${BUILD_DIR}/linux-amd64
 
 build-linux-386:
 	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-386 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-386
@@ -111,7 +118,14 @@ build-linux-arm-7:
 	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-arm-7 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-arm-7
 
 build-linux-arm64:
-	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-arm64 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-arm64
+	mkdir -p ${BUILD_DIR}/linux-arm64
+	docker buildx build --platform linux/arm64 --target binary-export \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg LD_FLAGS="$LD_FLAGS" \
+		--output type=local,dest=${BUILD_DIR}/linux-arm64 \
+		-f docker/Dockerfile .
+	mv ${BUILD_DIR}/linux-arm64/monita ${BUILD_DIR}/monita-linux-arm64
+	rmdir ${BUILD_DIR}/linux-arm64
 
 build-linux-riscv64:
 	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-riscv64 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-riscv64
