@@ -75,8 +75,9 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                 zIndex: (theme) => theme.zIndex.drawer + 1,
                 borderBottom: 1,
                 borderColor: 'divider',
-                backgroundColor: 'background.paper',
-                backdropFilter: 'blur(14px)',
+                backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark' ? 'rgba(16,27,45,.92)' : 'rgba(255,255,255,.92)',
+                backdropFilter: 'blur(18px)',
             }}>
             <Toolbar sx={{minHeight: 58, gap: 1.25, px: {xs: 1.25, sm: 2}}}>
                 {loggedIn && (
@@ -101,7 +102,7 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                     }}>
                     <Box
                         component="img"
-                        src={config.get('url') + 'static/monita-icon.svg?v=1.3.5'}
+                        src={config.get('url') + 'static/monita-icon.svg?v=1.4.0'}
                         alt=""
                         aria-hidden="true"
                         sx={{
@@ -113,12 +114,12 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                     />
                     <Box
                         component="img"
-                        src={config.get('url') + 'static/monita-logo.svg?v=1.3.5'}
+                        src={config.get('url') + 'static/monita-logo.svg?v=1.4.0'}
                         alt="Monita"
                         sx={{
                             display: {xs: 'none', sm: 'block'},
-                            width: 164,
-                            height: 40,
+                            width: 150,
+                            height: 36,
                             objectFit: 'contain',
                             objectPosition: 'left center',
                         }}
@@ -140,23 +141,23 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                     </Tooltip>
                 )}
 
-                <Tooltip title="Build version">
-                    <Chip
-                        component="a"
-                        clickable
-                        size="small"
-                        variant="outlined"
-                        label={`@${version}`}
-                        href={
-                            version.startsWith('master-')
-                                ? `https://github.com/gigabytegrove/monita/commit/${version.replace('master-', '')}`
-                                : 'https://github.com/gigabytegrove/monita/releases'
-                        }
-                        target="_blank"
-                        rel="noreferrer"
-                        sx={{display: {xs: 'none', sm: 'inline-flex'}}}
+                <Stack
+                    direction="row"
+                    spacing={0.7}
+                    sx={{display: {xs: 'none', lg: 'flex'}, alignItems: 'center', mr: 0.25}}>
+                    <Box
+                        sx={{
+                            width: 7,
+                            height: 7,
+                            borderRadius: '50%',
+                            bgcolor: 'success.main',
+                            boxShadow: '0 0 0 4px rgba(18,163,109,.10)',
+                        }}
                     />
-                </Tooltip>
+                    <Typography variant="caption" color="text.secondary">
+                        Connected
+                    </Typography>
+                </Stack>
 
                 {loggedIn && (
                     <>
@@ -173,8 +174,8 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                                 gap: 0.5,
                                 border: 1,
                                 borderColor: 'divider',
-                                borderRadius: 2.5,
-                                bgcolor: 'background.default',
+                                borderRadius: 0.75,
+                                bgcolor: 'background.paper',
                             }}>
                             <Avatar sx={{width: 30, height: 30, fontSize: '0.85rem'}}>
                                 {name.slice(0, 1).toUpperCase() || <AccountCircle />}
@@ -208,6 +209,9 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                                         />
                                     )}
                                 </Stack>
+                                <Typography variant="caption" color="text.secondary">
+                                    Monita @{version}
+                                </Typography>
                             </Box>
                             <MenuItem
                                 component={Link}

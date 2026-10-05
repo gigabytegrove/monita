@@ -403,7 +403,7 @@ const ReleaseUpdateDetails = ({
                                     maxHeight: 220,
                                     overflowY: 'auto',
                                     p: 1.25,
-                                    borderRadius: 1.5,
+                                    borderRadius: 0.25,
                                     bgcolor: 'action.hover',
                                 }}>
                                 {updater.activity.slice(-12).map((entry, index) => (

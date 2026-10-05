@@ -94,6 +94,7 @@ const SystemAdministration = () => {
 
     return (
         <DefaultPage
+            eyebrow="Administration"
             title="Security & Operations"
             description="Server-wide security policy, sessions, audit retention, and operational status."
             rightControl={
@@ -250,7 +251,7 @@ const SystemAdministration = () => {
                         ].map(([label, value]) => (
                             <Box
                                 key={String(label)}
-                                sx={{border: 1, borderColor: 'divider', borderRadius: 2, p: 1.5}}>
+                                sx={{border: 1, borderColor: 'divider', borderRadius: 0.25, p: 1.5}}>
                                 <Typography variant="caption" color="text.secondary">
                                     {label}
                                 </Typography>
@@ -279,7 +280,7 @@ const SystemAdministration = () => {
                         {sessions.map((session) => (
                             <Box
                                 key={session.id}
-                                sx={{border: 1, borderColor: 'divider', borderRadius: 2, p: 1.5}}>
+                                sx={{border: 1, borderColor: 'divider', borderRadius: 0.25, p: 1.5}}>
                                 <Stack
                                     direction={{xs: 'column', sm: 'row'}}
                                     spacing={1}
