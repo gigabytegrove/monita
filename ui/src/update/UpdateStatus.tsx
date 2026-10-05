@@ -19,9 +19,9 @@ import {
     classifyUpdate,
     latestPublishedRelease,
     PublishedRelease,
-    releaseChannel,
     RELEASES_API,
     UpdateClassification,
+    releaseChannel,
 } from './release';
 import {activeUpdaterStates, updaterStatusForDisplay, type UpdaterStatus} from './status';
 
@@ -306,22 +306,18 @@ const ReleaseUpdateDetails = ({
                         Latest published release
                     </Typography>
                     <Typography sx={{fontWeight: 700}}>{publishedVersion}</Typography>
+                    <Stack direction="row" spacing={0.75} sx={{alignItems: 'center'}}>
+                        <Typography variant="body2" color="text.secondary">
+                            Release channel
+                        </Typography>
+                        <Chip
+                            size="small"
+                            variant={channel === 'Stable' ? 'filled' : 'outlined'}
+                            color={channel === 'Stable' ? 'success' : 'warning'}
+                            label={channel}
+                        />
+                    </Stack>
                 </Stack>
-            </Stack>
-
-            <Stack
-                direction={{xs: 'column', sm: 'row'}}
-                spacing={1}
-                sx={{alignItems: {sm: 'center'}, justifyContent: 'space-between'}}>
-                <Typography variant="body2" color="text.secondary">
-                    Release channel
-                </Typography>
-                <Chip
-                    size="small"
-                    variant={channel === 'Stable' ? 'filled' : 'outlined'}
-                    color={channel === 'Stable' ? 'success' : 'default'}
-                    label={channel}
-                />
             </Stack>
 
             {state.classification === 'available' && (
