@@ -131,8 +131,8 @@ const ChatConversation = ({
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'hidden',
-                    borderRadius: 1,
-                    boxShadow: 'none',
+                    borderRadius: {xs: 2, sm: 3.5},
+                    boxShadow: {sm: '0 18px 50px rgba(15,23,42,0.08)'},
                 }}>
                 <Stack
                     direction="row"
@@ -147,7 +147,7 @@ const ChatConversation = ({
                     }}>
                     <Avatar
                         src={config.get('url') + app.image}
-                        variant="square"
+                        variant="rounded"
                         sx={{width: 42, height: 42}}
                     />
                     <Box sx={{minWidth: 0, flex: 1}}>
@@ -224,7 +224,12 @@ const ChatConversation = ({
                         minHeight: 0,
                         overflowY: 'auto',
                         py: 1.25,
-                        bgcolor: 'background.default',
+                        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#0b1220' : '#f8fafc'),
+                        backgroundImage: (theme) =>
+                            theme.palette.mode === 'dark'
+                                ? 'radial-gradient(circle at 20px 20px, rgba(148,163,184,0.035) 1px, transparent 0)'
+                                : 'radial-gradient(circle at 20px 20px, rgba(37,99,235,0.045) 1px, transparent 0)',
+                        backgroundSize: '28px 28px',
                     }}>
                     {hasMore && !normalized && (
                         <Box sx={{display: 'flex', justifyContent: 'center', pb: 1}}>

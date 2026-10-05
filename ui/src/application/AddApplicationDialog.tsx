@@ -109,7 +109,7 @@ export const AddApplicationDialog = ({fClose, fOnSubmit}: IProps) => {
                         sx={{alignItems: {xs: 'flex-start', sm: 'center'}}}>
                         <Avatar
                             src={imagePreview || undefined}
-                            variant="square"
+                            variant="rounded"
                             sx={{width: 72, height: 72, flexShrink: 0}}>
                             {name.trim().slice(0, 2).toUpperCase()}
                         </Avatar>
