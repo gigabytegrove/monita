@@ -102,7 +102,7 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                     }}>
                     <Box
                         component="img"
-                        src={config.get('url') + 'static/monita-icon.svg?v=1.3.8-alpha'}
+                        src={config.get('url') + 'static/monita-icon.svg?v=1.3.9-alpha'}
                         alt=""
                         aria-hidden="true"
                         sx={{
@@ -114,7 +114,7 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                     />
                     <Box
                         component="img"
-                        src={config.get('url') + 'static/monita-logo.svg?v=1.3.8-alpha'}
+                        src={config.get('url') + 'static/monita-logo.svg?v=1.3.9-alpha'}
                         alt="Monita"
                         sx={{
                             display: {xs: 'none', sm: 'block'},
