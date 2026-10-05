@@ -3,20 +3,20 @@ package api
 // Plugin is the interface every plugin needs to implement.
 type Plugin interface {
 	// Enable is called every time a plugin is started. Spawn custom goroutines here for polling, etc.
-	// It is always called after ^Set.*Handler$
+	// It is always called after ^Set.*Handler$.
 	Enable() error
 	// Disable is called every time a plugin is disabled. Plugins should stop all custom goroutines here.
 	Disable() error
 }
 
-// UserContext is provided when calling New to create a plugin instance for each user
+// UserContext is provided when calling New to create a plugin instance for each user.
 type UserContext struct {
 	ID    uint
 	Name  string
 	Admin bool
 }
 
-// Info is returned by the exported plugin function GetPluginInfo() for identification
+// Info is returned by the exported plugin function GetPluginInfo() for identification.
 // Plugins are identified by their ModulePath; Monita refuses to load plugins with an empty ModulePath.
 type Info struct {
 	Version     string
