@@ -22,8 +22,13 @@ import Settings from '@mui/icons-material/Settings';
 import Security from '@mui/icons-material/Security';
 import InstallDesktop from '@mui/icons-material/InstallDesktop';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import LightMode from '@mui/icons-material/LightMode';
+import DarkMode from '@mui/icons-material/DarkMode';
+import BrightnessAuto from '@mui/icons-material/BrightnessAuto';
+import Check from '@mui/icons-material/Check';
 import {Link} from 'react-router';
 import * as config from '../config';
+import {ThemeKey} from './theme';
 
 interface BeforeInstallPromptEvent extends Event {
     prompt: () => Promise<void>;
@@ -38,10 +43,23 @@ interface IProps {
     logout: VoidFunction;
     style: CSSProperties;
     setNavOpen: (open: boolean) => void;
+    currentTheme: ThemeKey;
+    setCurrentTheme: (theme: ThemeKey) => void;
 }
 
-const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IProps) => {
+const Header = ({
+    version,
+    name,
+    loggedIn,
+    admin,
+    logout,
+    style,
+    setNavOpen,
+    currentTheme,
+    setCurrentTheme,
+}: IProps) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [themeAnchorEl, setThemeAnchorEl] = React.useState<null | HTMLElement>(null);
     const [installPrompt, setInstallPrompt] = React.useState<BeforeInstallPromptEvent | null>(null);
 
     React.useEffect(() => {
@@ -63,6 +81,20 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
         await installPrompt.prompt();
         await installPrompt.userChoice;
         setInstallPrompt(null);
+    };
+
+    const themeIcon =
+        currentTheme === 'light' ? (
+            <LightMode fontSize="small" />
+        ) : currentTheme === 'dark' ? (
+            <DarkMode fontSize="small" />
+        ) : (
+            <BrightnessAuto fontSize="small" />
+        );
+
+    const chooseTheme = (theme: ThemeKey) => {
+        setCurrentTheme(theme);
+        setThemeAnchorEl(null);
     };
 
     return (
@@ -101,7 +133,7 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                     }}>
                     <Box
                         component="img"
-                        src={config.get('url') + 'static/monita-icon.svg?v=1.3.5'}
+                        src={config.get('url') + 'static/monita-icon.svg?v=1.3.9'}
                         alt=""
                         aria-hidden="true"
                         sx={{
@@ -113,7 +145,7 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                     />
                     <Box
                         component="img"
-                        src={config.get('url') + 'static/monita-logo.svg?v=1.3.5'}
+                        src={config.get('url') + 'static/monita-logo.svg?v=1.3.9'}
                         alt="Monita"
                         sx={{
                             display: {xs: 'none', sm: 'block'},
@@ -139,6 +171,47 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                         </Button>
                     </Tooltip>
                 )}
+
+                <Tooltip title="Appearance">
+                    <IconButton
+                        aria-label="Choose appearance"
+                        aria-controls={themeAnchorEl ? 'theme-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={themeAnchorEl ? 'true' : undefined}
+                        onClick={(event) => setThemeAnchorEl(event.currentTarget)}
+                        sx={{border: 1, borderColor: 'divider'}}>
+                        {themeIcon}
+                    </IconButton>
+                </Tooltip>
+                <Menu
+                    id="theme-menu"
+                    anchorEl={themeAnchorEl}
+                    open={Boolean(themeAnchorEl)}
+                    onClose={() => setThemeAnchorEl(null)}
+                    anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                    transformOrigin={{vertical: 'top', horizontal: 'right'}}>
+                    <MenuItem onClick={() => chooseTheme('light')}>
+                        <ListItemIcon>
+                            <LightMode fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>Light</ListItemText>
+                        {currentTheme === 'light' && <Check fontSize="small" />}
+                    </MenuItem>
+                    <MenuItem onClick={() => chooseTheme('dark')}>
+                        <ListItemIcon>
+                            <DarkMode fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>Dark</ListItemText>
+                        {currentTheme === 'dark' && <Check fontSize="small" />}
+                    </MenuItem>
+                    <MenuItem onClick={() => chooseTheme('system')}>
+                        <ListItemIcon>
+                            <BrightnessAuto fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText>System</ListItemText>
+                        {currentTheme === 'system' && <Check fontSize="small" />}
+                    </MenuItem>
+                </Menu>
 
                 <Tooltip title="Build version">
                     <Chip
@@ -173,7 +246,7 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                                 gap: 0.5,
                                 border: 1,
                                 borderColor: 'divider',
-                                borderRadius: 2.5,
+                                borderRadius: 2,
                                 bgcolor: 'background.default',
                             }}>
                             <Avatar sx={{width: 30, height: 30, fontSize: '0.85rem'}}>
