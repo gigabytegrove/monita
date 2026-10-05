@@ -12,6 +12,30 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+
+func TestUpdateVersionPatternAcceptsReleaseChannels(t *testing.T) {
+	for _, version := range []string{
+		"1.3.8",
+		"1.3.9-alpha",
+		"1.3.9-alpha.2",
+		"1.3.9-beta",
+		"1.3.9-rc.1",
+		"1.3.9+build.5",
+		"1.3.9-rc.1+build.5",
+	} {
+		assert.True(t, updateVersionPattern.MatchString(version), version)
+	}
+	for _, version := range []string{
+		"v1.3.9-alpha",
+		"1.3",
+		"1.3.9-",
+		"1.3.9_alpha",
+		"master",
+	} {
+		assert.False(t, updateVersionPattern.MatchString(version), version)
+	}
+}
+
 func TestRuntimeAssetName(t *testing.T) {
 	name, err := runtimeAssetName("linux", "amd64")
 	require.NoError(t, err)
