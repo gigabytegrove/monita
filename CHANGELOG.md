@@ -1,3 +1,16 @@
+## 1.3.9-alpha2 — 2026-10-05
+
+### Settings organization and update channels
+
+- Reorganized **Settings** into dedicated **Account**, **Notifications**, **Security**, and **Updates** tabs.
+- Added a server-persisted **Update channel** selector under **Settings → Updates**.
+- Added **Stable**, **Release Candidate**, **Beta**, **Alpha**, and **Preview / Development** channel choices.
+- Broader channels include releases from the safer channels below them; for example, Alpha receives Stable, RC, Beta, and Alpha releases.
+- The Software Update page now filters GitHub releases according to the selected channel.
+- The Dashboard update-available banner honors the same server-level channel preference.
+- Stable remains the default for existing installations until an administrator opts into prerelease updates.
+- Added backend validation and persistence tests plus UI release-channel filtering tests.
+
 ## 1.3.9-alpha1 — 2026-10-05
 
 ### Web UI redesign — first alpha
