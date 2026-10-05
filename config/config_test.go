@@ -160,3 +160,36 @@ func TestLegacyEnvironmentFallback(t *testing.T) {
 	conf, _ := Get()
 	assert.Equal(t, 9187, conf.Server.Port)
 }
+
+
+func TestDefaultDatabaseConnectionReusesSingleExistingDatabase(t *testing.T) {
+	oldwd, err := os.Getwd()
+	assert.NoError(t, err)
+	dir := t.TempDir()
+	assert.NoError(t, os.Chdir(dir))
+	t.Cleanup(func() {
+		_ = os.Chdir(oldwd)
+	})
+
+	assert.NoError(t, os.MkdirAll("data", 0o755))
+	existing := filepath.Join("data", "existing.db")
+	assert.NoError(t, os.WriteFile(existing, []byte("existing"), 0o600))
+
+	assert.Equal(t, existing, defaultDatabaseConnection())
+}
+
+func TestDefaultDatabaseConnectionPrefersMonitaDatabase(t *testing.T) {
+	oldwd, err := os.Getwd()
+	assert.NoError(t, err)
+	dir := t.TempDir()
+	assert.NoError(t, os.Chdir(dir))
+	t.Cleanup(func() {
+		_ = os.Chdir(oldwd)
+	})
+
+	assert.NoError(t, os.MkdirAll("data", 0o755))
+	assert.NoError(t, os.WriteFile(filepath.Join("data", "other.db"), []byte("other"), 0o600))
+	assert.NoError(t, os.WriteFile(filepath.Join("data", "monita.db"), []byte("primary"), 0o600))
+
+	assert.Equal(t, filepath.Join("data", "monita.db"), defaultDatabaseConnection())
+}
