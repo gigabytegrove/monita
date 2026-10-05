@@ -89,7 +89,7 @@ export const createMonitaTheme = (mode: PaletteMode) => {
                     contained: {boxShadow: 'none'},
                     outlined: {borderColor: border, backgroundColor: 'transparent'},
                     text: {
-                        '&:hover': {backgroundColor: alpha(accent, dark ? 0.10 : 0.06)},
+                        '&:hover': {backgroundColor: alpha(accent, dark ? 0.1 : 0.06)},
                     },
                 },
             },

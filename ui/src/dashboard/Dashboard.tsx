@@ -69,10 +69,18 @@ const Dashboard = observer(() => {
             description="Your Monita workspace, recent activity, and system health in one place."
             rightControl={
                 <Stack direction="row" spacing={1}>
-                    <Button component={Link} to="/channels" variant="outlined" startIcon={<AddCircle />}>
+                    <Button
+                        component={Link}
+                        to="/channels"
+                        variant="outlined"
+                        startIcon={<AddCircle />}>
                         Channels
                     </Button>
-                    <Button component={Link} to="/messages" variant="contained" startIcon={<Inbox />}>
+                    <Button
+                        component={Link}
+                        to="/messages"
+                        variant="contained"
+                        startIcon={<Inbox />}>
                         Messages
                     </Button>
                 </Stack>
@@ -91,11 +99,20 @@ const Dashboard = observer(() => {
                 <Grid container spacing={2} sx={{alignItems: 'center'}}>
                     <Grid size={{xs: 12, lg: 7}}>
                         <Stack spacing={0.75}>
-                            <Stack direction="row" spacing={1} sx={{alignItems: 'center', flexWrap: 'wrap'}}>
+                            <Stack
+                                direction="row"
+                                spacing={1}
+                                sx={{alignItems: 'center', flexWrap: 'wrap'}}>
                                 <Chip
                                     size="small"
-                                    color={currentUser.connectionErrorMessage ? 'warning' : 'success'}
-                                    label={currentUser.connectionErrorMessage ? 'Connection attention needed' : 'Server connected'}
+                                    color={
+                                        currentUser.connectionErrorMessage ? 'warning' : 'success'
+                                    }
+                                    label={
+                                        currentUser.connectionErrorMessage
+                                            ? 'Connection attention needed'
+                                            : 'Server connected'
+                                    }
                                 />
                                 <Typography variant="caption" color="text.secondary">
                                     Monita @{version.version}
@@ -141,7 +158,11 @@ const Dashboard = observer(() => {
                         subtitle="Jump back into the places with the latest activity."
                         flush
                         action={
-                            <Button component={Link} to="/channels" size="small" endIcon={<ArrowForward />}>
+                            <Button
+                                component={Link}
+                                to="/channels"
+                                size="small"
+                                endIcon={<ArrowForward />}>
                                 All channels
                             </Button>
                         }>
@@ -150,7 +171,8 @@ const Dashboard = observer(() => {
                                 <Box sx={{p: 4, textAlign: 'center'}}>
                                     <Typography variant="h6">No channels yet</Typography>
                                     <Typography color="text.secondary" sx={{mt: 0.5, mb: 2}}>
-                                        Create your first notification or chat channel to get started.
+                                        Create your first notification or chat channel to get
+                                        started.
                                     </Typography>
                                     <Button component={Link} to="/channels" variant="contained">
                                         Manage Channels
@@ -182,23 +204,38 @@ const Dashboard = observer(() => {
                                             sx={{width: 42, height: 42}}
                                         />
                                         <Box sx={{minWidth: 0}}>
-                                            <Stack direction="row" spacing={0.65} sx={{alignItems: 'center', flexWrap: 'wrap'}}>
+                                            <Stack
+                                                direction="row"
+                                                spacing={0.65}
+                                                sx={{alignItems: 'center', flexWrap: 'wrap'}}>
                                                 <Typography sx={{fontWeight: 750}} noWrap>
                                                     {app.name}
                                                 </Typography>
-                                                {app.autoAssign && <Public sx={{fontSize: 15, color: 'text.secondary'}} />}
+                                                {app.autoAssign && (
+                                                    <Public
+                                                        sx={{fontSize: 15, color: 'text.secondary'}}
+                                                    />
+                                                )}
                                                 {app.receiveNotifications === false && (
-                                                    <NotificationsOff sx={{fontSize: 15, color: 'text.secondary'}} />
+                                                    <NotificationsOff
+                                                        sx={{fontSize: 15, color: 'text.secondary'}}
+                                                    />
                                                 )}
                                             </Stack>
-                                            <Typography variant="body2" color="text.secondary" noWrap>
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                                noWrap>
                                                 {app.description ||
-                                                    (app.channelType === 'chat' || app.allowMemberPost
+                                                    (app.channelType === 'chat' ||
+                                                    app.allowMemberPost
                                                         ? 'Chat channel'
                                                         : 'Notification channel')}
                                             </Typography>
                                         </Box>
-                                        <ArrowForward sx={{fontSize: 18, color: 'text.secondary'}} />
+                                        <ArrowForward
+                                            sx={{fontSize: 18, color: 'text.secondary'}}
+                                        />
                                     </Box>
                                 ))
                             )}
@@ -210,26 +247,62 @@ const Dashboard = observer(() => {
                     <Stack spacing={2}>
                         <SurfaceCard title="Workspace" subtitle="Common destinations." flush>
                             <Box>
-                                <LaunchRow to="/messages" icon={<Inbox />} label="All messages" detail="Search and review activity" />
-                                <LaunchRow to="/channels" icon={<Forum />} label="Channels" detail="Manage chat and notifications" />
+                                <LaunchRow
+                                    to="/messages"
+                                    icon={<Inbox />}
+                                    label="All messages"
+                                    detail="Search and review activity"
+                                />
+                                <LaunchRow
+                                    to="/channels"
+                                    icon={<Forum />}
+                                    label="Channels"
+                                    detail="Manage chat and notifications"
+                                />
                                 {admin && (
                                     <>
-                                        <LaunchRow to="/users" icon={<People />} label="Users" detail={`${users.length} accounts`} />
-                                        <LaunchRow to="/groups" icon={<GroupWork />} label="Groups" detail={`${groups.length} groups`} />
-                                        <LaunchRow to="/audit" icon={<FactCheck />} label="Audit" detail="Security and admin history" />
+                                        <LaunchRow
+                                            to="/users"
+                                            icon={<People />}
+                                            label="Users"
+                                            detail={`${users.length} accounts`}
+                                        />
+                                        <LaunchRow
+                                            to="/groups"
+                                            icon={<GroupWork />}
+                                            label="Groups"
+                                            detail={`${groups.length} groups`}
+                                        />
+                                        <LaunchRow
+                                            to="/audit"
+                                            icon={<FactCheck />}
+                                            label="Audit"
+                                            detail="Security and admin history"
+                                        />
                                     </>
                                 )}
-                                <LaunchRow to="/settings" icon={<Settings />} label="Settings" detail="Account and notification preferences" last />
+                                <LaunchRow
+                                    to="/settings"
+                                    icon={<Settings />}
+                                    label="Settings"
+                                    detail="Account and notification preferences"
+                                    last
+                                />
                             </Box>
                         </SurfaceCard>
 
-                        <SurfaceCard title="System snapshot" subtitle="Current workspace inventory.">
+                        <SurfaceCard
+                            title="System snapshot"
+                            subtitle="Current workspace inventory.">
                             <Grid container spacing={1.5}>
                                 <Grid size={{xs: 6}}>
                                     <Snapshot label="Muted" value={muted} />
                                 </Grid>
                                 <Grid size={{xs: 6}}>
-                                    <Snapshot label="Plugins" value={`${enabledPlugins}/${plugins.length}`} />
+                                    <Snapshot
+                                        label="Plugins"
+                                        value={`${enabledPlugins}/${plugins.length}`}
+                                    />
                                 </Grid>
                                 {admin && (
                                     <>

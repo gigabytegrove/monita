@@ -24,7 +24,10 @@ const DefaultPage: FC<React.PropsWithChildren<IProps>> = ({
             <Box
                 sx={{
                     display: 'grid',
-                    gridTemplateColumns: {xs: '1fr', md: rightControl ? 'minmax(0,1fr) auto' : '1fr'},
+                    gridTemplateColumns: {
+                        xs: '1fr',
+                        md: rightControl ? 'minmax(0,1fr) auto' : '1fr',
+                    },
                     gap: 2,
                     alignItems: 'end',
                     pb: 2.25,
@@ -58,7 +61,11 @@ const DefaultPage: FC<React.PropsWithChildren<IProps>> = ({
                         </Typography>
                     )}
                 </Box>
-                {rightControl && <Box sx={{display: 'flex', justifyContent: {md: 'flex-end'}}}>{rightControl}</Box>}
+                {rightControl && (
+                    <Box sx={{display: 'flex', justifyContent: {md: 'flex-end'}}}>
+                        {rightControl}
+                    </Box>
+                )}
             </Box>
             {children}
         </Stack>
