@@ -36,6 +36,7 @@ const Settings = () => {
 
     return (
         <DefaultPage
+            eyebrow="Account"
             title="Settings"
             description="Account preferences and sign-in settings."
             maxWidth={900}>
@@ -577,7 +578,7 @@ const PasskeySettings = () => {
                                     sx={{
                                         border: 1,
                                         borderColor: 'divider',
-                                        borderRadius: 2,
+                                        borderRadius: 0.25,
                                         p: 1.5,
                                         justifyContent: 'space-between',
                                         alignItems: {sm: 'center'},

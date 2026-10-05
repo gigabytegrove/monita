@@ -1,5 +1,7 @@
 import {alpha, createTheme, PaletteMode} from '@mui/material/styles';
 
+// Monita 1.3.9-alpha workspace design system.
+
 export type ThemeKey = 'dark' | 'light' | 'system';
 
 export const isThemeKey = (value: string | null): value is ThemeKey =>
@@ -7,46 +9,39 @@ export const isThemeKey = (value: string | null): value is ThemeKey =>
 
 export const createMonitaTheme = (mode: PaletteMode) => {
     const dark = mode === 'dark';
-    const border = dark ? '#25324A' : '#D9E2EF';
-    const softBorder = dark ? '#1E2A3E' : '#E8EDF5';
-    const canvas = dark ? '#09111F' : '#F3F6FA';
-    const paper = dark ? '#101B2D' : '#FFFFFF';
-    const raised = dark ? '#142238' : '#F9FBFD';
+    const canvas = dark ? '#0B0D12' : '#F5F5F2';
+    const panel = dark ? '#11141A' : '#FFFFFF';
+    const panelAlt = dark ? '#171A21' : '#F0F0EC';
+    const border = dark ? '#2A2E37' : '#D7D7D1';
+    const text = dark ? '#F3F4F6' : '#171717';
+    const muted = dark ? '#9CA3AF' : '#666A70';
+    const accent = dark ? '#A78BFA' : '#6D28D9';
 
     const base = createTheme({
         palette: {
             mode,
-            primary: {
-                main: '#2F6BFF',
-                light: '#6B95FF',
-                dark: '#1D4ED8',
-                contrastText: '#FFFFFF',
-            },
-            secondary: {
-                main: '#12A8A0',
-                contrastText: '#FFFFFF',
-            },
-            info: {main: '#3C8DFF'},
-            success: {main: '#12A36D'},
-            warning: {main: '#D88A16'},
-            error: {main: '#D94B5B'},
-            background: {default: canvas, paper},
-            text: dark
-                ? {primary: '#F4F7FB', secondary: '#9BAAC0'}
-                : {primary: '#152238', secondary: '#617087'},
+            primary: {main: accent, contrastText: '#FFFFFF'},
+            secondary: {main: dark ? '#5EEAD4' : '#0F766E'},
+            success: {main: dark ? '#34D399' : '#047857'},
+            warning: {main: dark ? '#FBBF24' : '#B45309'},
+            error: {main: dark ? '#FB7185' : '#BE123C'},
+            info: {main: dark ? '#67E8F9' : '#0E7490'},
+            background: {default: canvas, paper: panel},
+            text: {primary: text, secondary: muted},
             divider: border,
         },
-        shape: {borderRadius: 14},
+        shape: {borderRadius: 4},
         typography: {
             fontFamily:
                 'Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-            h4: {fontWeight: 780, letterSpacing: '-0.035em'},
-            h5: {fontWeight: 760, letterSpacing: '-0.025em'},
-            h6: {fontWeight: 730, letterSpacing: '-0.018em'},
-            subtitle1: {fontWeight: 680},
-            button: {textTransform: 'none', fontWeight: 700, letterSpacing: '-0.01em'},
-            body2: {lineHeight: 1.55},
-            overline: {fontWeight: 760, letterSpacing: '0.09em'},
+            h3: {fontWeight: 760, letterSpacing: '-0.04em'},
+            h4: {fontWeight: 750, letterSpacing: '-0.035em'},
+            h5: {fontWeight: 730, letterSpacing: '-0.025em'},
+            h6: {fontWeight: 710, letterSpacing: '-0.015em'},
+            subtitle1: {fontWeight: 700},
+            button: {textTransform: 'none', fontWeight: 700, letterSpacing: 0},
+            body2: {lineHeight: 1.5},
+            overline: {fontWeight: 760, letterSpacing: '0.11em', fontSize: '0.66rem'},
         },
     });
 
@@ -57,99 +52,97 @@ export const createMonitaTheme = (mode: PaletteMode) => {
                     html: {backgroundColor: canvas},
                     body: {
                         backgroundColor: canvas,
+                        color: text,
                         backgroundImage: 'none',
-                        scrollbarColor: dark ? '#3D4D68 transparent' : '#B7C2D2 transparent',
+                        scrollbarColor: dark ? '#4B5563 transparent' : '#B8B8B0 transparent',
+                    },
+                    a: {
+                        color: 'inherit',
+                        textDecorationColor: 'currentColor',
+                        textUnderlineOffset: '0.18em',
+                    },
+                    'a:hover': {
+                        color: 'inherit',
                     },
                     '::selection': {
-                        backgroundColor: alpha(base.palette.primary.main, 0.24),
-                    },
-                },
-            },
-            MuiAppBar: {
-                styleOverrides: {
-                    root: {
-                        backgroundImage: 'none',
-                        boxShadow: 'none',
+                        backgroundColor: alpha(accent, 0.22),
                     },
                 },
             },
             MuiPaper: {
                 styleOverrides: {
-                    root: {
-                        backgroundImage: 'none',
-                    },
-                    outlined: {
-                        borderColor: border,
-                        boxShadow: dark
-                            ? '0 14px 34px rgba(0, 0, 0, 0.18)'
-                            : '0 12px 30px rgba(35, 55, 80, 0.07)',
-                    },
+                    root: {backgroundImage: 'none'},
+                    outlined: {borderColor: border, boxShadow: 'none'},
                 },
+            },
+            MuiAppBar: {
+                styleOverrides: {root: {backgroundImage: 'none', boxShadow: 'none'}},
             },
             MuiButton: {
                 defaultProps: {disableElevation: true},
                 styleOverrides: {
                     root: {
-                        borderRadius: 11,
-                        minHeight: 38,
-                        paddingInline: 15,
+                        borderRadius: 3,
+                        minHeight: 36,
+                        paddingInline: 13,
                     },
-                    contained: {
-                        boxShadow: 'none',
-                    },
-                    outlined: {
-                        borderColor: border,
-                        backgroundColor: alpha(paper, 0.74),
+                    contained: {boxShadow: 'none'},
+                    outlined: {borderColor: border, backgroundColor: 'transparent'},
+                    text: {
+                        '&:hover': {backgroundColor: alpha(accent, dark ? 0.10 : 0.06)},
                     },
                 },
             },
             MuiIconButton: {
                 styleOverrides: {
-                    root: {
-                        borderRadius: 11,
-                    },
+                    root: {borderRadius: 3},
                 },
             },
             MuiChip: {
                 styleOverrides: {
                     root: {
-                        borderRadius: 9,
+                        borderRadius: 2,
+                        height: 25,
                         fontWeight: 700,
+                        fontSize: '0.72rem',
                     },
                 },
             },
             MuiOutlinedInput: {
                 styleOverrides: {
                     root: {
-                        borderRadius: 11,
-                        backgroundColor: raised,
+                        borderRadius: 3,
+                        backgroundColor: panel,
                     },
-                    notchedOutline: {
-                        borderColor: border,
-                    },
+                    notchedOutline: {borderColor: border},
+                },
+            },
+            MuiInputLabel: {
+                styleOverrides: {
+                    root: {fontSize: '0.9rem'},
                 },
             },
             MuiTableCell: {
                 styleOverrides: {
-                    root: {borderBottomColor: softBorder},
+                    root: {borderBottomColor: border},
                     head: {
-                        color: base.palette.text.secondary,
-                        fontSize: '0.74rem',
+                        color: muted,
+                        fontSize: '0.69rem',
                         fontWeight: 760,
                         textTransform: 'uppercase',
-                        letterSpacing: '0.075em',
-                        backgroundColor: raised,
+                        letterSpacing: '0.08em',
+                        backgroundColor: panelAlt,
                     },
                 },
             },
             MuiDialog: {
                 styleOverrides: {
                     paper: {
-                        borderRadius: 20,
+                        borderRadius: 5,
                         border: `1px solid ${border}`,
                         boxShadow: dark
-                            ? '0 24px 80px rgba(0,0,0,.46)'
-                            : '0 24px 80px rgba(31,48,74,.18)',
+                            ? '0 24px 70px rgba(0,0,0,.50)'
+                            : '0 24px 70px rgba(0,0,0,.16)',
                     },
                 },
             },
@@ -158,26 +151,37 @@ export const createMonitaTheme = (mode: PaletteMode) => {
                 styleOverrides: {
                     paper: {
                         border: `1px solid ${border}`,
-                        borderRadius: 14,
-                        minWidth: 220,
+                        borderRadius: 4,
+                        minWidth: 210,
                         boxShadow: dark
-                            ? '0 18px 50px rgba(0,0,0,.38)'
-                            : '0 18px 50px rgba(31,48,74,.14)',
+                            ? '0 16px 40px rgba(0,0,0,.40)'
+                            : '0 16px 40px rgba(0,0,0,.12)',
                     },
                 },
             },
             MuiListItemButton: {
                 styleOverrides: {
                     root: {
-                        borderRadius: 11,
-                        '&.Mui-selected': {
-                            backgroundColor: alpha(base.palette.primary.main, dark ? 0.2 : 0.1),
-                        },
+                        borderRadius: 2,
+                        '&.Mui-selected': {backgroundColor: alpha(accent, dark ? 0.14 : 0.08)},
                     },
                 },
             },
+            MuiToggleButton: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: 2,
+                        textTransform: 'none',
+                    },
+                },
+            },
+            MuiAlert: {
+                styleOverrides: {
+                    root: {borderRadius: 3},
+                },
+            },
             MuiTooltip: {
-                defaultProps: {arrow: true, enterDelay: 400},
+                defaultProps: {arrow: true, enterDelay: 350},
             },
         },
     });

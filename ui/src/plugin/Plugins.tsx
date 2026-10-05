@@ -75,6 +75,7 @@ const Plugins = observer(() => {
 
     return (
         <DefaultPage
+            eyebrow="Extensions"
             title="Plugins"
             description="Install, enable, and configure server-side Monita plugins."
             rightControl={
@@ -100,7 +101,7 @@ const Plugins = observer(() => {
                                 sx={{
                                     border: 1,
                                     borderColor: 'divider',
-                                    borderRadius: 2,
+                                    borderRadius: 0.25,
                                     p: 1.5,
                                     justifyContent: 'space-between',
                                 }}>
