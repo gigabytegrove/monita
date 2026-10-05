@@ -130,7 +130,7 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
                             onClick={() => setNavOpen(false)}
                             sx={{
                                 minHeight: 42,
-                                borderRadius: 1.75,
+                                borderRadius: 0.75,
                                 my: 0.15,
                                 px: 1.1,
                                 '&.Mui-selected': {
@@ -172,7 +172,7 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
             </Stack>
             <List disablePadding>
                 {loggedIn && sectionApps.length === 0 && (
-                    <ListItemButton disabled sx={{borderRadius: 1.5, py: 0.5}}>
+                    <ListItemButton disabled sx={{borderRadius: 0.75, py: 0.5}}>
                         <ListItemText
                             primary={`No ${label.toLowerCase()}`}
                             slotProps={{primary: {fontSize: '0.82rem'}}}
@@ -191,7 +191,7 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
                                 selected={location.pathname === to}
                                 onClick={() => setNavOpen(false)}
                                 sx={{
-                                    borderRadius: 1.5,
+                                    borderRadius: 0.75,
                                     my: 0.1,
                                     py: 0.45,
                                     px: 0.85,
