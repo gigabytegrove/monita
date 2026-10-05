@@ -1,0 +1,45 @@
+name: one-shot release generated-source sync
+
+on:
+  push:
+    branches:
+      - release/v1.3.8-updater
+    paths:
+      - '.github/workflows/release-generated-sync-release-v1.3.8-updater.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+        with:
+          go-version: 1.26.x
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: release/v1.3.8-updater
+          fetch-depth: 0
+      - name: Regenerate formatted Go and Swagger
+        shell: bash
+        run: |
+          set -euo pipefail
+          go run mvdan.cc/gofumpt@v0.9.2 -w $(find . -type f -name '*.go' -not -path './vendor/*')
+          go install github.com/go-swagger/go-swagger/cmd/swagger@717e3cb29becaaf00e56953556c6d80f8a01b286
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          make update-swagger
+      - name: Commit canonical generated sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f ".github/workflows/release-generated-sync-release-v1.3.8-updater.yml"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to sync"
+            exit 0
+          fi
+          git commit -m "chore: sync generated release sources"
+          git push origin HEAD:release/v1.3.8-updater
