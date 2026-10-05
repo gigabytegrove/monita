@@ -11,9 +11,6 @@ import (
 
 func lookupEnv(env string) (string, bool, error) {
 	candidates := []string{env}
-	if strings.HasPrefix(env, "MONITA_") {
-		candidates = append(candidates, "GOTIFY_"+strings.TrimPrefix(env, "MONITA_"))
-	}
 
 	for _, candidate := range candidates {
 		if raw, ok := os.LookupEnv(candidate); ok {
