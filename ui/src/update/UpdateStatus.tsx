@@ -20,6 +20,7 @@ import {
     latestPublishedRelease,
     PublishedRelease,
     RELEASES_API,
+    releaseChannel,
     UpdateClassification,
 } from './release';
 import {activeUpdaterStates, updaterStatusForDisplay, type UpdaterStatus} from './status';
@@ -30,7 +31,6 @@ type ReleaseState =
     | {status: 'error'; message: string}
     | {status: 'ready'; release: PublishedRelease; classification: UpdateClassification};
 
-const releaseLabel = (release: PublishedRelease) => release.name || release.tag_name;
 const normalizeTag = (tag: string) => tag.replace(/^v/i, '');
 
 export const useReleaseUpdate = (refreshKey = 0): ReleaseState => {
@@ -285,33 +285,45 @@ const ReleaseUpdateDetails = ({
 }) => {
     const safeAutomaticInstall = canInstallPublishedRelease(state.classification);
     const updaterReady = updater?.ready === true;
+    const installedChannel = releaseChannel(currentVersion);
+    const latestVersion = normalizeTag(state.release.tag_name);
+    const latestChannel = releaseChannel(latestVersion, state.release.prerelease);
 
     return (
         <Stack spacing={2}>
-            <Stack
-                direction={{xs: 'column', sm: 'row'}}
-                spacing={1}
-                sx={{alignItems: {sm: 'center'}, justifyContent: 'space-between'}}>
-                <Stack spacing={0.35}>
-                    <Typography variant="body2" color="text.secondary">
-                        Installed
+            <Box
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: {xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))'},
+                    borderTop: 1,
+                    borderBottom: 1,
+                    borderColor: 'divider',
+                }}>
+                <Box sx={{py: 1.5, pr: {sm: 2}, borderRight: {sm: 1}, borderColor: 'divider'}}>
+                    <Typography variant="caption" color="text.secondary">
+                        Installed version
                     </Typography>
-                    <Typography sx={{fontWeight: 700}}>{currentVersion}</Typography>
-                </Stack>
-                <Stack spacing={0.35} sx={{alignItems: {sm: 'flex-end'}}}>
-                    <Typography variant="body2" color="text.secondary">
-                        Latest published release
+                    <Typography sx={{fontWeight: 760, mt: 0.25}}>{currentVersion}</Typography>
+                    <Typography variant="caption" color="text.secondary" sx={{display: 'block', mt: 0.75}}>
+                        Release channel
                     </Typography>
-                    <Stack direction="row" spacing={0.75} sx={{alignItems: 'center'}}>
-                        <Typography sx={{fontWeight: 700}}>
-                            {releaseLabel(state.release)}
-                        </Typography>
-                        {state.release.prerelease && (
-                            <Chip size="small" variant="outlined" label="Pre-release" />
-                        )}
-                    </Stack>
-                </Stack>
-            </Stack>
+                    <Typography variant="body2" sx={{fontWeight: 700}}>
+                        {installedChannel}
+                    </Typography>
+                </Box>
+                <Box sx={{py: 1.5, pl: {sm: 2}}}>
+                    <Typography variant="caption" color="text.secondary">
+                        Latest version
+                    </Typography>
+                    <Typography sx={{fontWeight: 760, mt: 0.25}}>{latestVersion}</Typography>
+                    <Typography variant="caption" color="text.secondary" sx={{display: 'block', mt: 0.75}}>
+                        Release channel
+                    </Typography>
+                    <Typography variant="body2" sx={{fontWeight: 700}}>
+                        {latestChannel}
+                    </Typography>
+                </Box>
+            </Box>
 
             {state.classification === 'available' && (
                 <Alert severity="success">
