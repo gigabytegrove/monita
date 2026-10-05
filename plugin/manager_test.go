@@ -30,6 +30,19 @@ const (
 	danglingPluginPath = "github.com/gigabytegrove/monita/plugin/testing/removed"
 )
 
+func pluginTestBuildFlags(output string) []string {
+	flags := []string{"build", "-buildmode=plugin", "-o=" + output}
+	flags = append(flags, extraGoBuildFlags...)
+	if os.Getenv("MONITA_TEST_PLUGIN_COVERAGE") == "1" {
+		flags = append(flags,
+			"-cover",
+			"-covermode=atomic",
+			"-coverpkg=github.com/gigabytegrove/monita/...",
+		)
+	}
+	return flags
+}
+
 type ManagerSuite struct {
 	suite.Suite
 	db          *testdb.Database
@@ -52,9 +65,7 @@ func (s *ManagerSuite) SetupSuite() {
 
 	test.WithWd(path.Join(test.GetProjectDir(), "./plugin/example/echo"), func(origWd string) {
 		exec.Command("go", "get", "-d").Run()
-		goBuildFlags := []string{"build", "-buildmode=plugin", "-o=" + s.tmpDir.Path("echo.so")}
-
-		goBuildFlags = append(goBuildFlags, extraGoBuildFlags...)
+		goBuildFlags := pluginTestBuildFlags(s.tmpDir.Path("echo.so"))
 
 		cmd := exec.Command("go", goBuildFlags...)
 		cmd.Stderr = os.Stderr
@@ -177,9 +188,7 @@ func (s *ManagerSuite) TestInitializePlugin_brokenPlugin_expectError() {
 	defer tmpDir.Clean()
 	test.WithWd(path.Join(test.GetProjectDir(), "./plugin/testing/broken/nothing"), func(origWd string) {
 		exec.Command("go", "get", "-d").Run()
-		goBuildFlags := []string{"build", "-buildmode=plugin", "-o=" + tmpDir.Path("empty.so")}
-
-		goBuildFlags = append(goBuildFlags, extraGoBuildFlags...)
+		goBuildFlags := pluginTestBuildFlags(tmpDir.Path("empty.so"))
 
 		cmd := exec.Command("go", goBuildFlags...)
 		cmd.Stderr = os.Stderr
