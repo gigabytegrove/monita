@@ -1,4 +1,3 @@
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -13,36 +12,37 @@ interface IProps {
 }
 
 const SurfaceCard = ({title, subtitle, action, children, flush = false}: IProps) => (
-    <Paper
-        elevation={0}
+    <Box
+        component="section"
         sx={{
-            border: 1,
+            py: {xs: 2.25, sm: 3},
+            borderBottom: 1,
             borderColor: 'divider',
-            borderRadius: 1,
-            overflow: 'hidden',
-            backgroundColor: 'background.paper',
+            '&:first-of-type': {pt: 0},
+            '&:last-of-type': {borderBottom: 0, pb: 0},
         }}>
         {(title || subtitle || action) && (
             <Stack
                 direction={{xs: 'column', sm: 'row'}}
                 spacing={1.5}
                 sx={{
-                    px: {xs: 2, sm: 2.5},
-                    py: 2,
+                    mb: 2,
                     justifyContent: 'space-between',
-                    alignItems: {xs: 'stretch', sm: 'center'},
-                    borderBottom: 1,
-                    borderColor: 'divider',
-                    bgcolor: 'background.default',
+                    alignItems: {xs: 'stretch', sm: 'flex-start'},
                 }}>
                 <Box sx={{minWidth: 0}}>
                     {title && (
-                        <Typography variant="subtitle1" sx={{fontWeight: 760}}>
+                        <Typography
+                            variant="h6"
+                            sx={{fontSize: '1rem', fontWeight: 760, letterSpacing: '-0.015em'}}>
                             {title}
                         </Typography>
                     )}
                     {subtitle && (
-                        <Typography variant="body2" color="text.secondary" sx={{mt: 0.15}}>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{mt: 0.35, maxWidth: 760}}>
                             {subtitle}
                         </Typography>
                     )}
@@ -50,8 +50,8 @@ const SurfaceCard = ({title, subtitle, action, children, flush = false}: IProps)
                 {action && <Box sx={{flexShrink: 0}}>{action}</Box>}
             </Stack>
         )}
-        <Box sx={flush ? undefined : {p: {xs: 2, sm: 2.5}}}>{children}</Box>
-    </Paper>
+        <Box sx={flush ? undefined : {}}>{children}</Box>
+    </Box>
 );
 
 export default SurfaceCard;
