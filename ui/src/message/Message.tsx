@@ -147,7 +147,7 @@ const Message = ({
             sx={{
                 p: {xs: 1.25, sm: 1.5},
                 mb: 1,
-                borderRadius: 2.25,
+                borderRadius: 0.75,
                 transition: 'box-shadow 140ms ease, border-color 140ms ease',
                 '&:hover': {
                     boxShadow: 1,
@@ -163,7 +163,7 @@ const Message = ({
                         <Avatar
                             src={config.get('url') + image}
                             alt={`${appName} logo`}
-                            variant="rounded"
+                            variant="square"
                             sx={{width: 38, height: 38}}
                         />
                     )}
@@ -279,7 +279,7 @@ const Message = ({
                         '& p:last-of-type': {mb: 0},
                         '& pre': {
                             overflow: 'auto',
-                            borderRadius: 2,
+                            borderRadius: 0.75,
                             bgcolor: 'action.hover',
                             p: 1.5,
                         },
@@ -301,7 +301,7 @@ const Message = ({
                                 sx={{
                                     border: 1,
                                     borderColor: 'divider',
-                                    borderRadius: 1.5,
+                                    borderRadius: 0.75,
                                     p: 1,
                                     minWidth: 0,
                                 }}>
