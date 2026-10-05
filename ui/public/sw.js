@@ -1,4 +1,4 @@
-const CACHE = 'monita-shell-v3';
+const CACHE = 'monita-shell-v4';
 const SHELL = [
     './',
     './index.html',
