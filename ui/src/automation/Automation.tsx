@@ -274,7 +274,7 @@ const Automation = () => {
                                             p: 1.25,
                                             border: 1,
                                             borderColor: 'divider',
-                                            borderRadius: 2,
+                                            borderRadius: 0.75,
                                         }}>
                                         <Stack
                                             direction={{xs: 'column', sm: 'row'}}
