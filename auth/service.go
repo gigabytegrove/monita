@@ -71,10 +71,12 @@ func ServiceScopes(account *model.ServiceAccount) map[string]bool {
 	}
 	return result
 }
+
 func ServiceHasScope(account *model.ServiceAccount, scope string) bool {
 	scopes := ServiceScopes(account)
 	return scopes["*"] || scopes[scope]
 }
+
 func ServiceAllowsApplication(account *model.ServiceAccount, applicationID uint) bool {
 	if account == nil {
 		return false

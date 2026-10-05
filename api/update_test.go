@@ -78,7 +78,6 @@ func TestUpdateStateActive(t *testing.T) {
 	}
 }
 
-
 func TestUpdateVersionPatternAcceptsReleaseChannels(t *testing.T) {
 	for _, version := range []string{
 		"1.3.8",

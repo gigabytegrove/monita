@@ -22,6 +22,7 @@ import (
 	"github.com/gigabytegrove/monita/database"
 	"github.com/gigabytegrove/monita/docs"
 	gerror "github.com/gigabytegrove/monita/error"
+	"github.com/gigabytegrove/monita/location"
 	"github.com/gigabytegrove/monita/model"
 	"github.com/gigabytegrove/monita/operations"
 	"github.com/gigabytegrove/monita/plugin"
@@ -29,7 +30,6 @@ import (
 	"github.com/gigabytegrove/monita/ui"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/gigabytegrove/monita/location"
 	"github.com/rs/zerolog/log"
 )
 

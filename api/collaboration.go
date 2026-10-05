@@ -724,6 +724,7 @@ func (a *CollaborationAPI) SendChatMessage(ctx *gin.Context) {
 		ctx.JSON(http.StatusCreated, external)
 	})
 }
+
 func randomStorageName() (string, error) {
 	raw := make([]byte, 24)
 	if _, err := rand.Read(raw); err != nil {
@@ -981,6 +982,7 @@ func parseOptionalInt(raw string) *int {
 	}
 	return &value
 }
+
 func parseOptionalTime(raw string) *time.Time {
 	if strings.TrimSpace(raw) == "" {
 		return nil
@@ -1014,6 +1016,7 @@ func (a *CollaborationAPI) GetSavedSearches(ctx *gin.Context) {
 	}
 	ctx.JSON(200, items)
 }
+
 func (a *CollaborationAPI) SaveSearch(ctx *gin.Context) {
 	var item model.SavedMessageSearch
 	if err := ctx.ShouldBindJSON(&item); err != nil {
@@ -1030,6 +1033,7 @@ func (a *CollaborationAPI) SaveSearch(ctx *gin.Context) {
 	}
 	ctx.JSON(201, item)
 }
+
 func (a *CollaborationAPI) UpdateSearch(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		item, err := a.DB.GetSavedMessageSearchByID(auth.GetUserID(ctx), id)
@@ -1058,6 +1062,7 @@ func (a *CollaborationAPI) UpdateSearch(ctx *gin.Context) {
 		ctx.JSON(200, item)
 	})
 }
+
 func (a *CollaborationAPI) DeleteSearch(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		if !successOrAbort(ctx, 500, a.DB.DeleteSavedMessageSearch(auth.GetUserID(ctx), id)) {

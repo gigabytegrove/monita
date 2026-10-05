@@ -13,9 +13,9 @@ import (
 )
 
 const (
-	ManifestName             = "monita-backup.json"
-	PendingRestoreName       = ".monita-restore-pending.zip"
-	BackupProduct            = "Monita"
+	ManifestName       = "monita-backup.json"
+	PendingRestoreName = ".monita-restore-pending.zip"
+	BackupProduct      = "Monita"
 )
 
 func DataDirectory(dialect, connection string) string {
