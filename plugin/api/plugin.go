@@ -17,7 +17,7 @@ type UserContext struct {
 }
 
 // Info is returned by the exported plugin function GetPluginInfo() for identification
-// plugins are identified by their ModulePath, gotify will refuse to load plugins with empty ModulePath
+// Plugins are identified by their ModulePath; Monita refuses to load plugins with an empty ModulePath.
 type Info struct {
 	Version     string
 	Author      string
