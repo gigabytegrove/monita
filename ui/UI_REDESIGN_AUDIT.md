@@ -140,6 +140,8 @@ The pass was re-run against the actual branch tree after the structural redesign
 
 **Total UI files reviewed: 116.**
 
+Validation branch: `ui/monita-1.4-redesign`.
+
 
 ## Findings corrected during the exhaustive pass
 
