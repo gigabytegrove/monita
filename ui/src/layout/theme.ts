@@ -7,36 +7,40 @@ export const isThemeKey = (value: string | null): value is ThemeKey =>
 
 export const createMonitaTheme = (mode: PaletteMode) => {
     const dark = mode === 'dark';
-    const border = dark ? '#25324A' : '#D9E2EF';
-    const softBorder = dark ? '#1E2A3E' : '#E8EDF5';
-    const canvas = dark ? '#09111F' : '#F3F6FA';
-    const paper = dark ? '#101B2D' : '#FFFFFF';
-    const raised = dark ? '#142238' : '#F9FBFD';
+    // Keep the interface anchored in Monita's blue/gray identity. Accent colors
+    // support status and hierarchy instead of competing with the primary palette.
+    const border = dark ? '#2A3948' : '#D5DEE8';
+    const softBorder = dark ? '#202D39' : '#E7EDF3';
+    const canvas = dark ? '#0B121A' : '#F4F7FA';
+    const paper = dark ? '#111B26' : '#FFFFFF';
+    const raised = dark ? '#162331' : '#F8FAFC';
 
     const base = createTheme({
         palette: {
             mode,
             primary: {
-                main: '#2F6BFF',
-                light: '#6B95FF',
-                dark: '#1D4ED8',
+                main: '#1976D2',
+                light: '#5AA2E8',
+                dark: '#0F5BA8',
                 contrastText: '#FFFFFF',
             },
             secondary: {
-                main: '#12A8A0',
+                main: '#64748B',
+                light: '#94A3B8',
+                dark: '#475569',
                 contrastText: '#FFFFFF',
             },
-            info: {main: '#3C8DFF'},
-            success: {main: '#12A36D'},
-            warning: {main: '#D88A16'},
-            error: {main: '#D94B5B'},
+            info: {main: '#3498DB'},
+            success: {main: '#16865B'},
+            warning: {main: '#C98318'},
+            error: {main: '#C84A55'},
             background: {default: canvas, paper},
             text: dark
-                ? {primary: '#F4F7FB', secondary: '#9BAAC0'}
-                : {primary: '#152238', secondary: '#617087'},
+                ? {primary: '#EDF3F8', secondary: '#9BAABB'}
+                : {primary: '#17212B', secondary: '#607080'},
             divider: border,
         },
-        shape: {borderRadius: 14},
+        shape: {borderRadius: 10},
         typography: {
             fontFamily:
                 'Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -54,14 +58,17 @@ export const createMonitaTheme = (mode: PaletteMode) => {
         components: {
             MuiCssBaseline: {
                 styleOverrides: {
-                    html: {backgroundColor: canvas},
+                    html: {
+                        backgroundColor: canvas,
+                        colorScheme: mode,
+                    },
                     body: {
                         backgroundColor: canvas,
                         backgroundImage: 'none',
-                        scrollbarColor: dark ? '#3D4D68 transparent' : '#B7C2D2 transparent',
+                        scrollbarColor: dark ? '#425466 transparent' : '#AAB8C6 transparent',
                     },
                     '::selection': {
-                        backgroundColor: alpha(base.palette.primary.main, 0.24),
+                        backgroundColor: alpha(base.palette.primary.main, dark ? 0.32 : 0.2),
                     },
                 },
             },
@@ -90,7 +97,7 @@ export const createMonitaTheme = (mode: PaletteMode) => {
                 defaultProps: {disableElevation: true},
                 styleOverrides: {
                     root: {
-                        borderRadius: 11,
+                        borderRadius: 8,
                         minHeight: 38,
                         paddingInline: 15,
                     },
@@ -106,14 +113,14 @@ export const createMonitaTheme = (mode: PaletteMode) => {
             MuiIconButton: {
                 styleOverrides: {
                     root: {
-                        borderRadius: 11,
+                        borderRadius: 8,
                     },
                 },
             },
             MuiChip: {
                 styleOverrides: {
                     root: {
-                        borderRadius: 9,
+                        borderRadius: 6,
                         fontWeight: 700,
                     },
                 },
@@ -121,7 +128,7 @@ export const createMonitaTheme = (mode: PaletteMode) => {
             MuiOutlinedInput: {
                 styleOverrides: {
                     root: {
-                        borderRadius: 11,
+                        borderRadius: 8,
                         backgroundColor: raised,
                     },
                     notchedOutline: {
@@ -145,7 +152,7 @@ export const createMonitaTheme = (mode: PaletteMode) => {
             MuiDialog: {
                 styleOverrides: {
                     paper: {
-                        borderRadius: 20,
+                        borderRadius: 12,
                         border: `1px solid ${border}`,
                         boxShadow: dark
                             ? '0 24px 80px rgba(0,0,0,.46)'
@@ -158,7 +165,7 @@ export const createMonitaTheme = (mode: PaletteMode) => {
                 styleOverrides: {
                     paper: {
                         border: `1px solid ${border}`,
-                        borderRadius: 14,
+                        borderRadius: 10,
                         minWidth: 220,
                         boxShadow: dark
                             ? '0 18px 50px rgba(0,0,0,.38)'
@@ -169,9 +176,9 @@ export const createMonitaTheme = (mode: PaletteMode) => {
             MuiListItemButton: {
                 styleOverrides: {
                     root: {
-                        borderRadius: 11,
+                        borderRadius: 8,
                         '&.Mui-selected': {
-                            backgroundColor: alpha(base.palette.primary.main, dark ? 0.2 : 0.1),
+                            backgroundColor: alpha(base.palette.primary.main, dark ? 0.16 : 0.09),
                         },
                     },
                 },
