@@ -52,7 +52,7 @@ func decodeSignature(value string) ([]byte, error) {
 
 func trustedPluginKeys() map[string]ed25519.PublicKey {
 	result := map[string]ed25519.PublicKey{}
-	for _, raw := range strings.FieldsFunc(pluginEnv("MONITA_PLUGIN_TRUSTED_ED25519_KEYS", "GOTIFY_MU_PLUGIN_TRUSTED_ED25519_KEYS"), func(r rune) bool {
+	for _, raw := range strings.FieldsFunc(pluginEnv("MONITA_PLUGIN_TRUSTED_ED25519_KEYS"), func(r rune) bool {
 		return r == ',' || r == ';' || r == '\n' || r == ' '
 	}) {
 		key, err := decodePublicKey(raw)
@@ -65,7 +65,7 @@ func trustedPluginKeys() map[string]ed25519.PublicKey {
 }
 
 func allowUnsignedPluginInstalls() bool {
-	switch strings.ToLower(strings.TrimSpace(pluginEnv("MONITA_PLUGIN_ALLOW_UNSIGNED_INSTALLS", "GOTIFY_MU_PLUGIN_ALLOW_UNSIGNED_INSTALLS"))) {
+	switch strings.ToLower(strings.TrimSpace(pluginEnv("MONITA_PLUGIN_ALLOW_UNSIGNED_INSTALLS"))) {
 	case "1", "true", "yes", "on":
 		return true
 	default:
@@ -141,9 +141,6 @@ func verifyPluginStream(directory, filename string, source io.Reader, verificati
 	return &VerifiedPluginFile{Path: path, SHA256: digestHex}, nil
 }
 
-func pluginEnv(primary, legacy string) string {
-	if value := os.Getenv(primary); value != "" {
-		return value
-	}
-	return os.Getenv(legacy)
+func pluginEnv(name string) string {
+	return os.Getenv(name)
 }
