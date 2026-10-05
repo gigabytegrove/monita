@@ -6,6 +6,7 @@ import {
     latestPublishedRelease,
     parseVersion,
     releaseChannel,
+    releaseEligibleForChannel,
 } from './release';
 
 describe('release update helpers', () => {
@@ -65,6 +66,32 @@ describe('release update helpers', () => {
         expect(canInstallPublishedRelease('development')).toBe(true);
         expect(canInstallPublishedRelease('current')).toBe(false);
         expect(canInstallPublishedRelease('newer')).toBe(false);
+    });
+
+    it('filters releases by the selected update channel', () => {
+        const stable = {
+            tag_name: 'v1.3.8',
+            target_commitish: 'stable',
+            name: 'stable',
+            html_url: 'https://example.invalid/stable',
+            draft: false,
+            prerelease: false,
+            published_at: null,
+            assets: [],
+        };
+        const alpha = {
+            ...stable,
+            tag_name: 'v1.3.9-alpha1',
+            target_commitish: 'alpha',
+            name: 'alpha',
+            prerelease: true,
+        };
+
+        expect(releaseEligibleForChannel(stable, 'stable')).toBe(true);
+        expect(releaseEligibleForChannel(alpha, 'stable')).toBe(false);
+        expect(releaseEligibleForChannel(alpha, 'alpha')).toBe(true);
+        expect(latestPublishedRelease([stable, alpha], 'stable')?.tag_name).toBe('v1.3.8');
+        expect(latestPublishedRelease([stable, alpha], 'alpha')?.tag_name).toBe('v1.3.9-alpha1');
     });
 
     it('includes prereleases while ignoring drafts', () => {

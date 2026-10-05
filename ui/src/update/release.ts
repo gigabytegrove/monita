@@ -20,6 +20,7 @@ export interface PublishedRelease {
 
 export type UpdateClassification = 'available' | 'current' | 'newer' | 'development';
 export type ReleaseChannel = 'Alpha' | 'Beta' | 'RC' | 'Stable' | 'Preview';
+export type UpdateChannelPreference = 'stable' | 'rc' | 'beta' | 'alpha' | 'preview';
 
 export interface ParsedVersion {
     major: number;
@@ -105,5 +106,35 @@ export const releaseChannel = (version: string, prerelease = false): ReleaseChan
 export const canInstallPublishedRelease = (classification: UpdateClassification): boolean =>
     classification === 'available' || classification === 'development';
 
-export const latestPublishedRelease = (releases: PublishedRelease[]): PublishedRelease | null =>
-    releases.find((release) => !release.draft) ?? null;
+const channelRank: Record<UpdateChannelPreference, number> = {
+    stable: 0,
+    rc: 1,
+    beta: 2,
+    alpha: 3,
+    preview: 4,
+};
+
+export const releaseEligibleForChannel = (
+    release: PublishedRelease,
+    preference: UpdateChannelPreference
+): boolean => {
+    if (release.draft) return false;
+    const channel = releaseChannel(release.tag_name, release.prerelease).toLowerCase() as UpdateChannelPreference;
+    const rank = channelRank[channel] ?? channelRank.preview;
+    return rank <= channelRank[preference];
+};
+
+export const latestPublishedRelease = (
+    releases: PublishedRelease[],
+    preference: UpdateChannelPreference = 'stable'
+): PublishedRelease | null => {
+    const eligible = releases.filter((release) => releaseEligibleForChannel(release, preference));
+    eligible.sort((left, right) => {
+        const comparison = compareVersions(
+            left.tag_name.replace(/^v/i, ''),
+            right.tag_name.replace(/^v/i, '')
+        );
+        return comparison === null ? 0 : -comparison;
+    });
+    return eligible[0] ?? null;
+};
