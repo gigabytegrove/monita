@@ -237,7 +237,7 @@ const MessageCollaboration = ({message, onChanged}: Props) => {
                                     sx={{
                                         display: 'block',
                                         overflow: 'hidden',
-                                        borderRadius: 1.5,
+                                        borderRadius: 0.75,
                                         border: 1,
                                         borderColor: 'divider',
                                         bgcolor: 'action.hover',
@@ -350,7 +350,7 @@ const MessageCollaboration = ({message, onChanged}: Props) => {
                         {thread?.map((item) => (
                             <Box
                                 key={item.id}
-                                sx={{border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25}}>
+                                sx={{border: 1, borderColor: 'divider', borderRadius: 0.75, p: 1.25}}>
                                 <Stack
                                     direction="row"
                                     spacing={1}
