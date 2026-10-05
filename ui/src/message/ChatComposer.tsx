@@ -292,7 +292,7 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                                     top: 3,
                                     right: 3,
                                     bgcolor: 'background.paper',
-                                    boxShadow: 1,
+                                    boxShadow: 'none',
                                     '&:hover': {bgcolor: 'background.paper'},
                                 }}>
                                 <Close fontSize="small" />
@@ -316,7 +316,7 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                         maxHeight: 220,
                         overflowY: 'auto',
                         borderRadius: 0.5,
-                        boxShadow: 4,
+                        boxShadow: 'none',
                     }}>
                     {mentionMatches.map((user) => (
                         <Button
