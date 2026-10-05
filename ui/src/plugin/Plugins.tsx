@@ -75,6 +75,7 @@ const Plugins = observer(() => {
 
     return (
         <DefaultPage
+            eyebrow="Extensions"
             title="Plugins"
             description="Install, enable, and configure server-side Monita plugins."
             rightControl={
