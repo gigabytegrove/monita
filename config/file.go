@@ -13,7 +13,7 @@ import (
 var osStat = os.Stat
 
 func loadFiles() []FutureLog {
-	if configFile := firstConfigEnv("MONITA_CONFIG_FILE", "GOTIFY_CONFIG_FILE"); configFile != "" {
+	if configFile := firstConfigEnv("MONITA_CONFIG_FILE"); configFile != "" {
 		log, _ := loadFile(configFile)
 		return []FutureLog{log}
 	}
@@ -43,11 +43,11 @@ func loadFile(file string) (log FutureLog, found bool) {
 }
 
 func getFiles() []string {
-	result := []string{"monita-server.env", "gotify-server.env"}
+	result := []string{"monita-server.env"}
 	if configHome := getConfigHome(); configHome != "" {
-		result = append(result, filepath.Join(configHome, "monita/monita-server.env"), filepath.Join(configHome, "gotify/gotify-server.env"))
+		result = append(result, filepath.Join(configHome, "monita/monita-server.env"))
 	}
-	return append(result, "/etc/monita/server.env", "/etc/gotify/server.env")
+	return append(result, "/etc/monita/server.env")
 }
 
 func getConfigHome() string {

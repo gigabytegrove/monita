@@ -16,7 +16,6 @@ The roadmap is intentionally high-level. Exact implementation details may change
 - clearer update progress
 - safer backup and restore workflows
 - better diagnostics
-- continued compatibility with existing Gotify clients
 
 ### User experience
 

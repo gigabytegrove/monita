@@ -14,11 +14,8 @@ import (
 
 const (
 	ManifestName             = "monita-backup.json"
-	LegacyManifestName       = "gotify-mu-backup.json"
 	PendingRestoreName       = ".monita-restore-pending.zip"
-	LegacyPendingRestoreName = ".gotify-mu-restore-pending.zip"
 	BackupProduct            = "Monita"
-	LegacyBackupProduct      = "Gotify MU"
 )
 
 func DataDirectory(dialect, connection string) string {
@@ -120,7 +117,7 @@ func CreateBackupBundle(dataDir, databasePath, snapshotPath, destination, versio
 		}
 		relSlash := filepath.ToSlash(rel)
 		if relSlash == filepath.ToSlash(databaseRel) ||
-			relSlash == PendingRestoreName || relSlash == LegacyPendingRestoreName ||
+			relSlash == PendingRestoreName ||
 			strings.HasPrefix(relSlash, "backups/") ||
 			strings.HasPrefix(relSlash, ".restore-work-") {
 			if info.IsDir() && (strings.HasPrefix(relSlash, "backups") || strings.HasPrefix(relSlash, ".restore-work-")) {
@@ -209,7 +206,7 @@ func ValidateBackupBundle(path string) (BackupManifest, error) {
 		if filepath.IsAbs(clean) || clean == ".." || strings.HasPrefix(clean, ".."+string(os.PathSeparator)) {
 			return manifest, fmt.Errorf("backup contains invalid path %q", entry.Name)
 		}
-		if filepath.ToSlash(clean) == ManifestName || filepath.ToSlash(clean) == LegacyManifestName {
+		if filepath.ToSlash(clean) == ManifestName {
 			file, openErr := entry.Open()
 			if openErr != nil {
 				return manifest, openErr
@@ -222,7 +219,7 @@ func ValidateBackupBundle(path string) (BackupManifest, error) {
 			foundManifest = true
 		}
 	}
-	if !foundManifest || (manifest.Product != BackupProduct && manifest.Product != LegacyBackupProduct) || manifest.FormatVersion != 1 {
+	if !foundManifest || (manifest.Product != BackupProduct) || manifest.FormatVersion != 1 {
 		return manifest, errors.New("file is not a supported Monita backup")
 	}
 	for _, entry := range reader.File {
@@ -241,14 +238,7 @@ func ApplyPendingRestore(dataDir string) (string, bool, error) {
 	dataDir = filepath.Clean(dataDir)
 	pending := filepath.Join(dataDir, PendingRestoreName)
 	if _, err := os.Stat(pending); errors.Is(err, os.ErrNotExist) {
-		legacyPending := filepath.Join(dataDir, LegacyPendingRestoreName)
-		if _, legacyErr := os.Stat(legacyPending); legacyErr == nil {
-			pending = legacyPending
-		} else if !errors.Is(legacyErr, os.ErrNotExist) {
-			return "", false, legacyErr
-		} else {
-			return "", false, nil
-		}
+		return "", false, nil
 	} else if err != nil {
 		return "", false, err
 	}
@@ -279,7 +269,7 @@ func ApplyPendingRestore(dataDir string) (string, bool, error) {
 		return safetyPath, true, err
 	}
 	for _, entry := range entries {
-		if entry.Name() == ManifestName || entry.Name() == LegacyManifestName {
+		if entry.Name() == ManifestName {
 			continue
 		}
 		source := filepath.Join(workDir, entry.Name())
@@ -315,7 +305,7 @@ func createColdSafetyBundle(dataDir, destination string) error {
 			return relErr
 		}
 		relSlash := filepath.ToSlash(rel)
-		if relSlash == PendingRestoreName || relSlash == LegacyPendingRestoreName || strings.HasPrefix(relSlash, "backups/") || strings.HasPrefix(relSlash, ".restore-work-") {
+		if relSlash == PendingRestoreName || strings.HasPrefix(relSlash, "backups/") || strings.HasPrefix(relSlash, ".restore-work-") {
 			if info.IsDir() {
 				return filepath.SkipDir
 			}
@@ -345,7 +335,7 @@ func extractBackup(path, destination string) error {
 	defer reader.Close()
 	root := filepath.Clean(destination) + string(os.PathSeparator)
 	for _, entry := range reader.File {
-		if filepath.ToSlash(filepath.Clean(entry.Name)) == ManifestName || filepath.ToSlash(filepath.Clean(entry.Name)) == LegacyManifestName {
+		if filepath.ToSlash(filepath.Clean(entry.Name)) == ManifestName {
 			continue
 		}
 		target := filepath.Join(destination, entry.Name)

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -261,13 +260,5 @@ func addTrailingSlashToPaths(conf *Configuration) {
 }
 
 func defaultDatabaseConnection() string {
-	primary := filepath.Join("data", "monita.db")
-	legacy := filepath.Join("data", "gotify.db")
-	if _, err := os.Stat(primary); err == nil {
-		return primary
-	}
-	if _, err := os.Stat(legacy); err == nil {
-		return legacy
-	}
-	return primary
+	return filepath.Join("data", "monita.db")
 }

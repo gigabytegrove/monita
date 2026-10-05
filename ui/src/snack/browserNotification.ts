@@ -17,7 +17,7 @@ export function requestPermission() {
 
 const mentionUserIds = (msg: IMessage): number[] => {
     const extras = msg.extras || {};
-    const raw = extras['monita::mentionUserIds'] ?? extras['gotify::mu::mentionUserIds'] ?? [];
+    const raw = extras['monita::mentionUserIds'] ?? [];
     if (!Array.isArray(raw)) return [];
     return raw.map((value) => Number(value)).filter((value) => Number.isFinite(value) && value > 0);
 };

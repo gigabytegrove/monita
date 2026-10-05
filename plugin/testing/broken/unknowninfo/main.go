@@ -1,7 +1,7 @@
 package main
 
-// GetGotifyPluginInfo returns the legacy plugin ABI information
-func GetGotifyPluginInfo() string {
+// GetMonitaPluginInfo returns the Monita plugin ABI information
+func GetMonitaPluginInfo() string {
 	return "github.com/gigabytegrove/monita/plugin/testing/broken/unknowninfo"
 }
 
