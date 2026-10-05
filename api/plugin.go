@@ -13,11 +13,11 @@ import (
 	"time"
 
 	"github.com/gigabytegrove/monita/auth"
+	"github.com/gigabytegrove/monita/location"
 	"github.com/gigabytegrove/monita/model"
 	"github.com/gigabytegrove/monita/plugin"
 	"github.com/gigabytegrove/monita/plugin/compat"
 	"github.com/gin-gonic/gin"
-	"github.com/gigabytegrove/monita/location"
 	"gopkg.in/yaml.v3"
 )
 

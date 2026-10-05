@@ -1397,6 +1397,7 @@ func (e *Engine) SendHomeAssistantEvent(id uint, eventType string, data map[stri
 	}
 	return nil
 }
+
 func (e *Engine) ReceiveHomeAssistantEvent(id uint, eventType string, data map[string]any) (bool, error) {
 	integration, err := e.db.GetHomeAssistantIntegrationByID(id)
 	if err != nil {

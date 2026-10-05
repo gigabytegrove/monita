@@ -128,4 +128,3 @@ func decodeSecretKey(raw string) ([]byte, error) {
 	}
 	return nil, errors.New("must be 32 bytes encoded as base64 or 64 hex characters")
 }
-
