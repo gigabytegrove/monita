@@ -25,10 +25,8 @@ const (
 )
 
 const (
-	headerName          = "X-Monita-Key"
-	legacyHeaderName    = "X-Gotify-Key"
-	mfaHeaderName       = "X-Monita-MFA-Code"
-	legacyMFAHeaderName = "X-Gotify-MFA-Code"
+	headerName    = "X-Monita-Key"
+	mfaHeaderName = "X-Monita-MFA-Code"
 )
 
 var timeNow = time.Now
@@ -338,9 +336,6 @@ func (a *Auth) tokenFromCookie(ctx *gin.Context) string {
 	if token, err := ctx.Cookie(CookieName); err == nil {
 		return token
 	}
-	if token, err := ctx.Cookie(LegacyCookieName); err == nil {
-		return token
-	}
 	return ""
 }
 
@@ -349,17 +344,11 @@ func (a *Auth) tokenFromQuery(ctx *gin.Context) string {
 }
 
 func (a *Auth) tokenFromKeyHeader(ctx *gin.Context) string {
-	if token := strings.TrimSpace(ctx.Request.Header.Get(headerName)); token != "" {
-		return token
-	}
-	return strings.TrimSpace(ctx.Request.Header.Get(legacyHeaderName))
+	return strings.TrimSpace(ctx.Request.Header.Get(headerName))
 }
 
 func MFACodeFromRequest(ctx *gin.Context) string {
-	if code := strings.TrimSpace(ctx.GetHeader(mfaHeaderName)); code != "" {
-		return code
-	}
-	return strings.TrimSpace(ctx.GetHeader(legacyMFAHeaderName))
+	return strings.TrimSpace(ctx.GetHeader(mfaHeaderName))
 }
 
 func (a *Auth) tokenFromAuthorizationHeader(ctx *gin.Context) string {
