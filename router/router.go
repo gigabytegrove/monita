@@ -456,6 +456,8 @@ func Create(db *database.GormDatabase, vInfo *model.VersionInfo, conf *config.Co
 	{
 		adminSession.Use(authentication.RequireAdminSession)
 		adminSession.GET("/update/status", updateHandler.Status)
+		adminSession.GET("/update/preferences", updateHandler.GetPreferences)
+		adminSession.PUT("/update/preferences", updateHandler.SavePreferences)
 
 		adminSession.GET("/user", userHandler.GetUsers)
 		adminSession.GET("/user/:id", userHandler.GetUserByID)
