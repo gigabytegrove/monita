@@ -58,6 +58,7 @@ const Groups = observer(() => {
 
     return (
         <DefaultPage
+            eyebrow="Administration"
             title="Groups"
             description="Organize users for shared administration, Channel assignment, and future policy rules."
             rightControl={

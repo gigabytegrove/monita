@@ -1,4 +1,5 @@
 import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -89,82 +90,87 @@ const Applications = observer(() => {
 
     return (
         <DefaultPage
+            eyebrow="Workspace"
             title="Channels"
-            description="Create notification destinations, control membership, and manage delivery behavior."
+            description="Create notification destinations, organize conversations, and manage delivery and membership."
             rightControl={
                 <Button id="create-app" variant="contained" onClick={() => setCreateDialog(true)}>
                     Create Channel
                 </Button>
             }>
             <SurfaceCard
-                title="Channel Directory"
+                title="Channel directory"
+                flush
                 subtitle={
                     apps.length === 0
                         ? 'No Channels are available yet.'
                         : `${apps.length} Channel${apps.length === 1 ? '' : 's'} available to your account`
                 }>
                 {apps.length === 0 ? (
-                    <Stack spacing={2} sx={{alignItems: 'flex-start'}}>
-                        <Alert severity="info">
-                            Create a Channel to start receiving notifications. Administrators can
-                            also make Channels Global so every current and future user is assigned.
-                        </Alert>
-                        <Button variant="contained" onClick={() => setCreateDialog(true)}>
-                            Create your first Channel
-                        </Button>
-                    </Stack>
+                    <Box sx={{p: {xs: 2, sm: 2.5}}}>
+                        <Stack spacing={2} sx={{alignItems: 'flex-start'}}>
+                            <Alert severity="info">
+                                Create a Channel to start receiving notifications. Administrators can
+                                also make Channels Global so every current and future user is assigned.
+                            </Alert>
+                            <Button variant="contained" onClick={() => setCreateDialog(true)}>
+                                Create your first Channel
+                            </Button>
+                        </Stack>
+                    </Box>
                 ) : (
                     <>
-                        <Stack
-                            direction={{xs: 'column', md: 'row'}}
-                            spacing={1.25}
-                            sx={{mb: 1.5, justifyContent: 'space-between'}}>
-                            <TextField
-                                value={query}
-                                onChange={(event) => setQuery(event.target.value)}
-                                placeholder="Search Channels"
-                                aria-label="Search Channels"
-                                sx={{width: {xs: '100%', md: 320}}}
-                                slotProps={{
-                                    input: {
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <Search fontSize="small" />
-                                            </InputAdornment>
-                                        ),
-                                    },
-                                }}
-                            />
-                            <ToggleButtonGroup
-                                size="small"
-                                exclusive
-                                value={filter}
-                                onChange={(_event, value) => value && setFilter(value)}
-                                aria-label="Channel filter">
-                                <ToggleButton value="all">All {apps.length}</ToggleButton>
-                                <ToggleButton value="global">Global {globalCount}</ToggleButton>
-                                <ToggleButton value="muted">Muted {mutedCount}</ToggleButton>
-                            </ToggleButtonGroup>
-                        </Stack>
-
-                        <Stack
-                            direction="row"
-                            spacing={0.75}
-                            useFlexGap
-                            sx={{mb: 1.5, flexWrap: 'wrap', alignItems: 'center'}}>
-                            <Chip
-                                size="small"
-                                variant="outlined"
-                                label={`${filteredApps.length} shown`}
-                            />
-                            <Typography variant="caption" color="text.secondary">
-                                Drag Channels to reorder them. Use the action menu for advanced
-                                management.
-                            </Typography>
-                        </Stack>
+                        <Box sx={{p: {xs: 2, sm: 2.5}, borderBottom: 1, borderColor: 'divider'}}>
+                            <Stack
+                                direction={{xs: 'column', md: 'row'}}
+                                spacing={1.25}
+                                sx={{mb: 1.5, justifyContent: 'space-between'}}>
+                                <TextField
+                                    value={query}
+                                    onChange={(event) => setQuery(event.target.value)}
+                                    placeholder="Search Channels"
+                                    aria-label="Search Channels"
+                                    sx={{width: {xs: '100%', md: 320}}}
+                                    slotProps={{
+                                        input: {
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <Search fontSize="small" />
+                                                </InputAdornment>
+                                            ),
+                                        },
+                                    }}
+                                />
+                                <ToggleButtonGroup
+                                    size="small"
+                                    exclusive
+                                    value={filter}
+                                    onChange={(_event, value) => value && setFilter(value)}
+                                    aria-label="Channel filter">
+                                    <ToggleButton value="all">All {apps.length}</ToggleButton>
+                                    <ToggleButton value="global">Global {globalCount}</ToggleButton>
+                                    <ToggleButton value="muted">Muted {mutedCount}</ToggleButton>
+                                </ToggleButtonGroup>
+                            </Stack>
+                            <Stack
+                                direction="row"
+                                spacing={0.75}
+                                useFlexGap
+                                sx={{flexWrap: 'wrap', alignItems: 'center'}}>
+                                <Chip
+                                    size="small"
+                                    variant="outlined"
+                                    label={`${filteredApps.length} shown`}
+                                />
+                                <Typography variant="caption" color="text.secondary">
+                                    Drag Channels to reorder them. Use the action menu for advanced
+                                    management.
+                                </Typography>
+                            </Stack>
+                        </Box>
 
                         {filteredApps.length === 0 ? (
-                            <Typography color="text.secondary" sx={{py: 3, textAlign: 'center'}}>
+                            <Typography color="text.secondary" sx={{py: 4, textAlign: 'center'}}>
                                 No Channels match this search or filter.
                             </Typography>
                         ) : (
@@ -175,7 +181,7 @@ const Applications = observer(() => {
                                 <SortableContext
                                     items={filteredApps.map((app) => app.id)}
                                     strategy={verticalListSortingStrategy}>
-                                    <Grid container spacing={1}>
+                                    <Grid container spacing={0}>
                                         {filteredApps.map((app) => {
                                             const isOwner = app.ownerId === currentUser.user.id;
                                             const canManage =
