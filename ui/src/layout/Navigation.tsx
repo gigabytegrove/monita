@@ -143,7 +143,7 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
                             <ListItemIcon sx={{minWidth: 38}}>{item.icon}</ListItemIcon>
                             <ListItemText
                                 primary={item.label}
-                                slotProps={{primary: {fontSize: '0.9rem'}}}
+                                slotProps={{primary: {sx: {fontSize: '0.9rem'}}}}
                             />
                         </ListItemButton>
                     ))}
@@ -175,7 +175,7 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
                     <ListItemButton disabled sx={{borderRadius: 0.75, py: 0.5}}>
                         <ListItemText
                             primary={`No ${label.toLowerCase()}`}
-                            slotProps={{primary: {fontSize: '0.82rem'}}}
+                            slotProps={{primary: {sx: {fontSize: '0.82rem'}}}}
                         />
                     </ListItemButton>
                 )}
@@ -214,7 +214,7 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
                                             ? 'Muted'
                                             : undefined
                                     }
-                                    slotProps={{secondary: {noWrap: true, fontSize: '0.7rem'}}}
+                                    slotProps={{secondary: {noWrap: true, sx: {fontSize: '0.7rem'}}}}
                                 />
                                 <Stack direction="row" spacing={0.4} sx={{alignItems: 'center'}}>
                                     {app.receiveNotifications === false && (
