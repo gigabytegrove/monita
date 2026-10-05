@@ -578,7 +578,7 @@ const PasskeySettings = () => {
                                     sx={{
                                         border: 1,
                                         borderColor: 'divider',
-                                        borderRadius: 0.75,
+                                        borderRadius: 0.25,
                                         p: 1.5,
                                         justifyContent: 'space-between',
                                         alignItems: {sm: 'center'},
