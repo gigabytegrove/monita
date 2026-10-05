@@ -50,6 +50,7 @@ const Clients = observer(() => {
 
     return (
         <DefaultPage
+            eyebrow="Account"
             title="Clients"
             description="Manage browser, mobile, and API client credentials for your account."
             rightControl={
