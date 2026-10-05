@@ -611,7 +611,7 @@ func ipAllowed(ip net.IP, cidrs string) bool {
 
 func (m *Manager) smtpListenerLoop() {
 	defer m.wg.Done()
-	listen := strings.TrimSpace(connectorEnv("MONITA_SMTP_LISTEN", "GOTIFY_MU_SMTP_LISTEN"))
+	listen := strings.TrimSpace(connectorEnv("MONITA_SMTP_LISTEN"))
 	if listen == "" {
 		listen = ":2525"
 	}
@@ -805,7 +805,7 @@ func (m *Manager) handleSMTP(conn net.Conn) {
 
 func (m *Manager) syslogListenerLoop() {
 	defer m.wg.Done()
-	listen := strings.TrimSpace(connectorEnv("MONITA_SYSLOG_LISTEN", "GOTIFY_MU_SYSLOG_LISTEN"))
+	listen := strings.TrimSpace(connectorEnv("MONITA_SYSLOG_LISTEN"))
 	if listen == "" {
 		listen = ":5514"
 	}
@@ -921,9 +921,6 @@ func ValidateConnectorURL(raw string) error {
 	return nil
 }
 
-func connectorEnv(primary, legacy string) string {
-	if value := os.Getenv(primary); value != "" {
-		return value
-	}
-	return os.Getenv(legacy)
+func connectorEnv(name string) string {
+	return os.Getenv(name)
 }
