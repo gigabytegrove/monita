@@ -329,8 +329,6 @@ func Create(db *database.GormDatabase, vInfo *model.VersionInfo, conf *config.Co
 		})
 	}
 	g.GET("monitainfo", monitaInfoHandler)
-	// Legacy Gotify endpoint retained for existing clients.
-	g.GET("gotifyinfo", monitaInfoHandler)
 
 	g.GET("/application/current", authentication.RequireApplicationToken, applicationHandler.GetCurrentApplication)
 
