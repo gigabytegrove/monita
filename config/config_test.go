@@ -155,7 +155,7 @@ func TestParseList(t *testing.T) {
 
 func TestLegacyEnvironmentFallback(t *testing.T) {
 	mode.Set(mode.TestDev)
-	t.Setenv("GOTIFY_SERVER_PORT", "9187")
+	t.Setenv("MONITA_SERVER_PORT", "9187")
 
 	conf, _ := Get()
 	assert.Equal(t, 9187, conf.Server.Port)
