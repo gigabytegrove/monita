@@ -116,7 +116,7 @@ const Message = ({
                                 fontWeight: 700,
                                 color: 'primary.main',
                                 bgcolor: 'action.hover',
-                                borderRadius: 0.75,
+                                borderRadius: 0.25,
                                 px: 0.35,
                             }}>
                             {part}
@@ -274,7 +274,7 @@ const Message = ({
                         '& p:last-of-type': {mb: 0},
                         '& pre': {
                             overflow: 'auto',
-                            borderRadius: 0.75,
+                            borderRadius: 0.25,
                             bgcolor: 'action.hover',
                             p: 1.5,
                         },
@@ -296,7 +296,7 @@ const Message = ({
                                 sx={{
                                     border: 1,
                                     borderColor: 'divider',
-                                    borderRadius: 0.75,
+                                    borderRadius: 0.25,
                                     p: 1,
                                     minWidth: 0,
                                 }}>
