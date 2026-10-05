@@ -112,6 +112,7 @@ const Automation = () => {
 
     return (
         <DefaultPage
+            eyebrow="Operations"
             title="Automation"
             description="Schedule notifications and escalate messages that need attention."
             rightControl={
