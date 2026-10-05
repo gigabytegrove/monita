@@ -3,8 +3,8 @@ const SHELL = [
     './',
     './index.html',
     './manifest.json',
-    './static/monita-icon.svg?v=1.3.5',
-    './static/monita-logo.svg?v=1.3.5',
+    './static/monita-icon.svg?v=1.3.8',
+    './static/monita-logo.svg?v=1.3.8',
 ];
 
 const isCacheableAsset = (request) => {
