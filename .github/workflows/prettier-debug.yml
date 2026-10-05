@@ -1,0 +1,24 @@
+name: temporary prettier diff
+
+on:
+  push:
+    branches:
+      - release/v1.3.8-updater
+
+jobs:
+  prettier-diff:
+    if: "!contains(github.event.head_commit.message, '[skip prettier debug]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+          cache-dependency-path: ui/yarn.lock
+      - run: cd ui && yarn --frozen-lockfile
+      - name: Show exact Prettier diff
+        run: |
+          cd ui
+          yarn prettier "src/update/UpdateStatus.tsx" --write
+          git diff -- src/update/UpdateStatus.tsx
