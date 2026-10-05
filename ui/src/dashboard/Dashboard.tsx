@@ -12,7 +12,6 @@ import NotificationsOff from '@mui/icons-material/NotificationsOff';
 import Public from '@mui/icons-material/Public';
 import People from '@mui/icons-material/People';
 import DevicesOther from '@mui/icons-material/DevicesOther';
-import Extension from '@mui/icons-material/Extension';
 import Security from '@mui/icons-material/Security';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import Inbox from '@mui/icons-material/Inbox';
@@ -20,7 +19,7 @@ import Settings from '@mui/icons-material/Settings';
 import Forum from '@mui/icons-material/Forum';
 import GroupWork from '@mui/icons-material/GroupWork';
 import FactCheck from '@mui/icons-material/FactCheck';
-import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
+import AddCircle from '@mui/icons-material/AddCircle';
 import {Link} from 'react-router';
 import {observer} from 'mobx-react-lite';
 import DefaultPage from '../common/DefaultPage';
@@ -70,7 +69,7 @@ const Dashboard = observer(() => {
             description="Your Monita workspace, recent activity, and system health in one place."
             rightControl={
                 <Stack direction="row" spacing={1}>
-                    <Button component={Link} to="/channels" variant="outlined" startIcon={<AddCircleOutline />}>
+                    <Button component={Link} to="/channels" variant="outlined" startIcon={<AddCircle />}>
                         Channels
                     </Button>
                     <Button component={Link} to="/messages" variant="contained" startIcon={<Inbox />}>
