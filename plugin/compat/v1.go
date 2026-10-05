@@ -4,7 +4,7 @@ import (
 	"net/url"
 
 	"github.com/gin-gonic/gin"
-	papiv1 "github.com/gotify/plugin-api"
+	papiv1 "github.com/gigabytegrove/monita/plugin/api"
 )
 
 // PluginV1 is an abstraction of a plugin written in the v1 plugin API. Exported for testing purposes only.
