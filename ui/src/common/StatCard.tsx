@@ -19,7 +19,7 @@ const StatCard = ({label, value, icon, helper}: IProps) => (
             height: '100%',
             border: 1,
             borderColor: 'divider',
-            borderRadius: 2.5,
+            borderRadius: 1,
             backgroundColor: 'background.paper',
         }}>
         <Stack direction="row" spacing={1.5} sx={{alignItems: 'center'}}>
@@ -30,7 +30,7 @@ const StatCard = ({label, value, icon, helper}: IProps) => (
                         bgcolor: 'action.selected',
                         width: 40,
                         height: 40,
-                        borderRadius: 2,
+                        borderRadius: 1,
                         display: 'grid',
                         placeItems: 'center',
                         flexShrink: 0,
