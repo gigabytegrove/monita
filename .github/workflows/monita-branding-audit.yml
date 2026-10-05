@@ -11,13 +11,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Reject retired product identity
+      - name: Reject retired product identity outside credit
         shell: bash
         run: |
           set -euo pipefail
-          matches="$(git grep -nIi -E 'gotify|gotify[-_ ]?mu|gotifymu' -- . ':!LICENSE' ':!CHANGELOG.md' ':!docs/releases/**' ':!.github/workflows/monita-branding-audit.yml' || true)"
+          banned_one="$(printf '%s%s' 'go' 'tify')"
+          banned_two="$(printf '%s%s%s' 'go' 'tify' '-mu')"
+          banned_three="$(printf '%s%s%s' 'go' 'tify' '_mu')"
+          banned_four="$(printf '%s%s%s' 'go' 'tify' 'mu')"
+          matches="$(git grep -nIi -E "$banned_one|$banned_two|$banned_three|$banned_four" -- . ':!LICENSE' ':!.github/workflows/monita-branding-audit.yml' || true)"
           if [ -n "$matches" ]; then
             printf '%s\n' "$matches"
-            echo "::error::Retired product identity remains in active Monita source."
+            echo "::error::Retired product identity remains outside the upstream credit."
             exit 1
           fi
