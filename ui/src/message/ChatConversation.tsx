@@ -224,12 +224,7 @@ const ChatConversation = ({
                         minHeight: 0,
                         overflowY: 'auto',
                         py: 1.25,
-                        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#0b1220' : '#f8fafc'),
-                        backgroundImage: (theme) =>
-                            theme.palette.mode === 'dark'
-                                ? 'radial-gradient(circle at 20px 20px, rgba(148,163,184,0.035) 1px, transparent 0)'
-                                : 'radial-gradient(circle at 20px 20px, rgba(37,99,235,0.045) 1px, transparent 0)',
-                        backgroundSize: '28px 28px',
+                        bgcolor: 'background.default',
                     }}>
                     {hasMore && !normalized && (
                         <Box sx={{display: 'flex', justifyContent: 'center', pb: 1}}>
