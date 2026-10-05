@@ -94,6 +94,7 @@ const SystemAdministration = () => {
 
     return (
         <DefaultPage
+            eyebrow="Administration"
             title="Security & Operations"
             description="Server-wide security policy, sessions, audit retention, and operational status."
             rightControl={
