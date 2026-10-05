@@ -118,7 +118,7 @@ const ChannelCard = ({
 
                 <Avatar
                     src={config.get('url') + app.image}
-                    variant="rounded"
+                    variant="square"
                     sx={{width: 46, height: 46, flexShrink: 0}}
                 />
 
