@@ -355,7 +355,7 @@ const ConnectorRows = ({items, empty}: {items: Row[]; empty: string}) => {
             {items.map((item) => (
                 <Box
                     key={item.id}
-                    sx={{border: 1, borderColor: 'divider', borderRadius: 0.75, p: 1.5}}>
+                    sx={{border: 1, borderColor: 'divider', borderRadius: 0.25, p: 1.5}}>
                     <Stack
                         direction={{xs: 'column', md: 'row'}}
                         spacing={1.5}
