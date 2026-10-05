@@ -12,6 +12,8 @@ import {
     MenuItem,
     Stack,
     Switch,
+    Tab,
+    Tabs,
     TextField,
     Tooltip,
     Typography,
@@ -20,6 +22,9 @@ import Security from '@mui/icons-material/Security';
 import Key from '@mui/icons-material/Key';
 import NotificationsNone from '@mui/icons-material/NotificationsNone';
 import Schedule from '@mui/icons-material/Schedule';
+import Person from '@mui/icons-material/Person';
+import Tune from '@mui/icons-material/Tune';
+import SystemUpdateAlt from '@mui/icons-material/SystemUpdateAlt';
 import DefaultPage from '../common/DefaultPage';
 import SurfaceCard from '../common/SurfaceCard';
 import ElevationForm from '../common/ElevationForm';
@@ -33,50 +38,98 @@ import {PriorityField, TimezoneField} from '../common/NotificationFields';
 
 const Settings = () => {
     const {currentUser} = useStores();
+    const [tab, setTab] = React.useState('account');
 
     return (
         <DefaultPage
             title="Settings"
-            description="Account preferences and sign-in settings."
-            maxWidth={900}>
-            {currentUser.user.admin && <UpdateStatusCard />}
-
-            <NotificationPreferences />
-
-            <MFASettings />
-            <PasskeySettings />
-
-            <SurfaceCard
-                title="Account Security"
-                subtitle="Security controls for your local Monita account."
-                action={<Security color="action" />}>
-                <Stack spacing={2}>
-                    <Stack
-                        direction={{xs: 'column', sm: 'row'}}
-                        spacing={1}
-                        sx={{justifyContent: 'space-between'}}>
-                        <Typography>Password sign-in</Typography>
-                        <Chip
-                            size="small"
-                            label={config.get('localAuth') ? 'Enabled' : 'Disabled'}
+            description="Manage your account, notifications, security, and software updates."
+            maxWidth={960}>
+            <Box
+                sx={{
+                    borderBottom: 1,
+                    borderColor: 'divider',
+                    mb: 2.5,
+                    overflowX: 'auto',
+                }}>
+                <Tabs
+                    value={tab}
+                    onChange={(_, value: string) => setTab(value)}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label="Settings sections">
+                    <Tab value="account" icon={<Person />} iconPosition="start" label="Account" />
+                    <Tab
+                        value="notifications"
+                        icon={<Tune />}
+                        iconPosition="start"
+                        label="Notifications"
+                    />
+                    <Tab
+                        value="security"
+                        icon={<Security />}
+                        iconPosition="start"
+                        label="Security"
+                    />
+                    {currentUser.user.admin && (
+                        <Tab
+                            value="updates"
+                            icon={<SystemUpdateAlt />}
+                            iconPosition="start"
+                            label="Updates"
                         />
-                    </Stack>
-                    <Stack
-                        direction={{xs: 'column', sm: 'row'}}
-                        spacing={1}
-                        sx={{justifyContent: 'space-between'}}>
-                        <Typography>Single sign-on</Typography>
-                        <Chip size="small" label={config.get('oidc') ? 'Enabled' : 'Disabled'} />
-                    </Stack>
-                </Stack>
-            </SurfaceCard>
+                    )}
+                </Tabs>
+            </Box>
 
-            <SurfaceCard
-                title="Change Password"
-                subtitle="Choose a new password for your account."
-                action={<Key color="action" />}>
-                <ChangePasswordForm />
-            </SurfaceCard>
+            {tab === 'account' && (
+                <Stack spacing={2}>
+                    <SurfaceCard
+                        title="Account"
+                        subtitle="Sign-in methods available for your Monita account."
+                        action={<Person color="action" />}>
+                        <Stack spacing={2}>
+                            <Stack
+                                direction={{xs: 'column', sm: 'row'}}
+                                spacing={1}
+                                sx={{justifyContent: 'space-between'}}>
+                                <Typography>Password sign-in</Typography>
+                                <Chip
+                                    size="small"
+                                    label={config.get('localAuth') ? 'Enabled' : 'Disabled'}
+                                />
+                            </Stack>
+                            <Stack
+                                direction={{xs: 'column', sm: 'row'}}
+                                spacing={1}
+                                sx={{justifyContent: 'space-between'}}>
+                                <Typography>Single sign-on</Typography>
+                                <Chip
+                                    size="small"
+                                    label={config.get('oidc') ? 'Enabled' : 'Disabled'}
+                                />
+                            </Stack>
+                        </Stack>
+                    </SurfaceCard>
+                    <SurfaceCard
+                        title="Change Password"
+                        subtitle="Choose a new password for your account."
+                        action={<Key color="action" />}>
+                        <ChangePasswordForm />
+                    </SurfaceCard>
+                </Stack>
+            )}
+
+            {tab === 'notifications' && <NotificationPreferences />}
+
+            {tab === 'security' && (
+                <Stack spacing={2}>
+                    <MFASettings />
+                    <PasskeySettings />
+                </Stack>
+            )}
+
+            {tab === 'updates' && currentUser.user.admin && <UpdateStatusCard />}
         </DefaultPage>
     );
 };
