@@ -3,7 +3,7 @@ package compat
 import (
 	"testing"
 
-	papiv1 "github.com/gotify/plugin-api"
+	papiv1 "github.com/gigabytegrove/monita/plugin/api"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
