@@ -89,7 +89,7 @@ const Login = observer(() => {
                 <Box>
                     <Box
                         component="img"
-                        src={config.get('url') + 'static/monita-logo.svg?v=1.4.0'}
+                        src={config.get('url') + 'static/monita-logo.svg?v=1.3.8-alpha'}
                         alt="Monita"
                         sx={{width: 190, maxWidth: '75%', mb: 5}}
                     />
