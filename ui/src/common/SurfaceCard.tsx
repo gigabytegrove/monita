@@ -9,40 +9,48 @@ interface IProps {
     subtitle?: string;
     action?: React.ReactNode;
     children: React.ReactNode;
+    flush?: boolean;
 }
 
-const SurfaceCard = ({title, subtitle, action, children}: IProps) => (
+const SurfaceCard = ({title, subtitle, action, children, flush = false}: IProps) => (
     <Paper
-        variant="outlined"
+        elevation={0}
         sx={{
-            p: {xs: 2, sm: 2.5},
-            borderRadius: 3,
-            overflowX: 'auto',
-            position: 'relative',
-            boxShadow: 'none',
-            transition: 'border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease',
-            '&:hover': {
-                borderColor: 'primary.light',
-                boxShadow: 1,
-            },
+            border: 1,
+            borderColor: 'divider',
+            borderRadius: 2.5,
+            overflow: 'hidden',
+            backgroundColor: 'background.paper',
         }}>
         {(title || subtitle || action) && (
             <Stack
-                direction="row"
-                spacing={2}
-                sx={{mb: 2, justifyContent: 'space-between', alignItems: 'flex-start'}}>
-                <Box>
-                    {title && <Typography variant="h6">{title}</Typography>}
+                direction={{xs: 'column', sm: 'row'}}
+                spacing={1.5}
+                sx={{
+                    px: {xs: 2, sm: 2.5},
+                    py: 2,
+                    justifyContent: 'space-between',
+                    alignItems: {xs: 'stretch', sm: 'center'},
+                    borderBottom: 1,
+                    borderColor: 'divider',
+                    bgcolor: 'action.hover',
+                }}>
+                <Box sx={{minWidth: 0}}>
+                    {title && (
+                        <Typography variant="subtitle1" sx={{fontWeight: 760}}>
+                            {title}
+                        </Typography>
+                    )}
                     {subtitle && (
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" color="text.secondary" sx={{mt: 0.15}}>
                             {subtitle}
                         </Typography>
                     )}
                 </Box>
-                {action}
+                {action && <Box sx={{flexShrink: 0}}>{action}</Box>}
             </Stack>
         )}
-        {children}
+        <Box sx={flush ? undefined : {p: {xs: 2, sm: 2.5}}}>{children}</Box>
     </Paper>
 );
 
