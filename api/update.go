@@ -21,16 +21,18 @@ import (
 )
 
 const (
-	defaultUpdateStatusFile = "/app/data/.monita-update-status.json"
-	defaultRuntimeDir       = "/app/data/.monita-runtime"
+	defaultUpdateStatusFile      = "/app/data/.monita-update-status.json"
+	defaultUpdatePreferencesFile = "/app/data/.monita-update-preferences.json"
+	defaultRuntimeDir            = "/app/data/.monita-runtime"
 	defaultUpdateRepository = "gigabytegrove/monita"
 )
 
 var updateVersionPattern = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$`)
 
 type UpdateAPI struct {
-	StatusFile string
-	RuntimeDir string
+	StatusFile     string
+	PreferencesFile string
+	RuntimeDir      string
 	Repository string
 	HTTPClient *http.Client
 	Exec       func(string, []string, []string) error
@@ -38,6 +40,10 @@ type UpdateAPI struct {
 
 type UpdateInstallRequest struct {
 	Version string `json:"version" binding:"required"`
+}
+
+type UpdatePreferences struct {
+	Channel string `json:"channel"`
 }
 
 type updateActivity struct {
@@ -72,6 +78,11 @@ func NewUpdateAPIFromEnv() UpdateAPI {
 		statusFile = defaultUpdateStatusFile
 	}
 
+	preferencesFile := firstUpdateEnv("MONITA_UPDATE_PREFERENCES_FILE")
+	if preferencesFile == "" {
+		preferencesFile = defaultUpdatePreferencesFile
+	}
+
 	runtimeDir := firstUpdateEnv("MONITA_RUNTIME_DIR")
 	if runtimeDir == "" {
 		runtimeDir = defaultRuntimeDir
@@ -83,8 +94,9 @@ func NewUpdateAPIFromEnv() UpdateAPI {
 	}
 
 	api := UpdateAPI{
-		StatusFile: statusFile,
-		RuntimeDir: runtimeDir,
+		StatusFile:      statusFile,
+		PreferencesFile: preferencesFile,
+		RuntimeDir:      runtimeDir,
 		Repository: repository,
 		HTTPClient: &http.Client{Timeout: 10 * time.Minute},
 		Exec:       syscall.Exec,
@@ -115,6 +127,42 @@ func (a *UpdateAPI) Status(ctx *gin.Context) {
 
 	status.Ready = true
 	ctx.JSON(http.StatusOK, status)
+}
+
+func validUpdateChannel(channel string) bool {
+	switch strings.ToLower(strings.TrimSpace(channel)) {
+	case "stable", "rc", "beta", "alpha", "preview":
+		return true
+	default:
+		return false
+	}
+}
+
+func (a *UpdateAPI) GetPreferences(ctx *gin.Context) {
+	preferences, err := a.readPreferences()
+	if err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, preferences)
+}
+
+func (a *UpdateAPI) SavePreferences(ctx *gin.Context) {
+	var preferences UpdatePreferences
+	if err := ctx.ShouldBindJSON(&preferences); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+	preferences.Channel = strings.ToLower(strings.TrimSpace(preferences.Channel))
+	if !validUpdateChannel(preferences.Channel) {
+		ctx.AbortWithError(http.StatusBadRequest, errors.New("update channel must be stable, rc, beta, alpha, or preview"))
+		return
+	}
+	if err := a.writePreferences(preferences); err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, preferences)
 }
 
 func (a *UpdateAPI) Install(ctx *gin.Context) {
@@ -556,6 +604,43 @@ func (a *UpdateAPI) writeStatus(status managedUpdateStatus) error {
 		return err
 	}
 	return os.Rename(temp, a.StatusFile)
+}
+
+func (a *UpdateAPI) readPreferences() (UpdatePreferences, error) {
+	preferences := UpdatePreferences{Channel: "stable"}
+	content, err := os.ReadFile(a.PreferencesFile)
+	if errors.Is(err, os.ErrNotExist) {
+		return preferences, nil
+	}
+	if err != nil {
+		return UpdatePreferences{}, err
+	}
+	if len(strings.TrimSpace(string(content))) == 0 {
+		return preferences, nil
+	}
+	if err := json.Unmarshal(content, &preferences); err != nil {
+		return UpdatePreferences{}, err
+	}
+	preferences.Channel = strings.ToLower(strings.TrimSpace(preferences.Channel))
+	if !validUpdateChannel(preferences.Channel) {
+		preferences.Channel = "stable"
+	}
+	return preferences, nil
+}
+
+func (a *UpdateAPI) writePreferences(preferences UpdatePreferences) error {
+	if err := os.MkdirAll(filepath.Dir(a.PreferencesFile), 0o700); err != nil {
+		return err
+	}
+	content, err := json.Marshal(preferences)
+	if err != nil {
+		return err
+	}
+	temp := a.PreferencesFile + ".tmp"
+	if err := os.WriteFile(temp, content, 0o600); err != nil {
+		return err
+	}
+	return os.Rename(temp, a.PreferencesFile)
 }
 
 func updateStateActive(state string) bool {
