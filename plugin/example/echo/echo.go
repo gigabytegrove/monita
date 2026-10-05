@@ -7,11 +7,11 @@ import (
 	"net/url"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gotify/plugin-api"
+	papiv1 "github.com/gigabytegrove/monita/plugin/api"
 )
 
-// GetGotifyPluginInfo returns the legacy plugin ABI information.
-func GetGotifyPluginInfo() plugin.Info {
+// GetMonitaPluginInfo returns the Monita plugin ABI information.
+func GetMonitaPluginInfo() plugin.Info {
 	return plugin.Info{
 		ModulePath: "github.com/gigabytegrove/monita/plugin/example/echo",
 		Name:       "test plugin",
@@ -109,8 +109,8 @@ func (c *EchoPlugin) GetDisplay(location *url.URL) string {
 	return "Echo plugin running at: " + loc.String()
 }
 
-// NewGotifyPluginInstance is the legacy ABI entrypoint for creating a plugin instance.
-func NewGotifyPluginInstance(ctx plugin.UserContext) plugin.Plugin {
+// NewMonitaPluginInstance is the Monita ABI entrypoint for creating a plugin instance.
+func NewMonitaPluginInstance(ctx plugin.UserContext) plugin.Plugin {
 	return &EchoPlugin{}
 }
 
