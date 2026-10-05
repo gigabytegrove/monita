@@ -1,3 +1,16 @@
+## 1.3.9 — 2026-10-05
+
+### Stable Web UI redesign and update channels
+
+- Promotes the 1.3.9 redesign line to **Stable**.
+- Includes the redesigned Monita Web UI with the blue-and-gray visual system.
+- Includes working **Light / Dark / System** appearance controls.
+- Includes the reorganized **Account**, **Notifications**, **Security**, and **Updates** settings tabs.
+- Includes server-persisted **Stable / RC / Beta / Alpha / Preview** update-channel selection.
+- The Software Update page and Dashboard update banner both honor the selected channel.
+- Stable remains the default update channel for existing installations.
+- Includes refreshed Web/PWA cache identifiers for the stable 1.3.9 build.
+
 ## 1.3.9-alpha2 — 2026-10-05
 
 ### Settings organization and update channels
