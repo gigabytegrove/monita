@@ -257,9 +257,9 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                 mb: 1,
                 border: 1,
                 borderColor: 'divider',
-                borderRadius: 3,
+                borderRadius: 0.75,
                 bgcolor: 'background.paper',
-                boxShadow: '0 10px 30px rgba(15,23,42,0.06)',
+                boxShadow: 'none',
             }}>
             {images.length > 0 && (
                 <Stack direction="row" spacing={1} useFlexGap sx={{mb: 1, flexWrap: 'wrap'}}>
@@ -270,7 +270,7 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                                 position: 'relative',
                                 width: 86,
                                 height: 86,
-                                borderRadius: 2,
+                                borderRadius: 0.5,
                                 overflow: 'hidden',
                                 border: 1,
                                 borderColor: 'divider',
@@ -315,7 +315,7 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                         mb: 1,
                         maxHeight: 220,
                         overflowY: 'auto',
-                        borderRadius: 2,
+                        borderRadius: 0.5,
                         boxShadow: 4,
                     }}>
                     {mentionMatches.map((user) => (
@@ -402,10 +402,10 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                     slotProps={{
                         input: {
                             sx: {
-                                borderRadius: 2.5,
-                                bgcolor: 'action.hover',
-                                '& fieldset': {borderColor: 'transparent'},
-                                '&:hover fieldset': {borderColor: 'divider'},
+                                borderRadius: 0.5,
+                                bgcolor: 'background.paper',
+                                '& fieldset': {borderColor: 'divider'},
+                                '&:hover fieldset': {borderColor: 'text.secondary'},
                             },
                         },
                     }}
@@ -420,8 +420,9 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                             }
                             onClick={() => void send()}
                             sx={{
-                                width: 44,
-                                height: 44,
+                                width: 42,
+                                height: 42,
+                                borderRadius: 0.5,
                                 mb: 0.1,
                                 bgcolor: 'primary.main',
                                 color: 'primary.contrastText',
