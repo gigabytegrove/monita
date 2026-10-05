@@ -5,8 +5,8 @@ import (
 )
 
 // GetMonitaPluginInfo returns the Monita plugin ABI information
-func GetMonitaPluginInfo() plugin.Info {
-	return plugin.Info{
+func GetMonitaPluginInfo() papiv1.Info {
+	return papiv1.Info{
 		ModulePath: "github.com/gigabytegrove/monita/plugin/testing/broken/noinstance",
 	}
 }
