@@ -5,8 +5,8 @@ import (
 )
 
 // GetMonitaPluginInfo returns the Monita plugin ABI information
-func GetMonitaPluginInfo() plugin.Info {
-	return plugin.Info{
+func GetMonitaPluginInfo() papiv1.Info {
+	return papiv1.Info{
 		Name:       "minimal plugin",
 		ModulePath: "github.com/gigabytegrove/monita/example/minimal",
 	}
@@ -15,18 +15,18 @@ func GetMonitaPluginInfo() plugin.Info {
 // Plugin is plugin instance
 type Plugin struct{}
 
-// Enable implements plugin.Plugin
+// Enable implements papiv1.Plugin
 func (c *Plugin) Enable() error {
 	return nil
 }
 
-// Disable implements plugin.Plugin
+// Disable implements papiv1.Plugin
 func (c *Plugin) Disable() error {
 	return nil
 }
 
 // NewMonitaPluginInstance is the Monita ABI entrypoint for creating a plugin instance.
-func NewMonitaPluginInstance(ctx plugin.UserContext) plugin.Plugin {
+func NewMonitaPluginInstance(ctx papiv1.UserContext) papiv1.Plugin {
 	return &Plugin{}
 }
 
