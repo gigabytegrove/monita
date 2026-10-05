@@ -131,8 +131,8 @@ const ChatConversation = ({
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'hidden',
-                    borderRadius: {xs: 2, sm: 3.5},
-                    boxShadow: {sm: '0 18px 50px rgba(15,23,42,0.08)'},
+                    borderRadius: 1,
+                    boxShadow: 'none',
                 }}>
                 <Stack
                     direction="row"
@@ -147,7 +147,7 @@ const ChatConversation = ({
                     }}>
                     <Avatar
                         src={config.get('url') + app.image}
-                        variant="rounded"
+                        variant="square"
                         sx={{width: 42, height: 42}}
                     />
                     <Box sx={{minWidth: 0, flex: 1}}>
