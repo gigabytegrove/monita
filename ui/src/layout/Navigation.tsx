@@ -203,7 +203,7 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
                                 <ListItemAvatar sx={{minWidth: 38}}>
                                     <Avatar
                                         src={config.get('url') + app.image}
-                                        variant="rounded"
+                                        variant="square"
                                         sx={{width: 28, height: 28}}
                                     />
                                 </ListItemAvatar>
