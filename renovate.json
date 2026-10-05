@@ -28,7 +28,7 @@
         "^(?<currentValue>[0-9.]+)"
       ],
       "extractVersionTemplate": "^(?<version>.+)-linux-amd64$",
-      "depNameTemplate": "docker.io/gotify/build",
+      "depNameTemplate": "docker.io/library/golang",
       "autoReplaceStringTemplate": "{{{newValue}}}",
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker"
@@ -43,7 +43,7 @@
         "toolchain go(?<currentValue>[0-9.]+)\\n"
       ],
       "extractVersionTemplate": "^(?<version>.+)-linux-amd64$",
-      "depNameTemplate": "docker.io/gotify/build",
+      "depNameTemplate": "docker.io/library/golang",
       "autoReplaceStringTemplate": "toolchain go{{{newValue}}}\n",
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker"
@@ -81,10 +81,10 @@
     },
     {
       "matchDepNames": [
-        "github.com/gotify/build"
+        "golang"
       ],
-      "groupName": "Bump gotify/build",
-      "groupSlug": "bump-gotify-build"
+      "groupName": "Bump Go build image",
+      "groupSlug": "bump-go-build-image"
     }
   ],
   "postUpdateOptions": [
