@@ -1,4 +1,3 @@
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -12,29 +11,17 @@ interface IProps {
 }
 
 const StatCard = ({label, value, icon, helper}: IProps) => (
-    <Paper
-        elevation={0}
+    <Box
         sx={{
-            p: 2,
             height: '100%',
-            border: 1,
-            borderColor: 'divider',
-            borderRadius: 1,
-            backgroundColor: 'background.paper',
+            pl: 1.5,
+            py: 0.5,
+            borderLeft: 2,
+            borderColor: 'primary.main',
         }}>
-        <Stack direction="row" spacing={1.5} sx={{alignItems: 'center'}}>
+        <Stack direction="row" spacing={1.25} sx={{alignItems: 'center'}}>
             {icon && (
-                <Box
-                    sx={{
-                        color: 'primary.main',
-                        bgcolor: 'action.selected',
-                        width: 40,
-                        height: 40,
-                        borderRadius: 1,
-                        display: 'grid',
-                        placeItems: 'center',
-                        flexShrink: 0,
-                    }}>
+                <Box sx={{color: 'text.secondary', display: 'grid', placeItems: 'center'}}>
                     {icon}
                 </Box>
             )}
@@ -43,7 +30,7 @@ const StatCard = ({label, value, icon, helper}: IProps) => (
                     {label}
                 </Typography>
                 <Stack direction="row" spacing={1} sx={{alignItems: 'baseline', flexWrap: 'wrap'}}>
-                    <Typography variant="h5" sx={{lineHeight: 1.1}}>
+                    <Typography variant="h5" sx={{lineHeight: 1.05}}>
                         {value}
                     </Typography>
                     {helper && (
@@ -54,7 +41,7 @@ const StatCard = ({label, value, icon, helper}: IProps) => (
                 </Stack>
             </Box>
         </Stack>
-    </Paper>
+    </Box>
 );
 
 export default StatCard;
