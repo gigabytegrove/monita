@@ -250,7 +250,7 @@ const SystemAdministration = () => {
                         ].map(([label, value]) => (
                             <Box
                                 key={String(label)}
-                                sx={{border: 1, borderColor: 'divider', borderRadius: 2, p: 1.5}}>
+                                sx={{border: 1, borderColor: 'divider', borderRadius: 0.75, p: 1.5}}>
                                 <Typography variant="caption" color="text.secondary">
                                     {label}
                                 </Typography>
@@ -279,7 +279,7 @@ const SystemAdministration = () => {
                         {sessions.map((session) => (
                             <Box
                                 key={session.id}
-                                sx={{border: 1, borderColor: 'divider', borderRadius: 2, p: 1.5}}>
+                                sx={{border: 1, borderColor: 'divider', borderRadius: 0.75, p: 1.5}}>
                                 <Stack
                                     direction={{xs: 'column', sm: 'row'}}
                                     spacing={1}
