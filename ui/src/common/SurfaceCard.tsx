@@ -18,7 +18,7 @@ const SurfaceCard = ({title, subtitle, action, children, flush = false}: IProps)
         sx={{
             border: 1,
             borderColor: 'divider',
-            borderRadius: 2.5,
+            borderRadius: 1,
             overflow: 'hidden',
             backgroundColor: 'background.paper',
         }}>
@@ -33,7 +33,7 @@ const SurfaceCard = ({title, subtitle, action, children, flush = false}: IProps)
                     alignItems: {xs: 'stretch', sm: 'center'},
                     borderBottom: 1,
                     borderColor: 'divider',
-                    bgcolor: 'action.hover',
+                    bgcolor: 'background.default',
                 }}>
                 <Box sx={{minWidth: 0}}>
                     {title && (
