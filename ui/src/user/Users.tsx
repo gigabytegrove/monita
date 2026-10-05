@@ -86,6 +86,7 @@ const Users = observer(() => {
 
     return (
         <DefaultPage
+            eyebrow="Administration"
             title="Users"
             description="Manage local accounts and administrative access."
             rightControl={
