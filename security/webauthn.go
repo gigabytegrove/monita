@@ -32,6 +32,7 @@ func (d *cborDecoder) readN(n int) ([]byte, error) {
 	d.offset += n
 	return out, nil
 }
+
 func (d *cborDecoder) readUint(add byte) (uint64, error) {
 	switch {
 	case add < 24:
@@ -64,6 +65,7 @@ func (d *cborDecoder) readUint(add byte) (uint64, error) {
 		return 0, errors.New("unsupported CBOR integer")
 	}
 }
+
 func (d *cborDecoder) item() (any, error) {
 	head, err := d.readN(1)
 	if err != nil {
@@ -261,6 +263,7 @@ func VerifyWebAuthnRPID(hash []byte, rpID string) error {
 	}
 	return nil
 }
+
 func bytesEqual(a, b []byte) bool {
 	if len(a) != len(b) {
 		return false

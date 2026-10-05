@@ -79,6 +79,7 @@ func emailGatewayView(item *model.EmailGateway) model.EmailGatewayView {
 	copy.Password = ""
 	return model.EmailGatewayView{EmailGateway: copy, PasswordConfigured: item.Password != ""}
 }
+
 func (a *ConnectorAPI) GetEmailGateways(ctx *gin.Context) {
 	items, err := a.DB.GetEmailGateways()
 	if !successOrAbort(ctx, 500, err) {
@@ -90,6 +91,7 @@ func (a *ConnectorAPI) GetEmailGateways(ctx *gin.Context) {
 	}
 	ctx.JSON(200, out)
 }
+
 func (a *ConnectorAPI) CreateEmailGateway(ctx *gin.Context) {
 	var p emailGatewayParams
 	if err := ctx.ShouldBindJSON(&p); err != nil {
@@ -112,6 +114,7 @@ func (a *ConnectorAPI) CreateEmailGateway(ctx *gin.Context) {
 	}
 	ctx.JSON(201, emailGatewayView(item))
 }
+
 func (a *ConnectorAPI) UpdateEmailGateway(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		item, err := a.DB.GetEmailGatewayByID(id)
@@ -156,9 +159,11 @@ func (a *ConnectorAPI) UpdateEmailGateway(ctx *gin.Context) {
 		ctx.JSON(200, emailGatewayView(item))
 	})
 }
+
 func (a *ConnectorAPI) DeleteEmailGateway(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) { successOrAbort(ctx, 500, a.DB.DeleteEmailGateway(id)) })
 }
+
 func (a *ConnectorAPI) TestEmailGateway(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		if !successOrAbort(ctx, 502, a.Runtime.TestEmailGateway(id)) {
@@ -186,6 +191,7 @@ func smtpView(item *model.SMTPRoute) model.SMTPRouteView {
 	copy.Password = ""
 	return model.SMTPRouteView{SMTPRoute: copy, PasswordConfigured: item.Password != ""}
 }
+
 func (a *ConnectorAPI) GetSMTPRoutes(ctx *gin.Context) {
 	items, err := a.DB.GetSMTPRoutes()
 	if !successOrAbort(ctx, 500, err) {
@@ -197,6 +203,7 @@ func (a *ConnectorAPI) GetSMTPRoutes(ctx *gin.Context) {
 	}
 	ctx.JSON(200, out)
 }
+
 func (a *ConnectorAPI) CreateSMTPRoute(ctx *gin.Context) {
 	var p smtpRouteParams
 	if err := ctx.ShouldBindJSON(&p); err != nil {
@@ -218,6 +225,7 @@ func (a *ConnectorAPI) CreateSMTPRoute(ctx *gin.Context) {
 	}
 	ctx.JSON(201, smtpView(item))
 }
+
 func (a *ConnectorAPI) UpdateSMTPRoute(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		item, err := a.DB.GetSMTPRouteByID(id)
@@ -260,6 +268,7 @@ func (a *ConnectorAPI) UpdateSMTPRoute(ctx *gin.Context) {
 		ctx.JSON(200, smtpView(item))
 	})
 }
+
 func (a *ConnectorAPI) DeleteSMTPRoute(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) { successOrAbort(ctx, 500, a.DB.DeleteSMTPRoute(id)) })
 }
@@ -282,6 +291,7 @@ func (a *ConnectorAPI) GetRSS(ctx *gin.Context) {
 	}
 	ctx.JSON(200, items)
 }
+
 func (a *ConnectorAPI) CreateRSS(ctx *gin.Context) {
 	var p rssParams
 	if err := ctx.ShouldBindJSON(&p); err != nil {
@@ -303,6 +313,7 @@ func (a *ConnectorAPI) CreateRSS(ctx *gin.Context) {
 	}
 	ctx.JSON(201, item)
 }
+
 func (a *ConnectorAPI) UpdateRSS(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		item, err := a.DB.GetRSSMonitorByID(id)
@@ -341,6 +352,7 @@ func (a *ConnectorAPI) UpdateRSS(ctx *gin.Context) {
 		ctx.JSON(200, item)
 	})
 }
+
 func (a *ConnectorAPI) DeleteRSS(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) { successOrAbort(ctx, 500, a.DB.DeleteRSSMonitor(id)) })
 }
@@ -362,6 +374,7 @@ func (a *ConnectorAPI) GetSyslog(ctx *gin.Context) {
 	}
 	ctx.JSON(200, items)
 }
+
 func (a *ConnectorAPI) CreateSyslog(ctx *gin.Context) {
 	var p syslogParams
 	if err := ctx.ShouldBindJSON(&p); err != nil {
@@ -384,6 +397,7 @@ func (a *ConnectorAPI) CreateSyslog(ctx *gin.Context) {
 	}
 	ctx.JSON(201, item)
 }
+
 func (a *ConnectorAPI) UpdateSyslog(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		item, err := a.DB.GetSyslogRouteByID(id)
@@ -422,6 +436,7 @@ func (a *ConnectorAPI) UpdateSyslog(ctx *gin.Context) {
 		ctx.JSON(200, item)
 	})
 }
+
 func (a *ConnectorAPI) DeleteSyslog(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) { successOrAbort(ctx, 500, a.DB.DeleteSyslogRoute(id)) })
 }
@@ -445,6 +460,7 @@ func (a *ConnectorAPI) GetCalendars(ctx *gin.Context) {
 	}
 	ctx.JSON(200, items)
 }
+
 func (a *ConnectorAPI) CreateCalendar(ctx *gin.Context) {
 	var p calendarParams
 	if err := ctx.ShouldBindJSON(&p); err != nil {
@@ -469,6 +485,7 @@ func (a *ConnectorAPI) CreateCalendar(ctx *gin.Context) {
 	}
 	ctx.JSON(201, item)
 }
+
 func (a *ConnectorAPI) UpdateCalendar(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		item, err := a.DB.GetCalendarMonitorByID(id)
@@ -508,6 +525,7 @@ func (a *ConnectorAPI) UpdateCalendar(ctx *gin.Context) {
 		ctx.JSON(200, item)
 	})
 }
+
 func (a *ConnectorAPI) DeleteCalendar(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) { successOrAbort(ctx, 500, a.DB.DeleteCalendarMonitor(id)) })
 }

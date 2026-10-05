@@ -16,6 +16,19 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+func pluginTestBuildFlags(output string) []string {
+	flags := []string{"build", "-buildmode=plugin", "-o=" + output}
+	flags = append(flags, extraGoBuildFlags...)
+	if os.Getenv("MONITA_TEST_PLUGIN_COVERAGE") == "1" {
+		flags = append(flags,
+			"-cover",
+			"-covermode=atomic",
+			"-coverpkg=github.com/gigabytegrove/monita/...",
+		)
+	}
+	return flags
+}
+
 type CompatSuite struct {
 	suite.Suite
 
@@ -28,9 +41,7 @@ func (s *CompatSuite) SetupSuite() {
 
 	test.WithWd(path.Join(test.GetProjectDir(), "./plugin/example/echo"), func(origWd string) {
 		exec.Command("go", "get", "-d").Run()
-		goBuildFlags := []string{"build", "-buildmode=plugin", "-o=" + s.tmpDir.Path("echo.so")}
-
-		goBuildFlags = append(goBuildFlags, extraGoBuildFlags...)
+		goBuildFlags := pluginTestBuildFlags(s.tmpDir.Path("echo.so"))
 
 		cmd := exec.Command("go", goBuildFlags...)
 		cmd.Stderr = os.Stderr
@@ -139,8 +150,7 @@ func TestWrapIncompatiblePlugins(t *testing.T) {
 	} {
 		fName := tmpDir.Path(fmt.Sprintf("broken_%d.so", i))
 		exec.Command("go", "get", "-d").Run()
-		goBuildFlags := []string{"build", "-buildmode=plugin", "-o=" + fName}
-		goBuildFlags = append(goBuildFlags, extraGoBuildFlags...)
+		goBuildFlags := pluginTestBuildFlags(fName)
 		goBuildFlags = append(goBuildFlags, modulePath)
 
 		cmd := exec.Command("go", goBuildFlags...)

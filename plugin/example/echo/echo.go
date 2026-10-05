@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/url"
 
-	"github.com/gin-gonic/gin"
 	papiv1 "github.com/gigabytegrove/monita/plugin/api"
+	"github.com/gin-gonic/gin"
 )
 
 // GetMonitaPluginInfo returns the Monita plugin ABI information.

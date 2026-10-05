@@ -1,3 +1,17 @@
+## 1.3.9-alpha — 2026-10-05
+
+### Alpha Web UI/UX redesign preview
+
+- Rebuilt the Monita server Web interface from the ground up as a workspace rather than a theme-only reskin.
+- Replaced the previous rounded-card-heavy visual language with flat, low-radius sections and denser operational layouts.
+- Removed browser-default blue-link styling in favor of Monita-native link treatment.
+- Reworked Dashboard, navigation, Channels, Messages, Chat, Login, Settings, Administration, Integrations, Automation, Plugins, Update status, and supporting dialogs.
+- Completed an exhaustive pass across all 116 files under `ui/`.
+- Retains the 1.3.8 updater improvements, including Alpha/Beta/RC/Stable release-channel display and prerelease installation support.
+- Re-versioned PWA/browser assets and service-worker cache for this alpha build.
+
+This is an **Alpha** preview intended for hands-on UI review before the design is finalized.
+
 ## 1.3.8 — 2026-10-05
 
 ### Release-channel aware software updates
