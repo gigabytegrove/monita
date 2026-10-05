@@ -19,6 +19,7 @@ This inventory records the exhaustive UI pass for the Monita server Web interfac
 - `ui/.gitignore`
 - `ui/.prettierrc`
 - `ui/.yarnrc`
+- `ui/UI_REDESIGN_AUDIT.md`
 - `ui/eslint.config.mjs`
 - `ui/index.html`
 - `ui/package.json`
@@ -132,4 +133,4 @@ This inventory records the exhaustive UI pass for the Monita server Web interfac
 - `ui/vitest.config.js`
 - `ui/yarn.lock`
 
-**Total UI files reviewed: 115.**
+**Total UI files reviewed: 116.**
