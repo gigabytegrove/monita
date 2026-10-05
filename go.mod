@@ -7,8 +7,6 @@ require (
 	github.com/gin-gonic/gin v1.12.0
 	github.com/go-playground/validator/v10 v10.30.4
 	github.com/gorilla/websocket v1.5.3
-	github.com/gotify/location v0.0.0-20170722210143-03bc4ad20437
-	github.com/gotify/plugin-api v1.0.0
 	github.com/h2non/filetype v1.1.3
 	github.com/joho/godotenv v1.5.1
 	github.com/mattn/go-isatty v0.0.24
