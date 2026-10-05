@@ -36,6 +36,34 @@ func TestUpdateVersionPatternAcceptsReleaseChannels(t *testing.T) {
 	}
 }
 
+func TestValidUpdateChannel(t *testing.T) {
+	for _, channel := range []string{"stable", "rc", "beta", "alpha", "preview", "ALPHA"} {
+		assert.True(t, validUpdateChannel(channel), channel)
+	}
+	for _, channel := range []string{"", "nightly", "dev", "stable-ish"} {
+		assert.False(t, validUpdateChannel(channel), channel)
+	}
+}
+
+func TestUpdatePreferencesDefaultAndRoundTrip(t *testing.T) {
+	dir := t.TempDir()
+	api := UpdateAPI{
+		StatusFile:      filepath.Join(dir, "status.json"),
+		PreferencesFile: filepath.Join(dir, "preferences.json"),
+		RuntimeDir:      filepath.Join(dir, "runtime"),
+		Repository:      "gigabytegrove/monita",
+	}
+
+	preferences, err := api.readPreferences()
+	require.NoError(t, err)
+	assert.Equal(t, "stable", preferences.Channel)
+
+	require.NoError(t, api.writePreferences(UpdatePreferences{Channel: "alpha"}))
+	preferences, err = api.readPreferences()
+	require.NoError(t, err)
+	assert.Equal(t, "alpha", preferences.Channel)
+}
+
 func TestRuntimeAssetName(t *testing.T) {
 	name, err := runtimeAssetName("linux", "amd64")
 	require.NoError(t, err)
