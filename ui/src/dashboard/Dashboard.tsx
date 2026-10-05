@@ -86,11 +86,8 @@ const Dashboard = observer(() => {
                     p: {xs: 2, md: 2.5},
                     border: 1,
                     borderColor: 'divider',
-                    borderRadius: 2.5,
-                    background: (theme) =>
-                        theme.palette.mode === 'dark'
-                            ? 'linear-gradient(120deg, rgba(47,107,255,.12), rgba(18,168,160,.05))'
-                            : 'linear-gradient(120deg, rgba(47,107,255,.07), rgba(18,168,160,.025))',
+                    borderRadius: 1,
+                    backgroundColor: 'background.paper',
                 }}>
                 <Grid container spacing={2} sx={{alignItems: 'center'}}>
                     <Grid size={{xs: 12, lg: 7}}>
