@@ -1,6 +1,6 @@
 package api
 
-// Plugin is the interface every plugin need to implement
+// Plugin is the interface every plugin needs to implement.
 type Plugin interface {
 	// Enable is called every time a plugin is started. Spawn custom goroutines here for polling, etc.
 	// It is always called after ^Set.*Handler$
