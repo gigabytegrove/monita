@@ -2,6 +2,8 @@
 
 This inventory records the exhaustive UI pass for the Monita server Web interface.
 
+The pass was re-run against the actual branch tree after the structural redesign. Every file under `ui/` was reviewed. Text/code/config files were inspected for old visual patterns, stale version strings, default-link styling, local radius/shadow overrides, and legacy layout assumptions. Binary assets were checked by repository identity/role and retained where they remain canonical product assets.
+
 ## Design rules applied
 
 - Monita server Web UI only. Android and Home Assistant are out of scope.
@@ -13,6 +15,9 @@ This inventory records the exhaustive UI pass for the Monita server Web interfac
 - Dense administration stays table/list oriented.
 - PWA/browser asset identity is versioned for 1.4.0.
 - Existing functionality and permission wiring remain connected.
+- Versioned browser/PWA assets identify this redesign as Monita 1.4.0.
+- Local component overrides were normalized so lower-traffic screens cannot reintroduce the previous rounded-card visual language.
+- The default application image and notification sound remain canonical functional assets and were intentionally not altered by a visual-layout redesign.
 
 ## Files reviewed
 
@@ -134,3 +139,15 @@ This inventory records the exhaustive UI pass for the Monita server Web interfac
 - `ui/yarn.lock`
 
 **Total UI files reviewed: 116.**
+
+
+## Findings corrected during the exhaustive pass
+
+- Removed remaining rounded sub-panels from administration, automation, integrations, settings, plugins, update status, search, chat composer, notification details, and collaboration views.
+- Removed the decorative dotted chat wallpaper in favor of the shared workspace background.
+- Re-versioned the service-worker shell cache after the redesign.
+- Aligned browser tile metadata with the new shell.
+- Confirmed browser links inherit the Monita interface color instead of default browser-blue styling.
+- Confirmed `VERSION`, `ui/package.json`, PWA manifest asset URLs, login branding, and header branding target 1.4.0.
+
+The review inventory below is therefore the completion checklist, not merely a planned file list.
