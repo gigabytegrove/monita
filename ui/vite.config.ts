@@ -2,7 +2,7 @@ import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 import babel from '@rolldown/plugin-babel';
 
-for (const envFile of ['../monita-server.env', '../gotify-server.env']) {
+for (const envFile of ['../monita-server.env']) {
     try {
         process.loadEnvFile(envFile);
         break;
@@ -11,7 +11,7 @@ for (const envFile of ['../monita-server.env', '../gotify-server.env']) {
     }
 }
 
-const MONITA_SERVER_PORT = process.env.MONITA_SERVER_PORT ?? process.env.GOTIFY_SERVER_PORT ?? '80';
+const MONITA_SERVER_PORT = process.env.MONITA_SERVER_PORT ?? '80';
 
 function decoratorPreset(options: Record<string, unknown>) {
     return {

@@ -143,14 +143,14 @@ func New(dialect, connection, defaultUser, defaultPass string, strength int, cre
 	if dialect == "sqlite3" && strings.Contains(connection, "mode=memory") {
 		secretStore = security.NewTestSecretStore()
 	} else {
-		keyPath := filepath.Join("data", ".gotify-mu-secrets.key")
+		keyPath := filepath.Join("data", ".monita-secrets.key")
 		if dialect == "sqlite3" {
 			candidate := strings.TrimPrefix(connection, "file:")
 			if query := strings.IndexByte(candidate, '?'); query >= 0 {
 				candidate = candidate[:query]
 			}
 			if candidate != "" && candidate != ":memory:" {
-				keyPath = filepath.Join(filepath.Dir(candidate), ".gotify-mu-secrets.key")
+				keyPath = filepath.Join(filepath.Dir(candidate), ".monita-secrets.key")
 			}
 		}
 		var secretErr error

@@ -74,7 +74,6 @@ MONITA_SMTP_PORT=2525
 MONITA_SYSLOG_PORT=5514
 ```
 
-Gotify-compatible `GOTIFY_*` settings remain supported where required for compatibility.
 
 ## Persistent data
 

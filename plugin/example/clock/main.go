@@ -3,13 +3,13 @@ package main
 import (
 	"time"
 
-	"github.com/gotify/plugin-api"
+	papiv1 "github.com/gigabytegrove/monita/plugin/api"
 	"github.com/robfig/cron"
 )
 
-// GetGotifyPluginInfo returns the legacy plugin ABI information
-func GetGotifyPluginInfo() plugin.Info {
-	return plugin.Info{
+// GetMonitaPluginInfo returns the Monita plugin ABI information
+func GetMonitaPluginInfo() papiv1.Info {
+	return papiv1.Info{
 		Name:        "clock",
 		Description: "Sends an hourly reminder",
 		ModulePath:  "github.com/gigabytegrove/monita/example/clock",
@@ -18,17 +18,17 @@ func GetGotifyPluginInfo() plugin.Info {
 
 // Plugin is plugin instance
 type Plugin struct {
-	msgHandler  plugin.MessageHandler
+	msgHandler  papiv1.MessageHandler
 	enabled     bool
 	cronHandler *cron.Cron
 }
 
-// Enable implements plugin.Plugin
+// Enable implements papiv1.Plugin
 func (c *Plugin) Enable() error {
 	c.enabled = true
 	c.cronHandler = cron.New()
 	c.cronHandler.AddFunc("0 0 * * *", func() {
-		c.msgHandler.SendMessage(plugin.Message{
+		c.msgHandler.SendMessage(papiv1.Message{
 			Title:   "Tick Tock!",
 			Message: time.Now().Format("It is 15:04:05 now."),
 		})
@@ -37,7 +37,7 @@ func (c *Plugin) Enable() error {
 	return nil
 }
 
-// Disable implements plugin.Plugin
+// Disable implements papiv1.Plugin
 func (c *Plugin) Disable() error {
 	if c.cronHandler != nil {
 		c.cronHandler.Stop()
@@ -46,13 +46,13 @@ func (c *Plugin) Disable() error {
 	return nil
 }
 
-// SetMessageHandler implements plugin.Messenger.
-func (c *Plugin) SetMessageHandler(h plugin.MessageHandler) {
+// SetMessageHandler implements papiv1.Messenger.
+func (c *Plugin) SetMessageHandler(h papiv1.MessageHandler) {
 	c.msgHandler = h
 }
 
-// NewGotifyPluginInstance is the legacy ABI entrypoint for creating a plugin instance.
-func NewGotifyPluginInstance(ctx plugin.UserContext) plugin.Plugin {
+// NewMonitaPluginInstance is the Monita ABI entrypoint for creating a plugin instance.
+func NewMonitaPluginInstance(ctx papiv1.UserContext) papiv1.Plugin {
 	p := &Plugin{}
 
 	return p
