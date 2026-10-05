@@ -3,12 +3,12 @@ package main
 import (
 	"time"
 
-	"github.com/gotify/plugin-api"
+	papiv1 "github.com/gigabytegrove/monita/plugin/api"
 	"github.com/robfig/cron"
 )
 
-// GetGotifyPluginInfo returns the legacy plugin ABI information
-func GetGotifyPluginInfo() plugin.Info {
+// GetMonitaPluginInfo returns the Monita plugin ABI information
+func GetMonitaPluginInfo() plugin.Info {
 	return plugin.Info{
 		Name:        "clock",
 		Description: "Sends an hourly reminder",
@@ -51,8 +51,8 @@ func (c *Plugin) SetMessageHandler(h plugin.MessageHandler) {
 	c.msgHandler = h
 }
 
-// NewGotifyPluginInstance is the legacy ABI entrypoint for creating a plugin instance.
-func NewGotifyPluginInstance(ctx plugin.UserContext) plugin.Plugin {
+// NewMonitaPluginInstance is the Monita ABI entrypoint for creating a plugin instance.
+func NewMonitaPluginInstance(ctx plugin.UserContext) plugin.Plugin {
 	p := &Plugin{}
 
 	return p
