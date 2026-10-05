@@ -9,7 +9,6 @@
 //
 //	The token can be transmitted in a header named `X-Monita-Key`, in a query parameter named `token`, or
 //	through an `Authorization` header with the value prefixed with `Bearer` (for example, `Bearer randomtoken`).
-//	For Gotify compatibility, `X-Gotify-Key` remains accepted as a legacy alias.
 //	Basic auth is also available for supported login/elevation flows.
 //
 //	\---
