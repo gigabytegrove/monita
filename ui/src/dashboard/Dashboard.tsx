@@ -179,7 +179,7 @@ const Dashboard = observer(() => {
                                         }}>
                                         <Avatar
                                             src={config.get('url') + app.image}
-                                            variant="rounded"
+                                            variant="square"
                                             sx={{width: 42, height: 42}}
                                         />
                                         <Box sx={{minWidth: 0}}>
