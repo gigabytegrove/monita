@@ -17,7 +17,7 @@ import (
 	"github.com/gigabytegrove/monita/plugin"
 	"github.com/gigabytegrove/monita/plugin/compat"
 	"github.com/gin-gonic/gin"
-	"github.com/gotify/location"
+	"github.com/gigabytegrove/monita/location"
 	"gopkg.in/yaml.v3"
 )
 
