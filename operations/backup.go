@@ -269,7 +269,7 @@ func ApplyPendingRestore(dataDir string) (string, bool, error) {
 		return safetyPath, true, err
 	}
 	for _, entry := range entries {
-		if entry.Name() == ManifestName || entry.Name() == LegacyManifestName {
+		if entry.Name() == ManifestName {
 			continue
 		}
 		source := filepath.Join(workDir, entry.Name())
