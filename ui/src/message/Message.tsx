@@ -9,7 +9,6 @@ import {
     DialogContent,
     DialogTitle,
     IconButton,
-    Paper,
     Stack,
     Tooltip,
     Typography,
@@ -141,21 +140,17 @@ const Message = ({
     };
 
     return (
-        <Paper
+        <Box
             className="message"
-            variant="outlined"
             sx={{
-                p: {xs: 1.25, sm: 1.5},
-                mb: 1,
-                borderRadius: 0.75,
-                transition: 'box-shadow 140ms ease, border-color 140ms ease',
-                '&:hover': {
-                    boxShadow: 1,
-                    borderColor: 'action.selected',
-                },
-                borderLeftWidth: 4,
+                px: {xs: 0.5, sm: 0.75},
+                py: 1.5,
+                borderBottom: 1,
+                borderColor: 'divider',
+                borderLeft: 3,
                 borderLeftColor:
-                    priority >= 8 ? 'error.main' : priority >= 4 ? 'warning.main' : 'divider',
+                    priority >= 8 ? 'error.main' : priority >= 4 ? 'warning.main' : 'transparent',
+                '&:hover': {bgcolor: 'action.hover'},
             }}>
             <Stack spacing={1.15}>
                 <Stack direction="row" spacing={1.25} sx={{alignItems: 'flex-start'}}>
@@ -367,7 +362,7 @@ const Message = ({
                     )}
                 </DialogContent>
             </Dialog>
-        </Paper>
+        </Box>
     );
 };
 
