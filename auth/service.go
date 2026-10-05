@@ -52,9 +52,6 @@ func serviceTokenFromRequest(ctx *gin.Context) string {
 	if token := strings.TrimSpace(ctx.GetHeader("X-Monita-Key")); strings.HasPrefix(token, "SA.") {
 		return token
 	}
-	if token := strings.TrimSpace(ctx.GetHeader("X-Gotify-Key")); strings.HasPrefix(token, "SA.") {
-		return token
-	}
 	if token := strings.TrimSpace(ctx.Query("token")); strings.HasPrefix(token, "SA.") {
 		return token
 	}
