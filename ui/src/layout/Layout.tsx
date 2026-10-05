@@ -6,6 +6,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Paper,
     StyledEngineProvider,
     ThemeProvider,
     Typography,
@@ -244,9 +245,9 @@ export const RequireElevation = observer(({children}: React.PropsWithChildren) =
             title="Authentication Required"
             description="Confirm your identity before accessing this administrative area."
             maxWidth={520}>
-            <Box sx={{pt: 1, borderTop: 1, borderColor: 'divider'}}>
+            <Paper variant="outlined" sx={{p: 2.5, borderRadius: 3}}>
                 <ElevationForm />
-            </Box>
+            </Paper>
         </DefaultPage>
     );
 });

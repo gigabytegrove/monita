@@ -112,7 +112,6 @@ const Automation = () => {
 
     return (
         <DefaultPage
-            eyebrow="Operations"
             title="Automation"
             description="Schedule notifications and escalate messages that need attention."
             rightControl={
@@ -275,7 +274,7 @@ const Automation = () => {
                                             p: 1.25,
                                             border: 1,
                                             borderColor: 'divider',
-                                            borderRadius: 0.25,
+                                            borderRadius: 2,
                                         }}>
                                         <Stack
                                             direction={{xs: 'column', sm: 'row'}}
@@ -372,7 +371,7 @@ const AutomationRow = ({
     onHistory?: () => Promise<void>;
     onDelete: () => Promise<void>;
 }) => (
-    <Box sx={{p: 1.5, border: 1, borderColor: 'divider', borderRadius: 0.5}}>
+    <Box sx={{p: 1.5, border: 1, borderColor: 'divider', borderRadius: 2}}>
         <Stack
             direction={{xs: 'column', sm: 'row'}}
             spacing={1.5}

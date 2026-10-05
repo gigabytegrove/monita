@@ -26,7 +26,7 @@ const (
 	defaultUpdateRepository = "gigabytegrove/monita"
 )
 
-var updateVersionPattern = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+$`)
+var updateVersionPattern = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$`)
 
 type UpdateAPI struct {
 	StatusFile string
@@ -131,7 +131,7 @@ func (a *UpdateAPI) Install(ctx *gin.Context) {
 
 	request.Version = strings.TrimSpace(strings.TrimPrefix(request.Version, "v"))
 	if !updateVersionPattern.MatchString(request.Version) {
-		ctx.AbortWithError(http.StatusBadRequest, errors.New("version must be semantic x.y.z"))
+		ctx.AbortWithError(http.StatusBadRequest, errors.New("version must be semantic x.y.z with optional prerelease/build metadata"))
 		return
 	}
 

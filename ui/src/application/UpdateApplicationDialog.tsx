@@ -100,7 +100,7 @@ export const UpdateApplicationDialog = ({
                         sx={{alignItems: {xs: 'flex-start', sm: 'center'}}}>
                         <Avatar
                             src={config.get('url') + image}
-                            variant="square"
+                            variant="rounded"
                             sx={{width: 72, height: 72, flexShrink: 0}}
                         />
                         <Stack spacing={0.75}>
