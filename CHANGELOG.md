@@ -1,12 +1,3 @@
-## 1.4.0
-
-- Rebuilt the Monita server Web UI from the ground up as a workspace rather than a reskinned card-based admin interface.
-- Reworked navigation, dashboard, channel management, notification history, chat, authentication, settings, administration, integrations, plugins, update UI, and shared layout primitives.
-- Replaced rounded bubble-heavy presentation with flatter low-radius sections, tables, feed rows, and transcript-style conversations.
-- Removed browser-default blue-link styling and aligned PWA/browser theme identity with the new Monita visual system.
-- Bumped Web UI and server release identity to 1.4.0 and invalidated stale PWA asset caches.
-- Audited every file under ui/ and recorded the exhaustive review in ui/UI_REDESIGN_AUDIT.md.
-
 <p align="center">
   <img src="assets/monita-banner.svg" alt="Monita" width="720">
 </p>
