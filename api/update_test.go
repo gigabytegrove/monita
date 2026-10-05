@@ -12,6 +12,15 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestUpdateVersionPattern(t *testing.T) {
+	for _, version := range []string{"1.3.8", "1.3.8-alpha", "1.3.8-beta.2", "1.3.8-rc.1"} {
+		assert.True(t, updateVersionPattern.MatchString(version), version)
+	}
+	for _, version := range []string{"v1.3.8-alpha", "1.3", "master-local", "1.3.8-alpha+build"} {
+		assert.False(t, updateVersionPattern.MatchString(version), version)
+	}
+}
+
 func TestRuntimeAssetName(t *testing.T) {
 	name, err := runtimeAssetName("linux", "amd64")
 	require.NoError(t, err)
