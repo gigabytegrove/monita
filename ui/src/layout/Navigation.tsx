@@ -88,7 +88,12 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
         {label: 'Groups', to: '/groups', icon: <GroupWork />, adminOnly: true},
         {label: 'Integrations', to: '/integrations', icon: <Hub />, adminOnly: true},
         {label: 'Automation', to: '/automation', icon: <AutoMode />, adminOnly: true},
-        {label: 'Security & Operations', to: '/system', icon: <AdminPanelSettings />, adminOnly: true},
+        {
+            label: 'Security & Operations',
+            to: '/system',
+            icon: <AdminPanelSettings />,
+            adminOnly: true,
+        },
         {label: 'Audit Log', to: '/audit', icon: <FactCheck />, adminOnly: true},
     ];
 
@@ -208,17 +213,23 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
                                     />
                                 </ListItemAvatar>
                                 <ListItemText
-                                    primary={<Typography variant="body2" noWrap>{app.name}</Typography>}
-                                    secondary={
-                                        app.receiveNotifications === false
-                                            ? 'Muted'
-                                            : undefined
+                                    primary={
+                                        <Typography variant="body2" noWrap>
+                                            {app.name}
+                                        </Typography>
                                     }
-                                    slotProps={{secondary: {noWrap: true, sx: {fontSize: '0.7rem'}}}}
+                                    secondary={
+                                        app.receiveNotifications === false ? 'Muted' : undefined
+                                    }
+                                    slotProps={{
+                                        secondary: {noWrap: true, sx: {fontSize: '0.7rem'}},
+                                    }}
                                 />
                                 <Stack direction="row" spacing={0.4} sx={{alignItems: 'center'}}>
                                     {app.receiveNotifications === false && (
-                                        <NotificationsOff sx={{fontSize: 14, color: 'text.disabled'}} />
+                                        <NotificationsOff
+                                            sx={{fontSize: 14, color: 'text.disabled'}}
+                                        />
                                     )}
                                     {app.autoAssign && (
                                         <Public sx={{fontSize: 14, color: 'text.secondary'}} />
@@ -254,7 +265,12 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
             <Box sx={{px: 1.25, py: 1.25, flex: 1, minHeight: 0, overflowY: 'auto'}}>
                 <Stack
                     direction="row"
-                    sx={{px: 1.25, mb: 0.75, alignItems: 'center', justifyContent: 'space-between'}}>
+                    sx={{
+                        px: 1.25,
+                        mb: 0.75,
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                    }}>
                     <Typography variant="overline" color="text.secondary">
                         Channels
                     </Typography>

@@ -110,8 +110,9 @@ const Applications = observer(() => {
                     <Box sx={{p: {xs: 2, sm: 2.5}}}>
                         <Stack spacing={2} sx={{alignItems: 'flex-start'}}>
                             <Alert severity="info">
-                                Create a Channel to start receiving notifications. Administrators can
-                                also make Channels Global so every current and future user is assigned.
+                                Create a Channel to start receiving notifications. Administrators
+                                can also make Channels Global so every current and future user is
+                                assigned.
                             </Alert>
                             <Button variant="contained" onClick={() => setCreateDialog(true)}>
                                 Create your first Channel
