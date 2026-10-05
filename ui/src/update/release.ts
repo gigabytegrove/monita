@@ -120,5 +120,18 @@ export const releaseChannel = (version: string, prereleaseFlag = false): Release
 export const canInstallPublishedRelease = (classification: UpdateClassification): boolean =>
     classification === 'available' || classification === 'development';
 
-export const latestPublishedRelease = (releases: PublishedRelease[]): PublishedRelease | null =>
-    releases.find((release) => !release.draft) ?? null;
+export const latestPublishedRelease = (releases: PublishedRelease[]): PublishedRelease | null => {
+    const published = releases.filter((release) => !release.draft);
+    if (published.length === 0) return null;
+
+    return published.reduce<PublishedRelease | null>((latest, release) => {
+        if (!latest) return release;
+
+        const comparison = compareVersions(
+            release.tag_name.replace(/^v/i, ''),
+            latest.tag_name.replace(/^v/i, '')
+        );
+        if (comparison === null) return latest;
+        return comparison > 0 ? release : latest;
+    }, null);
+};
