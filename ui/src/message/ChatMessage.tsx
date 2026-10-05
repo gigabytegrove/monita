@@ -49,7 +49,7 @@ const ChatMessage = ({message, mine, onRefresh, onArchive, onRestore, onDelete}:
                     width: 34,
                     height: 34,
                     mt: 0.15,
-                    borderRadius: 1,
+                    borderRadius: 0.25,
                     bgcolor: mine ? 'primary.main' : 'background.paper',
                     color: mine ? 'primary.contrastText' : 'text.primary',
                     border: mine ? 0 : 1,
