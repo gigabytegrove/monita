@@ -84,6 +84,7 @@ const Integrations = () => {
 
     return (
         <DefaultPage
+            eyebrow="Connections"
             title="Integrations"
             description="Connect external systems directly to Monita."
             rightControl={
