@@ -269,9 +269,6 @@ func mentionRecipientUserIDs(msg *model.Message) []uint {
 	}
 	raw, ok := extras["monita::mentionUserIds"]
 	if !ok {
-		raw, ok = extras["gotify::mu::mentionUserIds"]
-	}
-	if !ok {
 		return nil
 	}
 	var ids []uint
