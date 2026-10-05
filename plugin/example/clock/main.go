@@ -8,8 +8,8 @@ import (
 )
 
 // GetMonitaPluginInfo returns the Monita plugin ABI information
-func GetMonitaPluginInfo() plugin.Info {
-	return plugin.Info{
+func GetMonitaPluginInfo() papiv1.Info {
+	return papiv1.Info{
 		Name:        "clock",
 		Description: "Sends an hourly reminder",
 		ModulePath:  "github.com/gigabytegrove/monita/example/clock",
@@ -18,17 +18,17 @@ func GetMonitaPluginInfo() plugin.Info {
 
 // Plugin is plugin instance
 type Plugin struct {
-	msgHandler  plugin.MessageHandler
+	msgHandler  papiv1.MessageHandler
 	enabled     bool
 	cronHandler *cron.Cron
 }
 
-// Enable implements plugin.Plugin
+// Enable implements papiv1.Plugin
 func (c *Plugin) Enable() error {
 	c.enabled = true
 	c.cronHandler = cron.New()
 	c.cronHandler.AddFunc("0 0 * * *", func() {
-		c.msgHandler.SendMessage(plugin.Message{
+		c.msgHandler.SendMessage(papiv1.Message{
 			Title:   "Tick Tock!",
 			Message: time.Now().Format("It is 15:04:05 now."),
 		})
@@ -37,7 +37,7 @@ func (c *Plugin) Enable() error {
 	return nil
 }
 
-// Disable implements plugin.Plugin
+// Disable implements papiv1.Plugin
 func (c *Plugin) Disable() error {
 	if c.cronHandler != nil {
 		c.cronHandler.Stop()
@@ -46,13 +46,13 @@ func (c *Plugin) Disable() error {
 	return nil
 }
 
-// SetMessageHandler implements plugin.Messenger.
-func (c *Plugin) SetMessageHandler(h plugin.MessageHandler) {
+// SetMessageHandler implements papiv1.Messenger.
+func (c *Plugin) SetMessageHandler(h papiv1.MessageHandler) {
 	c.msgHandler = h
 }
 
 // NewMonitaPluginInstance is the Monita ABI entrypoint for creating a plugin instance.
-func NewMonitaPluginInstance(ctx plugin.UserContext) plugin.Plugin {
+func NewMonitaPluginInstance(ctx papiv1.UserContext) papiv1.Plugin {
 	p := &Plugin{}
 
 	return p
