@@ -1,3 +1,17 @@
+## 1.3.8 — 2026-10-05
+
+### Release-channel aware software updates
+
+- Added full semantic-version support for prerelease builds such as `1.3.9-alpha`, `1.3.9-beta`, and `1.3.9-rc.1`.
+- Added proper prerelease ordering so Alpha → Beta → RC → Stable upgrades are recognized correctly.
+- Added an explicit **Release channel** indicator to **Settings → Software Update**.
+- The updater now displays the complete published version string instead of reducing prerelease builds to the base version.
+- The managed update API now accepts and installs prerelease release tags while retaining checksum and runtime-version verification.
+- Stable releases continue to display as **Stable**.
+- Bumped the Web/PWA shell cache so the updated Software Update interface is loaded immediately.
+
+This release intentionally keeps the existing Monita Web UI. The separate Web UI redesign begins with **1.3.9-alpha**.
+
 <p align="center">
   <img src="assets/monita-banner.svg" alt="Monita" width="720">
 </p>
