@@ -1,10 +1,10 @@
-const CACHE = 'monita-shell-v5';
+const CACHE = 'monita-shell-v6';
 const SHELL = [
     './',
     './index.html',
     './manifest.json',
-    './static/monita-icon.svg?v=1.4.0',
-    './static/monita-logo.svg?v=1.4.0',
+    './static/monita-icon.svg?v=1.3.8-alpha',
+    './static/monita-logo.svg?v=1.3.8-alpha',
 ];
 
 const isCacheableAsset = (request) => {
