@@ -1,15 +1,16 @@
-## 1.3.8-alpha — 2026-10-05
+## 1.3.8 — 2026-10-05
 
-### Alpha Web UI/UX redesign
+### Release-channel aware software updates
 
-- Rebuilt the Monita server Web interface from the ground up as a workspace rather than a theme-only reskin.
-- Replaced the previous rounded-card-heavy visual language with flat, low-radius sections and denser operational layouts.
-- Removed browser-default blue-link styling in favor of Monita-native link treatment.
-- Reworked Dashboard, navigation, Channels, Messages, Chat, Login, Settings, Administration, Integrations, Automation, Plugins, Update status, and supporting dialogs.
-- Completed an exhaustive pass across all 116 files under `ui/`.
-- Re-versioned PWA/browser assets and service-worker cache for this alpha build.
+- Added full semantic-version support for prerelease builds such as `1.3.9-alpha`, `1.3.9-beta`, and `1.3.9-rc.1`.
+- Added proper prerelease ordering so Alpha → Beta → RC → Stable upgrades are recognized correctly.
+- Added an explicit **Release channel** indicator to **Settings → Software Update**.
+- The updater now displays the complete published version string instead of reducing prerelease builds to the base version.
+- The managed update API now accepts and installs prerelease release tags while retaining checksum and runtime-version verification.
+- Stable releases continue to display as **Stable**.
+- Bumped the Web/PWA shell cache so the updated Software Update interface is loaded immediately.
 
-This is an **alpha** preview intended for hands-on UI review before the design is finalized.
+This release intentionally keeps the existing Monita Web UI. The separate Web UI redesign begins with **1.3.9-alpha**.
 
 <p align="center">
   <img src="assets/monita-banner.svg" alt="Monita" width="720">
