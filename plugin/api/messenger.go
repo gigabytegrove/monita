@@ -1,6 +1,6 @@
 package api
 
-// Message describes a message to be send by MessageHandler#SendMessage
+// Message describes a message to be sent by MessageHandler#SendMessage.
 type Message struct {
 	Message  string
 	Title    string
