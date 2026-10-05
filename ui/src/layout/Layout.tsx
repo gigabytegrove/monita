@@ -41,7 +41,7 @@ import {createMonitaTheme, isThemeKey, ThemeKey} from './theme';
 import DefaultPage from '../common/DefaultPage';
 
 const localStorageThemeKey = 'monita-theme';
-const legacyThemeKey = 'gotify-theme';
+const legacyThemeKey = 'monita-theme-legacy';
 
 const Layout = observer(() => {
     const {
