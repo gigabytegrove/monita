@@ -56,17 +56,28 @@ const Layout = observer(() => {
         },
     } = useStores();
 
-    const [currentTheme] = React.useState<ThemeKey>(() => {
+    const [currentTheme, setCurrentThemeState] = React.useState<ThemeKey>(() => {
         const stored =
             window.localStorage.getItem(localStorageThemeKey) ??
             window.localStorage.getItem(legacyThemeKey);
         return isThemeKey(stored) ? stored : 'system';
     });
+
+    const setCurrentTheme = React.useCallback((nextTheme: ThemeKey) => {
+        setCurrentThemeState(nextTheme);
+        window.localStorage.setItem(localStorageThemeKey, nextTheme);
+        window.localStorage.removeItem(legacyThemeKey);
+    }, []);
     const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
     const paletteMode = currentTheme === 'system' ? (prefersDark ? 'dark' : 'light') : currentTheme;
     const theme = React.useMemo(() => createMonitaTheme(paletteMode), [paletteMode]);
     const {version} = config.get('version');
     const [navOpen, setNavOpen] = React.useState(false);
+
+    React.useEffect(() => {
+        document.documentElement.dataset.theme = paletteMode;
+        document.documentElement.style.colorScheme = paletteMode;
+    }, [paletteMode]);
 
     const authed = (children: React.ReactNode) => (
         <RequireAuth loggedIn={loggedIn} authenticating={authenticating}>
@@ -98,6 +109,8 @@ const Layout = observer(() => {
                             loggedIn={loggedIn}
                             logout={logout}
                             setNavOpen={setNavOpen}
+                            currentTheme={currentTheme}
+                            setCurrentTheme={setCurrentTheme}
                         />
 
                         <Box sx={{display: 'flex', minHeight: 'calc(100vh - 64px)'}}>
