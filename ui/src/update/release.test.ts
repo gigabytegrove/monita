@@ -66,7 +66,7 @@ describe('release update helpers', () => {
         expect(canInstallPublishedRelease('newer')).toBe(false);
     });
 
-    it('includes prereleases while ignoring drafts', () => {
+    it('selects the highest published semantic release while ignoring drafts', () => {
         const release = latestPublishedRelease([
             {
                 tag_name: 'v1.3.9-alpha',
@@ -80,15 +80,25 @@ describe('release update helpers', () => {
             },
             {
                 tag_name: 'v1.3.8',
-                target_commitish: 'releasesha',
+                target_commitish: 'stable',
                 name: 'Monita v1.3.8',
-                html_url: 'https://example.invalid/release',
+                html_url: 'https://example.invalid/stable',
                 draft: false,
                 prerelease: false,
-                published_at: null,
+                published_at: '2026-10-05T18:00:00Z',
+                assets: [],
+            },
+            {
+                tag_name: 'v1.3.9-alpha',
+                target_commitish: 'alpha',
+                name: 'Monita v1.3.9-alpha',
+                html_url: 'https://example.invalid/alpha',
+                draft: false,
+                prerelease: true,
+                published_at: '2026-10-05T17:00:00Z',
                 assets: [],
             },
         ]);
-        expect(release?.tag_name).toBe('v1.3.8');
+        expect(release?.tag_name).toBe('v1.3.9-alpha');
     });
 });
