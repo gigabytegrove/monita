@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gotify/location"
+	"github.com/gigabytegrove/monita/location"
 )
 
 //go:embed spec.json
