@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/gotify/plugin-api"
+	papiv1 "github.com/gigabytegrove/monita/plugin/api"
 )
 
-// GetGotifyPluginInfo returns the legacy plugin ABI information
-func GetGotifyPluginInfo() plugin.Info {
+// GetMonitaPluginInfo returns the Monita plugin ABI information
+func GetMonitaPluginInfo() plugin.Info {
 	return plugin.Info{
 		ModulePath: "github.com/gigabytegrove/monita/plugin/testing/broken/malformedconstructor",
 	}
@@ -24,8 +24,8 @@ func (c *Plugin) Disable() error {
 	return nil
 }
 
-// NewGotifyPluginInstance is the legacy ABI entrypoint for creating a plugin instance.
-func NewGotifyPluginInstance(ctx plugin.UserContext) any {
+// NewMonitaPluginInstance is the Monita ABI entrypoint for creating a plugin instance.
+func NewMonitaPluginInstance(ctx plugin.UserContext) any {
 	return &Plugin{}
 }
 
