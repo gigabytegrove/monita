@@ -1,6 +1,6 @@
 import React from 'react';
-import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 interface ConnectionErrorBannerProps {
     height: number;
@@ -8,22 +8,20 @@ interface ConnectionErrorBannerProps {
     message: string;
 }
 
-export const ConnectionErrorBanner = ({retry, message}: ConnectionErrorBannerProps) => (
-    <Alert
-        severity="error"
-        variant="filled"
-        square
-        action={
-            <Button color="inherit" size="small" onClick={retry}>
+export const ConnectionErrorBanner = ({height, retry, message}: ConnectionErrorBannerProps) => (
+    <div
+        style={{
+            backgroundColor: '#e74c3c',
+            height,
+            width: '100%',
+            zIndex: 1300,
+            position: 'relative',
+        }}>
+        <Typography align="center" variant="h6" style={{lineHeight: `${height}px`}}>
+            {message}{' '}
+            <Button variant="outlined" onClick={retry}>
                 Retry
             </Button>
-        }
-        sx={{
-            borderRadius: 0,
-            minHeight: 44,
-            alignItems: 'center',
-            '& .MuiAlert-message': {py: 0.5},
-        }}>
-        {message}
-    </Alert>
+        </Typography>
+    </div>
 );

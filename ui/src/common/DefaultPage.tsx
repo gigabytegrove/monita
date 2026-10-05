@@ -8,58 +8,39 @@ interface IProps {
     description?: string;
     rightControl?: React.ReactNode;
     maxWidth?: number;
-    eyebrow?: string;
 }
 
 const DefaultPage: FC<React.PropsWithChildren<IProps>> = ({
     title,
     description,
     rightControl,
-    maxWidth = 1320,
-    eyebrow,
+    maxWidth = 1280,
     children,
 }) => (
-    <Box component="main" sx={{width: '100%', maxWidth, mx: 'auto', pb: 5}}>
-        <Stack spacing={3}>
-            <Box
+    <Box component="main" sx={{width: '100%', maxWidth, mx: 'auto', pb: 4}}>
+        <Stack spacing={2.75}>
+            <Stack
+                direction={{xs: 'column', sm: 'row'}}
+                spacing={1.5}
                 sx={{
-                    display: 'grid',
-                    gridTemplateColumns: {xs: '1fr', md: rightControl ? 'minmax(0,1fr) auto' : '1fr'},
-                    gap: 2,
-                    alignItems: 'end',
-                    pb: 2.25,
-                    borderBottom: 1,
-                    borderColor: 'divider',
+                    alignItems: {xs: 'stretch', sm: 'center'},
+                    justifyContent: 'space-between',
                 }}>
                 <Box sx={{minWidth: 0}}>
-                    {eyebrow && (
-                        <Typography
-                            variant="overline"
-                            color="primary.main"
-                            sx={{display: 'block', mb: 0.5}}>
-                            {eyebrow}
-                        </Typography>
-                    )}
                     <Typography
-                        variant="h3"
+                        variant="h4"
                         component="h1"
-                        sx={{
-                            fontSize: {xs: '1.9rem', sm: '2.35rem', lg: '2.65rem'},
-                            lineHeight: 1.02,
-                            letterSpacing: '-0.045em',
-                        }}>
+                        sx={{fontSize: {xs: '1.7rem', sm: '2.05rem'}, lineHeight: 1.08}}>
                         {title}
                     </Typography>
                     {description && (
-                        <Typography
-                            color="text.secondary"
-                            sx={{mt: 0.85, maxWidth: 760, fontSize: {sm: '1rem'}}}>
+                        <Typography color="text.secondary" sx={{mt: 0.5}}>
                             {description}
                         </Typography>
                     )}
                 </Box>
-                {rightControl && <Box sx={{display: 'flex', justifyContent: {md: 'flex-end'}}}>{rightControl}</Box>}
-            </Box>
+                {rightControl && <Box sx={{flexShrink: 0}}>{rightControl}</Box>}
+            </Stack>
             {children}
         </Stack>
     </Box>

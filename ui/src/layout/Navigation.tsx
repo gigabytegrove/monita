@@ -37,7 +37,7 @@ import {mayAllowPermission, requestPermission} from '../snack/browserNotificatio
 import {useStores} from '../stores';
 import * as config from '../config';
 
-export const navigationWidth = 288;
+export const navigationWidth = 276;
 
 interface IProps {
     loggedIn: boolean;
@@ -71,112 +71,50 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
     const [showRequestNotification, setShowRequestNotification] =
         React.useState(mayAllowPermission);
 
-    const primaryItems: NavItem[] = [
-        {label: 'Home', to: '/', icon: <Dashboard />, exact: true},
+    const items: NavItem[] = [
+        {label: 'Dashboard', to: '/', icon: <Dashboard />, exact: true},
         {label: 'Messages', to: '/messages', icon: <Inbox />},
         {label: 'Channels', to: '/channels', icon: <Forum />},
-    ];
-
-    const workspaceItems: NavItem[] = [
+        {label: 'Users', to: '/users', icon: <People />, adminOnly: true},
+        {label: 'Groups', to: '/groups', icon: <GroupWork />, adminOnly: true},
+        {label: 'Integrations', to: '/integrations', icon: <Hub />, adminOnly: true},
+        {label: 'Automation', to: '/automation', icon: <AutoMode />, adminOnly: true},
+        {
+            label: 'Security & Operations',
+            to: '/system',
+            icon: <AdminPanelSettings />,
+            adminOnly: true,
+        },
+        {label: 'Audit Log', to: '/audit', icon: <FactCheck />, adminOnly: true},
         {label: 'Clients', to: '/clients', icon: <DevicesOther />},
         {label: 'Plugins', to: '/plugins', icon: <Extension />},
         {label: 'Settings', to: '/settings', icon: <Settings />},
     ];
 
-    const adminItems: NavItem[] = [
-        {label: 'Users', to: '/users', icon: <People />, adminOnly: true},
-        {label: 'Groups', to: '/groups', icon: <GroupWork />, adminOnly: true},
-        {label: 'Integrations', to: '/integrations', icon: <Hub />, adminOnly: true},
-        {label: 'Automation', to: '/automation', icon: <AutoMode />, adminOnly: true},
-        {label: 'Security & Operations', to: '/system', icon: <AdminPanelSettings />, adminOnly: true},
-        {label: 'Audit Log', to: '/audit', icon: <FactCheck />, adminOnly: true},
-    ];
-
     const selected = (item: NavItem) =>
         item.exact ? location.pathname === item.to : location.pathname.startsWith(item.to);
-
-    const renderNavGroup = (label: string, items: NavItem[]) => (
-        <Box sx={{mb: 1.5}}>
-            <Typography
-                variant="overline"
-                color="text.secondary"
-                sx={{display: 'block', px: 1.25, mb: 0.35}}>
-                {label}
-            </Typography>
-            <List disablePadding>
-                {items
-                    .filter((item) => !item.adminOnly || currentUser.user.admin)
-                    .map((item) => (
-                        <ListItemButton
-                            key={item.to}
-                            id={
-                                item.to === '/channels'
-                                    ? 'navigate-apps'
-                                    : item.to === '/users'
-                                      ? 'navigate-users'
-                                      : item.to === '/clients'
-                                        ? 'navigate-clients'
-                                        : item.to === '/plugins'
-                                          ? 'navigate-plugins'
-                                          : item.to === '/messages'
-                                            ? 'navigate-messages'
-                                            : undefined
-                            }
-                            className={item.to === '/messages' ? 'all' : undefined}
-                            component={Link}
-                            to={item.to}
-                            selected={selected(item)}
-                            disabled={!loggedIn}
-                            onClick={() => setNavOpen(false)}
-                            sx={{
-                                minHeight: 42,
-                                borderRadius: 0.75,
-                                my: 0.15,
-                                px: 1.1,
-                                '&.Mui-selected': {
-                                    bgcolor: 'action.selected',
-                                    color: 'primary.main',
-                                    '& .MuiListItemIcon-root': {color: 'primary.main'},
-                                    '& .MuiListItemText-primary': {fontWeight: 760},
-                                },
-                            }}>
-                            <ListItemIcon sx={{minWidth: 38}}>{item.icon}</ListItemIcon>
-                            <ListItemText
-                                primary={item.label}
-                                slotProps={{primary: {sx: {fontSize: '0.9rem'}}}}
-                            />
-                        </ListItemButton>
-                    ))}
-            </List>
-        </Box>
-    );
 
     const renderChannelSection = (
         label: string,
         sectionApps: typeof apps,
         icon: React.ReactNode
     ) => (
-        <Box sx={{mb: 1.25}}>
+        <Box sx={{mb: 1.5}}>
             <Stack
                 direction="row"
-                sx={{px: 1.25, mb: 0.35, alignItems: 'center', justifyContent: 'space-between'}}>
-                <Stack direction="row" spacing={0.65} sx={{alignItems: 'center'}}>
+                sx={{px: 1.25, mb: 0.5, alignItems: 'center', justifyContent: 'space-between'}}>
+                <Stack direction="row" spacing={0.75} sx={{alignItems: 'center'}}>
                     <Box sx={{display: 'flex', color: 'text.secondary'}}>{icon}</Box>
-                    <Typography variant="caption" color="text.secondary" sx={{fontWeight: 750}}>
+                    <Typography variant="overline" color="text.secondary" sx={{letterSpacing: 1}}>
                         {label}
                     </Typography>
                 </Stack>
-                <Typography variant="caption" color="text.disabled">
-                    {sectionApps.length}
-                </Typography>
+                <Chip size="small" variant="outlined" label={sectionApps.length} />
             </Stack>
             <List disablePadding>
                 {loggedIn && sectionApps.length === 0 && (
-                    <ListItemButton disabled sx={{borderRadius: 0.75, py: 0.5}}>
-                        <ListItemText
-                            primary={`No ${label.toLowerCase()}`}
-                            slotProps={{primary: {sx: {fontSize: '0.82rem'}}}}
-                        />
+                    <ListItemButton disabled sx={{borderRadius: 2}}>
+                        <ListItemText primary={`No ${label.toLowerCase()}`} />
                     </ListItemButton>
                 )}
                 {loggedIn &&
@@ -191,37 +129,35 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
                                 selected={location.pathname === to}
                                 onClick={() => setNavOpen(false)}
                                 sx={{
-                                    borderRadius: 0.75,
-                                    my: 0.1,
-                                    py: 0.45,
-                                    px: 0.85,
-                                    '&.Mui-selected': {
-                                        bgcolor: 'action.selected',
-                                        '& .MuiListItemText-primary': {fontWeight: 750},
-                                    },
+                                    borderRadius: 1.75,
+                                    my: 0.15,
+                                    py: 0.55,
+                                    '&.Mui-selected': {bgcolor: 'action.selected'},
                                 }}>
-                                <ListItemAvatar sx={{minWidth: 38}}>
+                                <ListItemAvatar sx={{minWidth: 42}}>
                                     <Avatar
                                         src={config.get('url') + app.image}
-                                        variant="square"
-                                        sx={{width: 28, height: 28}}
+                                        variant="rounded"
+                                        sx={{width: 30, height: 30}}
                                     />
                                 </ListItemAvatar>
                                 <ListItemText
-                                    primary={<Typography variant="body2" noWrap>{app.name}</Typography>}
+                                    primary={<Typography noWrap>{app.name}</Typography>}
                                     secondary={
                                         app.receiveNotifications === false
-                                            ? 'Muted'
+                                            ? 'Notifications muted'
                                             : undefined
                                     }
-                                    slotProps={{secondary: {noWrap: true, sx: {fontSize: '0.7rem'}}}}
+                                    slotProps={{secondary: {noWrap: true}}}
                                 />
-                                <Stack direction="row" spacing={0.4} sx={{alignItems: 'center'}}>
+                                <Stack direction="row" spacing={0.5} sx={{alignItems: 'center'}}>
                                     {app.receiveNotifications === false && (
-                                        <NotificationsOff sx={{fontSize: 14, color: 'text.disabled'}} />
+                                        <NotificationsOff
+                                            sx={{fontSize: 15, color: 'text.disabled'}}
+                                        />
                                     )}
                                     {app.autoAssign && (
-                                        <Public sx={{fontSize: 14, color: 'text.secondary'}} />
+                                        <Public sx={{fontSize: 15, color: 'text.secondary'}} />
                                     )}
                                 </Stack>
                             </ListItemButton>
@@ -245,46 +181,90 @@ const Navigation = observer(({loggedIn, navOpen, setNavOpen}: IProps) => {
                 </IconButton>
             </Box>
 
-            <Box sx={{px: 1.25, pt: {xs: 0.5, sm: 1.5}, pb: 0.75}}>
-                {renderNavGroup('Workspace', primaryItems)}
+            <Box sx={{px: 1.25, py: 2}}>
+                <Typography
+                    variant="overline"
+                    color="text.secondary"
+                    sx={{px: 1.5, letterSpacing: 1}}>
+                    Workspace
+                </Typography>
+                <List disablePadding>
+                    {items
+                        .filter((item) => !item.adminOnly || currentUser.user.admin)
+                        .map((item) => (
+                            <ListItemButton
+                                key={item.to}
+                                id={
+                                    item.to === '/channels'
+                                        ? 'navigate-apps'
+                                        : item.to === '/users'
+                                          ? 'navigate-users'
+                                          : item.to === '/clients'
+                                            ? 'navigate-clients'
+                                            : item.to === '/plugins'
+                                              ? 'navigate-plugins'
+                                              : item.to === '/messages'
+                                                ? 'navigate-messages'
+                                                : undefined
+                                }
+                                className={item.to === '/messages' ? 'all' : undefined}
+                                component={Link}
+                                to={item.to}
+                                selected={selected(item)}
+                                disabled={!loggedIn}
+                                onClick={() => setNavOpen(false)}
+                                sx={{
+                                    borderRadius: 2.25,
+                                    my: 0.35,
+                                    py: 0.85,
+                                    '&.Mui-selected': {
+                                        bgcolor: 'action.selected',
+                                        boxShadow: 'inset 3px 0 0 currentColor',
+                                        color: 'primary.main',
+                                        '& .MuiListItemIcon-root': {color: 'primary.main'},
+                                        '& .MuiListItemText-primary': {fontWeight: 700},
+                                    },
+                                }}>
+                                <ListItemIcon sx={{minWidth: 40}}>{item.icon}</ListItemIcon>
+                                <ListItemText primary={item.label} />
+                            </ListItemButton>
+                        ))}
+                </List>
             </Box>
 
             <Divider />
 
-            <Box sx={{px: 1.25, py: 1.25, flex: 1, minHeight: 0, overflowY: 'auto'}}>
+            <Box sx={{px: 1.5, py: 1.5, flex: 1, minHeight: 0, overflowY: 'auto'}}>
                 <Stack
                     direction="row"
-                    sx={{px: 1.25, mb: 0.75, alignItems: 'center', justifyContent: 'space-between'}}>
-                    <Typography variant="overline" color="text.secondary">
-                        Channels
+                    sx={{px: 1.25, mb: 1, alignItems: 'center', justifyContent: 'space-between'}}>
+                    <Typography variant="overline" color="text.secondary" sx={{letterSpacing: 1}}>
+                        Conversations
                     </Typography>
-                    <Chip size="small" variant="outlined" label={apps.length} />
+                    <Chip size="small" color="primary" variant="outlined" label={apps.length} />
                 </Stack>
-                {renderChannelSection('Chats', chatApps, <Forum sx={{fontSize: 15}} />)}
+                {renderChannelSection('Chats', chatApps, <Forum sx={{fontSize: 16}} />)}
                 {renderChannelSection(
-                    'Notifications',
+                    'Notification Channels',
                     notificationApps,
-                    <NotificationsActive sx={{fontSize: 15}} />
+                    <NotificationsActive sx={{fontSize: 16}} />
                 )}
-
-                <Divider sx={{my: 1.5}} />
-                {currentUser.user.admin && renderNavGroup('Administration', adminItems)}
-                {renderNavGroup('Tools', workspaceItems)}
             </Box>
 
             {showRequestNotification && (
-                <Box sx={{p: 1.25, borderTop: 1, borderColor: 'divider'}}>
-                    <Button
-                        fullWidth
-                        size="small"
-                        variant="contained"
-                        onClick={() => {
-                            requestPermission();
-                            setShowRequestNotification(false);
-                        }}>
-                        Enable notifications
-                    </Button>
-                </Box>
+                <>
+                    <Divider />
+                    <Stack sx={{p: 1.5}}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => {
+                                requestPermission();
+                                setShowRequestNotification(false);
+                            }}>
+                            Enable Browser Notifications
+                        </Button>
+                    </Stack>
+                </>
             )}
         </Box>
     );
