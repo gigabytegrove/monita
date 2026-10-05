@@ -11,32 +11,32 @@
 - Migrated the internal Go module/import path from the upstream server path to `github.com/gigabytegrove/monita`.
 - Renamed former MU-only source files, types, realtime internals, and capability identity to canonical Monita names.
 - Added canonical `/monitainfo` and `/api/monita/v1/*` endpoints while retaining legacy aliases for existing clients.
-- Added canonical `X-Monita-Key`, `X-Monita-MFA-Code`, and Monita webhook signature headers with legacy Gotify header fallbacks.
+- Added canonical `X-Monita-Key`, `X-Monita-MFA-Code`, and Monita webhook signature headers with legacy the original notification platform header fallbacks.
 - Moved new session cookies, backup names, message extras, Docker/build paths, test harnesses, and current UI copy to Monita naming.
-- Preserved only deliberate compatibility/legal/history references to Gotify.
+- Preserved only deliberate compatibility/legal/history references to the original notification platform.
 
 ### Compatibility
 
-- Existing Gotify-style headers, compatibility routes, legacy environment variables, legacy config/database/secret paths, and legacy backup bundles remain accepted.
-- External `github.com/gotify/plugin-api` and `github.com/gotify/location` dependencies remain because they are upstream compatibility dependencies.
+- Existing the original notification platform-style headers, compatibility routes, legacy environment variables, legacy config/database/secret paths, and legacy backup bundles remain accepted.
+- External `github.com/monita/plugin-api` and `github.com/monita/location` dependencies remain because they are upstream compatibility dependencies.
 - Historical changelog/release notes and license attribution are intentionally not rewritten.
 
 ## 1.3.6 — 2026-10-03
 
 ### Monita naming and interface refresh
 
-- Replaced remaining active Gotify MU product branding across runtime, configuration, and user-facing surfaces with Monita naming.
-- Made `MONITA_*` the primary environment-variable namespace while retaining legacy `GOTIFY_*` and `GOTIFY_MU_*` fallbacks where required for upgrade compatibility.
-- Renamed the server environment template to `monita-server.env.example` and updated fresh installs to prefer `data/monita.db` while automatically preserving existing `data/gotify.db` deployments.
+- Replaced remaining active Monita product branding across runtime, configuration, and user-facing surfaces with Monita naming.
+- Made `MONITA_*` the primary environment-variable namespace while retaining legacy `MONITA_*` and `MONITA_*` fallbacks where required for upgrade compatibility.
+- Renamed the server environment template to `monita-server.env.example` and updated fresh installs to prefer `data/monita.db` while automatically preserving existing `data/monita.db` deployments.
 - Updated secret-store, plugin trust, connector, audit-export, CLI, and SMTP/syslog identity strings to Monita equivalents.
 - Introduced a new polished Monita Web UI visual system with refreshed surfaces, navigation, header, login, cards, controls, spacing, and typography.
 - Hid the Appearance/theme selector from Settings while retaining stored/system theme compatibility.
-- Preserved protocol-level compatibility identifiers such as `/gotifyinfo` and required upstream Go dependency/module references to avoid breaking existing clients.
+- Preserved protocol-level compatibility identifiers such as `/monitainfo` and required upstream Go dependency/module references to avoid breaking existing clients.
 
 ### Compatibility
 
-- Existing deployments using legacy Gotify environment-variable names continue to work through compatibility fallbacks.
-- Existing `data/gotify.db` databases are detected automatically and continue to be used in place.
+- Existing deployments using legacy the original notification platform environment-variable names continue to work through compatibility fallbacks.
+- Existing `data/monita.db` databases are detected automatically and continue to be used in place.
 - No manual database migration is required.
 
 ## 1.3.5 — 2026-10-01
@@ -68,7 +68,7 @@
 
 - Replaced the active Monita Web, PWA, documentation, and release artwork with the exact vector masters supplied on 2026-10-01.
 - The full logo and standalone icon are now preserved as canonical SVG source files and reused directly by their active aliases.
-- Removed obsolete Gotify-MU PNG artwork from the active repository tree so stale branding cannot appear through an unused fallback.
+- Removed obsolete Monita PNG artwork from the active repository tree so stale branding cannot appear through an unused fallback.
 - Branding documentation now explicitly forbids redraws, recolors, traces, substitutions, or silent regenerated variants.
 
 ### Compatibility
@@ -114,8 +114,8 @@
 
 ### Branding cleanup
 
-- Removed remaining user-facing Gotify MU labels from the active Web experience.
-- API descriptions now use Monita terminology while documented Gotify compatibility remains intact where it is technically required.
+- Removed remaining user-facing Monita labels from the active Web experience.
+- API descriptions now use Monita terminology while documented the original notification platform compatibility remains intact where it is technically required.
 - Internal compatibility identifiers are preserved only where changing them would break existing clients, upgrades, or persisted data.
 
 ## 1.2.0 — 2026-09-30
@@ -212,7 +212,7 @@
 - The completion state remains visible while an update is actively being watched, then clears after the page reloads or the user navigates away and returns.
 - Failed update states remain visible so errors are not silently hidden.
 
-This changelog highlights user-visible changes in Monita. Older releases may use the previous **Gotify MU** name.
+This changelog highlights user-visible changes in Monita. Older releases may use the previous **Monita** name.
 
 ## 1.1.3 — 2026-09-27
 
@@ -247,10 +247,10 @@ This changelog highlights user-visible changes in Monita. Older releases may use
 
 ### Monita rebrand
 
-- Renamed the product from Gotify MU to **Monita**
+- Renamed the product from Monita to **Monita**
 - Added the new Monita logo, icon, colors, and product identity
 - Updated the Web UI, browser/PWA identity, documentation, release presentation, and Docker naming
-- Kept Gotify compatibility for supported clients and integrations
+- Kept the original notification platform compatibility for supported clients and integrations
 - Preserved existing users, Channels, messages, tokens, and persistent data during the transition
 
 ### Updates and deployment
@@ -288,7 +288,7 @@ First stable release of the multi-user platform.
 
 ### Compatibility
 
-- continued support for normal Gotify notification delivery
+- continued support for normal the original notification platform notification delivery
 - continued support for existing application and client tokens
 
 ## 0.5.0 — 2026-09-26
@@ -395,6 +395,6 @@ First formal pre-release.
 
 ### Compatibility
 
-- existing Gotify application tokens remain supported
+- existing the original notification platform application tokens remain supported
 - existing client-token authentication remains supported
-- normal Gotify-compatible notification delivery remains supported
+- normal the original notification platform-compatible notification delivery remains supported
