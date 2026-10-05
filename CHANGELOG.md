@@ -1,3 +1,14 @@
+## 1.3.9-alpha1 — 2026-10-05
+
+### Web UI redesign — first alpha
+
+- First prerelease build of the redesigned Monita Web UI.
+- Restored a working **Light / Dark / System** appearance selector with persistent per-browser preference.
+- Rebalanced the interface around Monita's blue-and-gray visual identity and reduced the overly purple/indigo cast.
+- Reduced excessive global rounding across controls, menus, inputs, chips, and dialogs.
+- Updated Web/PWA asset cache identifiers so 1.3.9-alpha1 branding and styling load without stale 1.3.8 shell assets.
+- This is an **Alpha** release and is intentionally published on the prerelease update channel.
+
 ## 1.3.8 — 2026-10-05
 
 ### Release-channel aware software updates
