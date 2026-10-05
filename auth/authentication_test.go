@@ -470,5 +470,5 @@ func (s *AuthenticationSuite) assertCsrfRequest(headers map[string]string, cooki
 type fMiddleware gin.HandlerFunc
 
 func (s *AuthenticationSuite) TestLegacyKeyHeaderCompatibility() {
-	s.assertHeaderRequest("X-Gotify-Key", "clienttoken", s.auth.RequireClient, 200)
+	s.assertHeaderRequest("X-Monita-Key", "clienttoken", s.auth.RequireClient, 200)
 }
