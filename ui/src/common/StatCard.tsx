@@ -1,4 +1,3 @@
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -12,54 +11,37 @@ interface IProps {
 }
 
 const StatCard = ({label, value, icon, helper}: IProps) => (
-    <Paper
-        variant="outlined"
+    <Box
         sx={{
-            p: 2.25,
             height: '100%',
-            borderRadius: 3,
-            position: 'relative',
-            overflow: 'hidden',
-            transition: 'transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease',
-            '&:hover': {
-                transform: 'translateY(-2px)',
-                borderColor: 'primary.light',
-                boxShadow: 2,
-            },
+            pl: 1.5,
+            py: 0.5,
+            borderLeft: 2,
+            borderColor: 'primary.main',
         }}>
-        <Stack
-            direction="row"
-            spacing={2}
-            sx={{justifyContent: 'space-between', alignItems: 'flex-start'}}>
-            <Box>
-                <Typography variant="body2" color="text.secondary">
-                    {label}
-                </Typography>
-                <Typography variant="h4" sx={{mt: 0.25, lineHeight: 1.1}}>
-                    {value}
-                </Typography>
-                {helper && (
-                    <Typography variant="caption" color="text.secondary">
-                        {helper}
-                    </Typography>
-                )}
-            </Box>
+        <Stack direction="row" spacing={1.25} sx={{alignItems: 'center'}}>
             {icon && (
-                <Box
-                    sx={{
-                        color: 'primary.main',
-                        bgcolor: 'action.hover',
-                        width: 42,
-                        height: 42,
-                        borderRadius: 2.5,
-                        display: 'grid',
-                        placeItems: 'center',
-                    }}>
+                <Box sx={{color: 'text.secondary', display: 'grid', placeItems: 'center'}}>
                     {icon}
                 </Box>
             )}
+            <Box sx={{minWidth: 0}}>
+                <Typography variant="caption" color="text.secondary" sx={{fontWeight: 700}}>
+                    {label}
+                </Typography>
+                <Stack direction="row" spacing={1} sx={{alignItems: 'baseline', flexWrap: 'wrap'}}>
+                    <Typography variant="h5" sx={{lineHeight: 1.05}}>
+                        {value}
+                    </Typography>
+                    {helper && (
+                        <Typography variant="caption" color="text.secondary">
+                            {helper}
+                        </Typography>
+                    )}
+                </Stack>
+            </Box>
         </Stack>
-    </Paper>
+    </Box>
 );
 
 export default StatCard;
