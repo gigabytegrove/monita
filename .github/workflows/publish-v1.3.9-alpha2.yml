@@ -1,0 +1,74 @@
+name: publish-v1.3.9-alpha2
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/publish-v1.3.9-alpha2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.x'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Verify release version
+        run: test "$(tr -d '[:space:]' < VERSION)" = "1.3.9-alpha2"
+
+      - name: Build Web UI
+        run: |
+          cd ui
+          yarn --frozen-lockfile
+          yarn build
+
+      - name: Build Linux updater runtimes
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          BUILD_DATE="$(date -u '+%F-%T')"
+          COMMIT="$(git rev-parse HEAD)"
+          LDFLAGS="-w -s -X main.Version=1.3.9-alpha2 -X main.BuildDate=${BUILD_DATE} -X main.Commit=${COMMIT} -X main.Mode=prod"
+          go build -ldflags="${LDFLAGS}" -o build/monita-linux-amd64 ./app.go
+          ./build/monita-linux-amd64 version | grep -F "Version: 1.3.9-alpha2"
+          docker buildx create --use --name monita-release-builder || docker buildx use monita-release-builder
+          docker buildx build --platform linux/arm64 --target binary-export \
+            --build-arg GO_VERSION=1.26.6 \
+            --build-arg LD_FLAGS="${LDFLAGS}" \
+            --output type=local,dest=build/arm64 \
+            -f docker/Dockerfile .
+          mv build/arm64/monita build/monita-linux-arm64
+          rmdir build/arm64
+          (cd build && sha256sum monita-linux-amd64 monita-linux-arm64 > SHA256SUMS)
+          git archive --format=zip --prefix="monita-v1.3.9-alpha2/" --output=build/monita-v1.3.9-alpha2-source.zip HEAD
+
+      - name: Publish prerelease v1.3.9-alpha2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git ls-remote --exit-code --tags origin refs/tags/v1.3.9-alpha2 >/dev/null 2>&1; then
+            git tag -a v1.3.9-alpha2 -m "Monita v1.3.9-alpha2"
+            git push origin v1.3.9-alpha2
+          fi
+          if gh release view v1.3.9-alpha2 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release edit v1.3.9-alpha2 --title "Monita v1.3.9-alpha2" --notes-file docs/releases/v1.3.9-alpha2.md --prerelease --repo "$GITHUB_REPOSITORY"
+            gh release upload v1.3.9-alpha2 build/monita-linux-amd64 build/monita-linux-arm64 build/SHA256SUMS build/monita-v1.3.9-alpha2-source.zip assets/monita-banner.svg assets/monita-icon.svg assets/monita-logo.svg --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create v1.3.9-alpha2 build/monita-linux-amd64 build/monita-linux-arm64 build/SHA256SUMS build/monita-v1.3.9-alpha2-source.zip assets/monita-banner.svg assets/monita-icon.svg assets/monita-logo.svg --title "Monita v1.3.9-alpha2" --notes-file docs/releases/v1.3.9-alpha2.md --prerelease --repo "$GITHUB_REPOSITORY"
+          fi
