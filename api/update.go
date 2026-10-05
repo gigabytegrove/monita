@@ -67,7 +67,7 @@ func firstUpdateEnv(keys ...string) string {
 }
 
 func NewUpdateAPIFromEnv() UpdateAPI {
-	statusFile := firstUpdateEnv("MONITA_UPDATE_STATUS_FILE", "GOTIFY_MU_UPDATE_STATUS_FILE")
+	statusFile := firstUpdateEnv("MONITA_UPDATE_STATUS_FILE")
 	if statusFile == "" {
 		statusFile = defaultUpdateStatusFile
 	}
@@ -77,7 +77,7 @@ func NewUpdateAPIFromEnv() UpdateAPI {
 		runtimeDir = defaultRuntimeDir
 	}
 
-	repository := firstUpdateEnv("MONITA_REPOSITORY", "GOTIFY_MU_REPOSITORY")
+	repository := firstUpdateEnv("MONITA_REPOSITORY")
 	if repository == "" {
 		repository = defaultUpdateRepository
 	}
