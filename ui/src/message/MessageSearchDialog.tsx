@@ -220,7 +220,12 @@ const MessageSearchDialog = ({open, onClose, initialApplicationId}: Props) => {
                         {results.map((message) => (
                             <Box
                                 key={message.id}
-                                sx={{border: 1, borderColor: 'divider', borderRadius: 0.25, p: 1.25}}>
+                                sx={{
+                                    border: 1,
+                                    borderColor: 'divider',
+                                    borderRadius: 0.25,
+                                    p: 1.25,
+                                }}>
                                 <Stack
                                     direction={{xs: 'column', sm: 'row'}}
                                     spacing={1}

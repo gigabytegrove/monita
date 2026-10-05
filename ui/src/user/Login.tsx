@@ -211,7 +211,9 @@ const Login = observer(() => {
                                         Boolean(currentUser.connectionErrorMessage) ||
                                         currentUser.authenticating
                                     }
-                                    onClick={() => void currentUser.loginDirectory(username, password)}>
+                                    onClick={() =>
+                                        void currentUser.loginDirectory(username, password)
+                                    }>
                                     Sign in with {ldapIdpName}
                                 </Button>
                             </>
@@ -233,7 +235,10 @@ const Login = observer(() => {
                         )}
 
                         {localAuthEnabled && config.get('register') && (
-                            <Button id="register" variant="text" onClick={() => setRegisterDialog(true)}>
+                            <Button
+                                id="register"
+                                variant="text"
+                                onClick={() => setRegisterDialog(true)}>
                                 Create an account
                             </Button>
                         )}
