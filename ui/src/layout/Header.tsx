@@ -209,6 +209,9 @@ const Header = ({version, name, loggedIn, admin, logout, style, setNavOpen}: IPr
                                         />
                                     )}
                                 </Stack>
+                                <Typography variant="caption" color="text.secondary">
+                                    Monita @{version}
+                                </Typography>
                             </Box>
                             <MenuItem
                                 component={Link}
