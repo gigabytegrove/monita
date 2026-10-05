@@ -18,7 +18,7 @@ jobs:
           banned_one="$(printf '%s%s' 'go' 'tify')"
           banned_two="$(printf '%s%s%s' 'go' 'tify' '-mu')"
           banned_three="$(printf '%s%s%s' 'go' 'tify' '_mu')"
-          banned_four="$(printf '%s%s' 'gotify' 'mu')"
+          banned_four="$(printf '%s%s%s' 'go' 'tify' 'mu')"
           matches="$(git grep -nIi -E "$banned_one|$banned_two|$banned_three|$banned_four" -- . ':!LICENSE' ':!.github/workflows/monita-branding-audit.yml' || true)"
           if [ -n "$matches" ]; then
             printf '%s\n' "$matches"
