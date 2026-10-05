@@ -19,13 +19,35 @@ export interface PublishedRelease {
 }
 
 export type UpdateClassification = 'available' | 'current' | 'newer' | 'development';
+export type ReleaseChannel = 'Alpha' | 'Beta' | 'Release Candidate' | 'Stable' | 'Preview';
 
-const SEMVER = /^v?(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/i;
+export interface ParsedVersion {
+    major: number;
+    minor: number;
+    patch: number;
+    prerelease: string[];
+}
 
-export const parseVersion = (value: string): [number, number, number] | null => {
+const SEMVER = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/;
+
+export const parseVersion = (value: string): ParsedVersion | null => {
     const match = value.trim().match(SEMVER);
     if (!match) return null;
-    return [Number(match[1]), Number(match[2]), Number(match[3])];
+    return {
+        major: Number(match[1]),
+        minor: Number(match[2]),
+        patch: Number(match[3]),
+        prerelease: match[4] ? match[4].split('.') : [],
+    };
+};
+
+const comparePrereleasePart = (left: string, right: string): number => {
+    const leftNumeric = /^\d+$/.test(left);
+    const rightNumeric = /^\d+$/.test(right);
+    if (leftNumeric && rightNumeric) return Number(left) - Number(right);
+    if (leftNumeric) return -1;
+    if (rightNumeric) return 1;
+    return left.localeCompare(right);
 };
 
 export const compareVersions = (left: string, right: string): number | null => {
@@ -33,9 +55,21 @@ export const compareVersions = (left: string, right: string): number | null => {
     const b = parseVersion(right);
     if (!a || !b) return null;
 
-    for (let index = 0; index < 3; index += 1) {
-        if (a[index] > b[index]) return 1;
-        if (a[index] < b[index]) return -1;
+    for (const key of ['major', 'minor', 'patch'] as const) {
+        if (a[key] > b[key]) return 1;
+        if (a[key] < b[key]) return -1;
+    }
+
+    if (a.prerelease.length === 0 && b.prerelease.length === 0) return 0;
+    if (a.prerelease.length === 0) return 1;
+    if (b.prerelease.length === 0) return -1;
+
+    const length = Math.max(a.prerelease.length, b.prerelease.length);
+    for (let index = 0; index < length; index += 1) {
+        if (a.prerelease[index] == null) return -1;
+        if (b.prerelease[index] == null) return 1;
+        const comparison = comparePrereleasePart(a.prerelease[index], b.prerelease[index]);
+        if (comparison !== 0) return comparison > 0 ? 1 : -1;
     }
     return 0;
 };
@@ -49,6 +83,17 @@ export const classifyUpdate = (
     if (comparison < 0) return 'available';
     if (comparison > 0) return 'newer';
     return 'current';
+};
+
+export const releaseChannel = (version: string, prereleaseFlag = false): ReleaseChannel => {
+    const parsed = parseVersion(version);
+    if (!parsed) return 'Preview';
+    const label = parsed.prerelease.join('.').toLowerCase();
+    if (label.startsWith('alpha')) return 'Alpha';
+    if (label.startsWith('beta')) return 'Beta';
+    if (label.startsWith('rc')) return 'Release Candidate';
+    if (parsed.prerelease.length > 0 || prereleaseFlag) return 'Preview';
+    return 'Stable';
 };
 
 export const canInstallPublishedRelease = (classification: UpdateClassification): boolean =>
