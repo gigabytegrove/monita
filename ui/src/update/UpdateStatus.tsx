@@ -86,6 +86,7 @@ export const UpdateAvailableBanner = () => {
     if (state.classification !== 'available' && state.classification !== 'development') return null;
 
     const development = state.classification === 'development';
+    const publishedVersion = normalizeTag(state.release.tag_name);
 
     return (
         <Alert
