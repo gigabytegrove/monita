@@ -26,35 +26,7 @@ const (
 	defaultUpdateRepository = "gigabytegrove/monita"
 )
 
-var updateVersionPattern = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?package api
-
-import (
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"io"
-	"net/http"
-	"os"
-	"os/exec"
-	"path/filepath"
-	"regexp"
-	"runtime"
-	"strings"
-	"syscall"
-	"time"
-
-	"github.com/gin-gonic/gin"
-)
-
-const (
-	defaultUpdateStatusFile = "/app/data/.monita-update-status.json"
-	defaultRuntimeDir       = "/app/data/.monita-runtime"
-	defaultUpdateRepository = "gigabytegrove/monita"
-)
-
-)
+var updateVersionPattern = regexp.MustCompile(`^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$`)
 
 type UpdateAPI struct {
 	StatusFile string
