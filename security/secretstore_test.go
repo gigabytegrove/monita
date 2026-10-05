@@ -45,8 +45,8 @@ func TestSecretStoreRoundTripAndTamperDetection(t *testing.T) {
 }
 
 func TestLoadOrCreateSecretStoreUsesPrivateKeyFile(t *testing.T) {
-	t.Setenv("GOTIFY_MU_SECRET_KEY", "")
-	t.Setenv("GOTIFY_MU_SECRET_KEY_FILE", "")
+	t.Setenv("MONITA_SECRET_KEY_UNUSED", "")
+	t.Setenv("MONITA_SECRET_KEY_FILE_UNUSED", "")
 	path := filepath.Join(t.TempDir(), "secret.key")
 	store, err := LoadOrCreateSecretStore(path)
 	if err != nil {
