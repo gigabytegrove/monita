@@ -393,7 +393,7 @@ const Integrations = () => {
                                             p: 1.25,
                                             border: 1,
                                             borderColor: 'divider',
-                                            borderRadius: 2,
+                                            borderRadius: 0.75,
                                         }}>
                                         <Stack
                                             direction={{xs: 'column', sm: 'row'}}
@@ -590,7 +590,7 @@ const IntegrationList = ({items, empty}: {items: ListItem[]; empty: string}) => 
                         p: 1.5,
                         border: 1,
                         borderColor: 'divider',
-                        borderRadius: 2,
+                        borderRadius: 0.75,
                     }}>
                     <Stack
                         direction={{xs: 'column', sm: 'row'}}
