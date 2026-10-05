@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - release/v1.3.8-updater
   workflow_dispatch:
 
 permissions:
@@ -41,7 +42,7 @@ jobs:
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             VERSION="${GITHUB_REF#refs/tags/v}"
             RELEASE=true
-          elif [[ "${GITHUB_REF}" == "refs/heads/master" || "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+          elif [[ "${GITHUB_REF}" == "refs/heads/master" || "${GITHUB_REF}" == "refs/heads/release/v1.3.8-updater" || "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
             VERSION="$(tr -d '[:space:]' < VERSION)"
             if [[ -z "${VERSION}" ]]; then
               echo "VERSION file is empty"
