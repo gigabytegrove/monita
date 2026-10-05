@@ -7,6 +7,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import LinearProgress from '@mui/material/LinearProgress';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 import NewReleases from '@mui/icons-material/NewReleases';
 import SystemUpdateAlt from '@mui/icons-material/SystemUpdateAlt';
 import Refresh from '@mui/icons-material/Refresh';
@@ -22,6 +24,7 @@ import {
     RELEASES_API,
     UpdateClassification,
     releaseChannel,
+    UpdateChannelPreference,
 } from './release';
 import {activeUpdaterStates, updaterStatusForDisplay, type UpdaterStatus} from './status';
 
@@ -33,7 +36,10 @@ type ReleaseState =
 
 const normalizeTag = (tag: string) => tag.replace(/^v/i, '');
 
-export const useReleaseUpdate = (refreshKey = 0): ReleaseState => {
+export const useReleaseUpdate = (
+    refreshKey = 0,
+    channel: UpdateChannelPreference = 'stable'
+): ReleaseState => {
     const [state, setState] = React.useState<ReleaseState>({status: 'loading'});
     const currentVersion = config.get('version').version;
 
@@ -51,7 +57,7 @@ export const useReleaseUpdate = (refreshKey = 0): ReleaseState => {
                 }
 
                 const releases = (await response.json()) as PublishedRelease[];
-                const release = latestPublishedRelease(releases);
+                const release = latestPublishedRelease(releases, channel);
                 if (!release) {
                     setState({status: 'none'});
                     return;
@@ -73,13 +79,27 @@ export const useReleaseUpdate = (refreshKey = 0): ReleaseState => {
 
         void check();
         return () => controller.abort();
-    }, [currentVersion, refreshKey]);
+    }, [currentVersion, refreshKey, channel]);
 
     return state;
 };
 
 export const UpdateAvailableBanner = () => {
-    const state = useReleaseUpdate();
+    const [channel, setChannel] = React.useState<UpdateChannelPreference>('stable');
+
+    React.useEffect(() => {
+        void fetch(`${config.get('url')}update/preferences`, {
+            credentials: 'same-origin',
+            headers: {Accept: 'application/json'},
+        })
+            .then((response) => (response.ok ? response.json() : Promise.reject()))
+            .then((preferences: {channel?: UpdateChannelPreference}) =>
+                setChannel(preferences.channel || 'stable')
+            )
+            .catch(() => setChannel('stable'));
+    }, []);
+
+    const state = useReleaseUpdate(0, channel);
     const currentVersion = config.get('version').version;
 
     if (state.status !== 'ready') return null;
@@ -111,7 +131,10 @@ export const UpdateAvailableBanner = () => {
 
 export const UpdateStatusCard = () => {
     const [releaseRefreshKey, setReleaseRefreshKey] = React.useState(0);
-    const state = useReleaseUpdate(releaseRefreshKey);
+    const [channel, setChannel] = React.useState<UpdateChannelPreference>('stable');
+    const [channelLoaded, setChannelLoaded] = React.useState(false);
+    const [savingChannel, setSavingChannel] = React.useState(false);
+    const state = useReleaseUpdate(releaseRefreshKey, channel);
     const {elevateStore} = useStores();
     const currentVersion = config.get('version').version;
     const [updater, setUpdater] = React.useState<UpdaterStatus>();
@@ -120,6 +143,30 @@ export const UpdateStatusCard = () => {
     const updateStartedHere = React.useRef(false);
     const sawActiveUpdate = React.useRef(false);
     const reloadScheduled = React.useRef(false);
+
+    React.useEffect(() => {
+        void fetch(`${config.get('url')}update/preferences`, {
+            credentials: 'same-origin',
+            headers: {Accept: 'application/json'},
+        })
+            .then(async (response) => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return (await response.json()) as {channel?: UpdateChannelPreference};
+            })
+            .then((preferences) => setChannel(preferences.channel || 'stable'))
+            .finally(() => setChannelLoaded(true));
+    }, []);
+
+    const saveChannel = async (nextChannel: UpdateChannelPreference) => {
+        setSavingChannel(true);
+        try {
+            await axios.put(`${config.get('url')}update/preferences`, {channel: nextChannel});
+            setChannel(nextChannel);
+            setReleaseRefreshKey((value) => value + 1);
+        } finally {
+            setSavingChannel(false);
+        }
+    };
 
     const loadUpdaterStatus = React.useCallback(async () => {
         try {
@@ -237,6 +284,27 @@ export const UpdateStatusCard = () => {
                     <NewReleases color="action" />
                 </Stack>
             }>
+            <Stack spacing={1}>
+                <Typography variant="body2" color="text.secondary">
+                    Update channel
+                </Typography>
+                <TextField
+                    select
+                    size="small"
+                    value={channel}
+                    disabled={!channelLoaded || savingChannel}
+                    onChange={(event) =>
+                        void saveChannel(event.target.value as UpdateChannelPreference)
+                    }
+                    helperText="Stable receives only stable releases. RC, Beta, Alpha, and Preview progressively include earlier prerelease builds.">
+                    <MenuItem value="stable">Stable</MenuItem>
+                    <MenuItem value="rc">Release Candidate</MenuItem>
+                    <MenuItem value="beta">Beta</MenuItem>
+                    <MenuItem value="alpha">Alpha</MenuItem>
+                    <MenuItem value="preview">Preview / Development</MenuItem>
+                </TextField>
+            </Stack>
+
             {state.status === 'loading' && (
                 <Stack direction="row" spacing={1.25} sx={{alignItems: 'center'}}>
                     <CircularProgress size={20} />
