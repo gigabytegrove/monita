@@ -89,20 +89,23 @@ const Applications = observer(() => {
 
     return (
         <DefaultPage
+            eyebrow="Workspace"
             title="Channels"
-            description="Create notification destinations, control membership, and manage delivery behavior."
+            description="Create notification destinations, organize conversations, and manage delivery and membership."
             rightControl={
                 <Button id="create-app" variant="contained" onClick={() => setCreateDialog(true)}>
                     Create Channel
                 </Button>
             }>
             <SurfaceCard
-                title="Channel Directory"
+                title="Channel directory"
+                flush
                 subtitle={
                     apps.length === 0
                         ? 'No Channels are available yet.'
                         : `${apps.length} Channel${apps.length === 1 ? '' : 's'} available to your account`
                 }>
+                <Box sx={{p: {xs: 2, sm: 2.5}, borderBottom: apps.length === 0 ? 0 : 1, borderColor: 'divider'}}>
                 {apps.length === 0 ? (
                     <Stack spacing={2} sx={{alignItems: 'flex-start'}}>
                         <Alert severity="info">
@@ -163,6 +166,7 @@ const Applications = observer(() => {
                             </Typography>
                         </Stack>
 
+                        </Box>
                         {filteredApps.length === 0 ? (
                             <Typography color="text.secondary" sx={{py: 3, textAlign: 'center'}}>
                                 No Channels match this search or filter.
@@ -175,7 +179,7 @@ const Applications = observer(() => {
                                 <SortableContext
                                     items={filteredApps.map((app) => app.id)}
                                     strategy={verticalListSortingStrategy}>
-                                    <Grid container spacing={1}>
+                                    <Grid container spacing={0}>
                                         {filteredApps.map((app) => {
                                             const isOwner = app.ownerId === currentUser.user.id;
                                             const canManage =
