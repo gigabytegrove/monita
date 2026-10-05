@@ -28,6 +28,7 @@ func lookupEnv(env string) (string, bool, error) {
 	}
 	return "", false, nil
 }
+
 func parseString(target *string, env string) error {
 	raw, ok, err := lookupEnv(env)
 	if err != nil {

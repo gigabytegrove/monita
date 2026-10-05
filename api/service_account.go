@@ -64,6 +64,7 @@ func normalizeServiceScopes(raw string) (string, error) {
 	}
 	return strings.Join(result, ","), nil
 }
+
 func normalizeServiceApplications(raw string) (string, error) {
 	raw = strings.TrimSpace(raw)
 	if raw == "" || raw == "*" {
@@ -92,6 +93,7 @@ func (a *ServiceAccountAPI) GetAccounts(ctx *gin.Context) {
 	}
 	ctx.JSON(200, items)
 }
+
 func (a *ServiceAccountAPI) CreateAccount(ctx *gin.Context) {
 	var p serviceAccountParams
 	if err := ctx.ShouldBindJSON(&p); err != nil {
@@ -113,6 +115,7 @@ func (a *ServiceAccountAPI) CreateAccount(ctx *gin.Context) {
 	}
 	ctx.JSON(201, item)
 }
+
 func (a *ServiceAccountAPI) UpdateAccount(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		item, err := a.DB.GetServiceAccountByID(id)
@@ -147,6 +150,7 @@ func (a *ServiceAccountAPI) UpdateAccount(ctx *gin.Context) {
 		ctx.JSON(200, item)
 	})
 }
+
 func (a *ServiceAccountAPI) DeleteAccount(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		if !successOrAbort(ctx, 500, a.DB.DeleteServiceAccount(id)) {
@@ -170,6 +174,7 @@ func (a *ServiceAccountAPI) GetTokens(ctx *gin.Context) {
 		ctx.JSON(200, items)
 	})
 }
+
 func (a *ServiceAccountAPI) CreateToken(ctx *gin.Context) {
 	withID(ctx, "id", func(id uint) {
 		account, err := a.DB.GetServiceAccountByID(id)
@@ -204,6 +209,7 @@ func (a *ServiceAccountAPI) CreateToken(ctx *gin.Context) {
 		ctx.JSON(201, model.ServiceAccountTokenResult{ID: item.ID, Name: item.Name, Token: token, Prefix: prefix, CreatedAt: item.CreatedAt, ExpiresAt: item.ExpiresAt})
 	})
 }
+
 func (a *ServiceAccountAPI) DeleteToken(ctx *gin.Context) {
 	withID(ctx, "id", func(accountID uint) {
 		tokenID64, err := strconv.ParseUint(ctx.Param("tokenId"), 10, 64)
@@ -265,6 +271,7 @@ func (a *ServiceAccountAPI) PublishMessage(ctx *gin.Context) {
 	}
 	ctx.JSON(200, toExternalMessage(msg))
 }
+
 func (a *ServiceAccountAPI) GetMessages(ctx *gin.Context) {
 	appID64, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {

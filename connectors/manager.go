@@ -483,6 +483,7 @@ func unfoldICal(raw string) []string {
 	}
 	return out
 }
+
 func parseICalTime(value string) (time.Time, error) {
 	value = strings.TrimSpace(value)
 	layouts := []string{"20060102T150405Z", "20060102T150405", "20060102"}
@@ -493,6 +494,7 @@ func parseICalTime(value string) (time.Time, error) {
 	}
 	return time.Time{}, errors.New("unsupported calendar date " + value)
 }
+
 func parseCalendar(body []byte) []calendarEvent {
 	lines := unfoldICal(string(body))
 	var result []calendarEvent
@@ -534,6 +536,7 @@ func parseCalendar(body []byte) []calendarEvent {
 	}
 	return result
 }
+
 func (m *Manager) pollCalendar(item *model.CalendarMonitor, now time.Time) {
 	body, _, _, _, err := m.fetchURL(item.URL, "", "")
 	item.LastCheckedAt = &now
@@ -596,6 +599,7 @@ func remoteIP(address net.Addr) net.IP {
 	}
 	return net.ParseIP(host)
 }
+
 func ipAllowed(ip net.IP, cidrs string) bool {
 	if strings.TrimSpace(cidrs) == "" {
 		return true
@@ -868,6 +872,7 @@ func parseSyslogPRI(message string) (facility, severity int, body string) {
 	}
 	return
 }
+
 func (m *Manager) handleSyslog(ip net.IP, raw string) {
 	facility, severity, body := parseSyslogPRI(raw)
 	routes, err := m.db.GetSyslogRoutes()

@@ -23,6 +23,7 @@ func (d *GormDatabase) GetEmailGateways() ([]*model.EmailGateway, error) {
 	}
 	return items, nil
 }
+
 func (d *GormDatabase) GetEmailGatewayByID(id uint) (*model.EmailGateway, error) {
 	item := new(model.EmailGateway)
 	if err := d.DB.First(item, id).Error; err != nil {
@@ -38,6 +39,7 @@ func (d *GormDatabase) GetEmailGatewayByID(id uint) (*model.EmailGateway, error)
 	item.Password = plain
 	return item, nil
 }
+
 func (d *GormDatabase) SaveEmailGateway(item *model.EmailGateway) error {
 	plain, err := d.Secrets.Decrypt(item.Password)
 	if err != nil {
@@ -52,9 +54,11 @@ func (d *GormDatabase) SaveEmailGateway(item *model.EmailGateway) error {
 	item.Password = plain
 	return err
 }
+
 func (d *GormDatabase) DeleteEmailGateway(id uint) error {
 	return d.DB.Delete(&model.EmailGateway{}, id).Error
 }
+
 func (d *GormDatabase) GetEmailGatewaysForMessage(applicationID uint, priority int) ([]*model.EmailGateway, error) {
 	var items []*model.EmailGateway
 	if err := d.DB.Where("enabled = ? AND source_application_id = ? AND min_priority <= ?", true, applicationID, priority).Find(&items).Error; err != nil {
@@ -69,6 +73,7 @@ func (d *GormDatabase) GetEmailGatewaysForMessage(applicationID uint, priority i
 	}
 	return items, nil
 }
+
 func (d *GormDatabase) UpdateEmailGatewayStatus(id uint, sentAt *time.Time, lastError string, errorAt *time.Time) error {
 	status := "ready"
 	if lastError != "" {
@@ -95,6 +100,7 @@ func (d *GormDatabase) GetSMTPRoutes() ([]*model.SMTPRoute, error) {
 	}
 	return items, nil
 }
+
 func (d *GormDatabase) GetSMTPRouteByID(id uint) (*model.SMTPRoute, error) {
 	item := new(model.SMTPRoute)
 	if err := d.DB.First(item, id).Error; err != nil {
@@ -110,6 +116,7 @@ func (d *GormDatabase) GetSMTPRouteByID(id uint) (*model.SMTPRoute, error) {
 	item.Password = plain
 	return item, nil
 }
+
 func (d *GormDatabase) SaveSMTPRoute(item *model.SMTPRoute) error {
 	plain, err := d.Secrets.Decrypt(item.Password)
 	if err != nil {
@@ -124,9 +131,11 @@ func (d *GormDatabase) SaveSMTPRoute(item *model.SMTPRoute) error {
 	item.Password = plain
 	return err
 }
+
 func (d *GormDatabase) DeleteSMTPRoute(id uint) error {
 	return d.DB.Delete(&model.SMTPRoute{}, id).Error
 }
+
 func (d *GormDatabase) MatchSMTPRoute(recipient string) (*model.SMTPRoute, error) {
 	recipient = strings.ToLower(strings.TrimSpace(recipient))
 	var items []*model.SMTPRoute
@@ -151,6 +160,7 @@ func (d *GormDatabase) GetRSSMonitors() ([]*model.RSSMonitor, error) {
 	var items []*model.RSSMonitor
 	return items, d.DB.Order("name asc, id asc").Find(&items).Error
 }
+
 func (d *GormDatabase) GetRSSMonitorByID(id uint) (*model.RSSMonitor, error) {
 	item := new(model.RSSMonitor)
 	if err := d.DB.First(item, id).Error; err != nil {
@@ -170,6 +180,7 @@ func (d *GormDatabase) DeleteRSSMonitor(id uint) error {
 		return tx.Delete(&model.RSSMonitor{}, id).Error
 	})
 }
+
 func (d *GormDatabase) GetDueRSSMonitors(now time.Time) ([]*model.RSSMonitor, error) {
 	var items []*model.RSSMonitor
 	return items, d.DB.Where(
@@ -177,6 +188,7 @@ func (d *GormDatabase) GetDueRSSMonitors(now time.Time) ([]*model.RSSMonitor, er
 		true, now.Add(-time.Minute),
 	).Find(&items).Error
 }
+
 func (d *GormDatabase) UpdateRSSMonitorStatus(item *model.RSSMonitor) error {
 	return d.DB.Save(item).Error
 }
@@ -185,6 +197,7 @@ func (d *GormDatabase) GetSyslogRoutes() ([]*model.SyslogRoute, error) {
 	var items []*model.SyslogRoute
 	return items, d.DB.Order("name asc, id asc").Find(&items).Error
 }
+
 func (d *GormDatabase) GetSyslogRouteByID(id uint) (*model.SyslogRoute, error) {
 	item := new(model.SyslogRoute)
 	if err := d.DB.First(item, id).Error; err != nil {
@@ -204,6 +217,7 @@ func (d *GormDatabase) GetCalendarMonitors() ([]*model.CalendarMonitor, error) {
 	var items []*model.CalendarMonitor
 	return items, d.DB.Order("name asc, id asc").Find(&items).Error
 }
+
 func (d *GormDatabase) GetCalendarMonitorByID(id uint) (*model.CalendarMonitor, error) {
 	item := new(model.CalendarMonitor)
 	if err := d.DB.First(item, id).Error; err != nil {
@@ -214,9 +228,11 @@ func (d *GormDatabase) GetCalendarMonitorByID(id uint) (*model.CalendarMonitor, 
 	}
 	return item, nil
 }
+
 func (d *GormDatabase) SaveCalendarMonitor(item *model.CalendarMonitor) error {
 	return d.DB.Save(item).Error
 }
+
 func (d *GormDatabase) DeleteCalendarMonitor(id uint) error {
 	return d.DB.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Where("connector_type = ? AND connector_id = ?", "ical", id).Delete(&model.ConnectorSeenItem{}).Error; err != nil {
@@ -225,6 +241,7 @@ func (d *GormDatabase) DeleteCalendarMonitor(id uint) error {
 		return tx.Delete(&model.CalendarMonitor{}, id).Error
 	})
 }
+
 func (d *GormDatabase) GetDueCalendarMonitors(now time.Time) ([]*model.CalendarMonitor, error) {
 	var items []*model.CalendarMonitor
 	return items, d.DB.Where(
