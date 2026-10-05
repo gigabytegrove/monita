@@ -1,6 +1,6 @@
 package api
 
-// Configurer is the interface plugins should implement in order to provide configuration interface to the user
+// Configurer is the interface plugins should implement in order to provide configuration interface to the user.
 type Configurer interface {
 	Plugin
 	// DefaultConfig will be called on plugin first run to set the default config.
