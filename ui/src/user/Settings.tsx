@@ -36,6 +36,7 @@ const Settings = () => {
 
     return (
         <DefaultPage
+            eyebrow="Account"
             title="Settings"
             description="Account preferences and sign-in settings."
             maxWidth={900}>
