@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/gotify/plugin-api"
+	papiv1 "github.com/gigabytegrove/monita/plugin/api"
 )
 
-// GetGotifyPluginInfo returns the legacy plugin ABI information
-func GetGotifyPluginInfo() plugin.Info {
+// GetMonitaPluginInfo returns the Monita plugin ABI information
+func GetMonitaPluginInfo() plugin.Info {
 	return plugin.Info{
 		ModulePath: "github.com/gigabytegrove/monita/plugin/testing/broken/noinstance",
 	}
