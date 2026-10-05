@@ -31,7 +31,6 @@ type ReleaseState =
     | {status: 'error'; message: string}
     | {status: 'ready'; release: PublishedRelease; classification: UpdateClassification};
 
-const releaseLabel = (release: PublishedRelease) => release.name || release.tag_name;
 const normalizeTag = (tag: string) => tag.replace(/^v/i, '');
 
 export const useReleaseUpdate = (refreshKey = 0): ReleaseState => {
