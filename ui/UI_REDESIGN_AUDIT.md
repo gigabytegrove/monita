@@ -1,4 +1,4 @@
-# Monita 1.4.0 Web UI redesign audit
+# Monita 1.3.8-alpha Web UI redesign audit
 
 This inventory records the exhaustive UI pass for the Monita server Web interface.
 
@@ -13,9 +13,9 @@ The pass was re-run against the actual branch tree after the structural redesign
 - Chat uses transcript rows rather than speech bubbles.
 - Notification history uses feed rows rather than floating cards.
 - Dense administration stays table/list oriented.
-- PWA/browser asset identity is versioned for 1.4.0.
+- PWA/browser asset identity is versioned for 1.3.8-alpha.
 - Existing functionality and permission wiring remain connected.
-- Versioned browser/PWA assets identify this redesign as Monita 1.4.0.
+- Versioned browser/PWA assets identify this redesign as Monita 1.3.8-alpha.
 - Local component overrides were normalized so lower-traffic screens cannot reintroduce the previous rounded-card visual language.
 - The default application image and notification sound remain canonical functional assets and were intentionally not altered by a visual-layout redesign.
 
@@ -150,6 +150,6 @@ Validation branch: `ui/monita-1.4-redesign`.
 - Re-versioned the service-worker shell cache after the redesign.
 - Aligned browser tile metadata with the new shell.
 - Confirmed browser links inherit the Monita interface color instead of default browser-blue styling.
-- Confirmed `VERSION`, `ui/package.json`, PWA manifest asset URLs, login branding, and header branding target 1.4.0.
+- Confirmed `VERSION`, `ui/package.json`, PWA manifest asset URLs, login branding, and header branding target 1.3.8-alpha.
 
 The review inventory below is therefore the completion checklist, not merely a planned file list.
