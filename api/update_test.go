@@ -77,3 +77,27 @@ func TestUpdateStateActive(t *testing.T) {
 		assert.False(t, updateStateActive(state), state)
 	}
 }
+
+
+func TestUpdateVersionPatternAcceptsReleaseChannels(t *testing.T) {
+	for _, version := range []string{
+		"1.3.8",
+		"1.3.9-alpha",
+		"1.3.9-alpha.2",
+		"1.3.9-beta.1",
+		"1.3.9-rc.1",
+		"1.3.9+build.7",
+	} {
+		assert.True(t, updateVersionPattern.MatchString(version), version)
+	}
+
+	for _, version := range []string{
+		"v1.3.9-alpha",
+		"1.3",
+		"1.3.9-",
+		"master-local",
+		"1.3.9 alpha",
+	} {
+		assert.False(t, updateVersionPattern.MatchString(version), version)
+	}
+}
