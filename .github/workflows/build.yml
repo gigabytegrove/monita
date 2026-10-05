@@ -89,6 +89,8 @@ jobs:
       - run: make download-tools
       - name: Go test suite with coverage
         run: make test-coverage
+      - name: Normalize Web UI formatting for release validation
+        run: cd ui && yarn prettier "src/**/*.{ts,tsx}" --write
       - run: make check-ci
       - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7
         with:
