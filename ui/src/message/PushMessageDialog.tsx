@@ -64,7 +64,7 @@ export const PushMessageDialog = ({appId, appName, defaultPriority, fClose, fOnS
         setTitle(item.title);
         setMessage(item.message);
         setPriority(item.priority);
-        const display = item.extras?.['monita::display'] ?? item.extras?.['gotify-mu::display'];
+        const display = item.extras?.['monita::display'];
         setActions(Array.isArray(display?.actions) ? display.actions : []);
         setFields(Array.isArray(display?.fields) ? display.fields : []);
     };
