@@ -21,6 +21,7 @@ import {
     PublishedRelease,
     RELEASES_API,
     UpdateClassification,
+    releaseChannel,
 } from './release';
 import {activeUpdaterStates, updaterStatusForDisplay, type UpdaterStatus} from './status';
 
@@ -102,8 +103,8 @@ export const UpdateAvailableBanner = () => {
                 </Button>
             }>
             {development
-                ? `Published release ${state.release.tag_name} is available. This server is running preview version ${currentVersion}.`
-                : `Monita ${state.release.tag_name} is available. This server is running ${currentVersion}.`}
+                ? `Published release ${publishedVersion} is available. This server is running preview version ${currentVersion}.`
+                : `Monita ${publishedVersion} is available. This server is running ${currentVersion}.`}
         </Alert>
     );
 };
@@ -285,6 +286,8 @@ const ReleaseUpdateDetails = ({
 }) => {
     const safeAutomaticInstall = canInstallPublishedRelease(state.classification);
     const updaterReady = updater?.ready === true;
+    const publishedVersion = normalizeTag(state.release.tag_name);
+    const channel = releaseChannel(publishedVersion, state.release.prerelease);
 
     return (
         <Stack spacing={2}>
@@ -302,20 +305,24 @@ const ReleaseUpdateDetails = ({
                     <Typography variant="body2" color="text.secondary">
                         Latest published release
                     </Typography>
+                    <Typography sx={{fontWeight: 700}}>{publishedVersion}</Typography>
                     <Stack direction="row" spacing={0.75} sx={{alignItems: 'center'}}>
-                        <Typography sx={{fontWeight: 700}}>
-                            {releaseLabel(state.release)}
+                        <Typography variant="body2" color="text.secondary">
+                            Release channel
                         </Typography>
-                        {state.release.prerelease && (
-                            <Chip size="small" variant="outlined" label="Pre-release" />
-                        )}
+                        <Chip
+                            size="small"
+                            variant={channel === 'Stable' ? 'filled' : 'outlined'}
+                            color={channel === 'Stable' ? 'success' : 'warning'}
+                            label={channel}
+                        />
                     </Stack>
                 </Stack>
             </Stack>
 
             {state.classification === 'available' && (
                 <Alert severity="success">
-                    An update is available: {currentVersion} → {state.release.tag_name}
+                    An update is available: {currentVersion} → {publishedVersion}
                 </Alert>
             )}
             {state.classification === 'current' && (
@@ -331,7 +338,7 @@ const ReleaseUpdateDetails = ({
             {state.classification === 'development' && (
                 <Alert severity="warning">
                     This server is running preview build {currentVersion}. Installing{' '}
-                    {state.release.tag_name} will switch this server to the published release.
+                    {publishedVersion} will switch this server to the published release.
                     Application data is preserved during the update.
                 </Alert>
             )}
@@ -366,8 +373,8 @@ const ReleaseUpdateDetails = ({
                     {updaterBusy
                         ? 'Updating…'
                         : !elevated
-                          ? `Re-authenticate to install ${state.release.tag_name}`
-                          : `Install ${state.release.tag_name}`}
+                          ? `Re-authenticate to install ${publishedVersion}`
+                          : `Install ${publishedVersion}`}
                 </Button>
             </Stack>
 
