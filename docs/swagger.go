@@ -4,8 +4,8 @@ import (
 	_ "embed"
 	"strings"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gigabytegrove/monita/location"
+	"github.com/gin-gonic/gin"
 )
 
 //go:embed spec.json

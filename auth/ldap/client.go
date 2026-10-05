@@ -58,6 +58,7 @@ func encLen(n int) []byte {
 	out := []byte{0x80 | byte(len(raw)-i)}
 	return append(out, raw[i:]...)
 }
+
 func enc(tag byte, content ...[]byte) []byte {
 	body := bytes.Join(content, nil)
 	out := []byte{tag}
@@ -65,6 +66,7 @@ func enc(tag byte, content ...[]byte) []byte {
 	out = append(out, body...)
 	return out
 }
+
 func encInt(tag byte, value int) []byte {
 	if value == 0 {
 		return enc(tag, []byte{0})
@@ -113,6 +115,7 @@ func readLength(reader *bufio.Reader) (int, error) {
 	}
 	return n, nil
 }
+
 func readTLV(reader *bufio.Reader) (tlv, error) {
 	tag, err := reader.ReadByte()
 	if err != nil {
@@ -129,6 +132,7 @@ func readTLV(reader *bufio.Reader) (tlv, error) {
 	_, err = io.ReadFull(reader, value)
 	return tlv{tag: tag, value: value}, err
 }
+
 func children(raw []byte) ([]tlv, error) {
 	reader := bufio.NewReader(bytes.NewReader(raw))
 	var result []tlv
@@ -147,6 +151,7 @@ func children(raw []byte) ([]tlv, error) {
 	}
 	return result, nil
 }
+
 func intValue(raw []byte) int {
 	n := 0
 	for _, b := range raw {
@@ -222,6 +227,7 @@ func (c *Client) send(protocol []byte) (int, error) {
 	_, err := c.conn.Write(message)
 	return id, err
 }
+
 func (c *Client) readMessage() (int, tlv, error) {
 	outer, err := readTLV(c.reader)
 	if err != nil {
@@ -282,6 +288,7 @@ func (p *filterParser) skip() {
 		p.i++
 	}
 }
+
 func (p *filterParser) parse() ([]byte, error) {
 	p.skip()
 	if p.i >= len(p.s) || p.s[p.i] != '(' {
