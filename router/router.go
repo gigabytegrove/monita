@@ -29,7 +29,7 @@ import (
 	"github.com/gigabytegrove/monita/ui"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/gotify/location"
+	"github.com/gigabytegrove/monita/location"
 	"github.com/rs/zerolog/log"
 )
 
@@ -329,8 +329,6 @@ func Create(db *database.GormDatabase, vInfo *model.VersionInfo, conf *config.Co
 		})
 	}
 	g.GET("monitainfo", monitaInfoHandler)
-	// Legacy Gotify endpoint retained for existing clients.
-	g.GET("gotifyinfo", monitaInfoHandler)
 
 	g.GET("/application/current", authentication.RequireApplicationToken, applicationHandler.GetCurrentApplication)
 

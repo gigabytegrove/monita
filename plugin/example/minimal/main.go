@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/gotify/plugin-api"
+	papiv1 "github.com/gigabytegrove/monita/plugin/api"
 )
 
-// GetGotifyPluginInfo returns the legacy plugin ABI information
-func GetGotifyPluginInfo() plugin.Info {
-	return plugin.Info{
+// GetMonitaPluginInfo returns the Monita plugin ABI information
+func GetMonitaPluginInfo() papiv1.Info {
+	return papiv1.Info{
 		Name:       "minimal plugin",
 		ModulePath: "github.com/gigabytegrove/monita/example/minimal",
 	}
@@ -15,18 +15,18 @@ func GetGotifyPluginInfo() plugin.Info {
 // Plugin is plugin instance
 type Plugin struct{}
 
-// Enable implements plugin.Plugin
+// Enable implements papiv1.Plugin
 func (c *Plugin) Enable() error {
 	return nil
 }
 
-// Disable implements plugin.Plugin
+// Disable implements papiv1.Plugin
 func (c *Plugin) Disable() error {
 	return nil
 }
 
-// NewGotifyPluginInstance is the legacy ABI entrypoint for creating a plugin instance.
-func NewGotifyPluginInstance(ctx plugin.UserContext) plugin.Plugin {
+// NewMonitaPluginInstance is the Monita ABI entrypoint for creating a plugin instance.
+func NewMonitaPluginInstance(ctx papiv1.UserContext) papiv1.Plugin {
 	return &Plugin{}
 }
 

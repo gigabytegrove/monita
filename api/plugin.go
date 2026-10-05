@@ -17,7 +17,7 @@ import (
 	"github.com/gigabytegrove/monita/plugin"
 	"github.com/gigabytegrove/monita/plugin/compat"
 	"github.com/gin-gonic/gin"
-	"github.com/gotify/location"
+	"github.com/gigabytegrove/monita/location"
 	"gopkg.in/yaml.v3"
 )
 
@@ -95,9 +95,6 @@ type pluginCatalogEntry struct {
 
 func loadPluginCatalog(ctx *gin.Context) ([]pluginCatalogEntry, error) {
 	rawURL := strings.TrimSpace(os.Getenv("MONITA_PLUGIN_CATALOG_URL"))
-	if rawURL == "" {
-		rawURL = strings.TrimSpace(os.Getenv("GOTIFY_MU_PLUGIN_CATALOG_URL"))
-	}
 	if rawURL == "" {
 		return []pluginCatalogEntry{}, nil
 	}
