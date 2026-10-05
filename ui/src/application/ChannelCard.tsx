@@ -9,7 +9,6 @@ import {
     ListItemText,
     Menu,
     MenuItem,
-    Paper,
     Stack,
     Tooltip,
     Typography,
@@ -84,23 +83,20 @@ const ChannelCard = ({
     };
 
     return (
-        <Paper
+        <Box
             ref={setNodeRef}
             className="channel-card"
             data-channel-id={app.id}
-            variant="outlined"
             sx={{
-                p: {xs: 1.5, sm: 1.75},
-                borderRadius: 2.5,
+                px: {xs: 1.5, sm: 2},
+                py: 1.35,
                 opacity: isDragging ? 0.55 : 1,
                 transform: CSS.Transform.toString(transform),
-                transition:
-                    transition ||
-                    'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
-                '&:hover': {
-                    boxShadow: 2,
-                    borderColor: 'action.selected',
-                },
+                transition: transition || 'background-color 120ms ease, transform 140ms ease',
+                borderBottom: 1,
+                borderColor: 'divider',
+                '&:last-of-type': {borderBottom: 0},
+                '&:hover': {bgcolor: 'action.hover'},
             }}>
             <Stack direction="row" spacing={{xs: 1, sm: 1.5}} sx={{alignItems: 'center'}}>
                 <Tooltip title={canManage ? 'Drag to reorder' : ''}>
@@ -289,7 +285,7 @@ const ChannelCard = ({
                     <ListItemText>Delete channel</ListItemText>
                 </MenuItem>
             </Menu>
-        </Paper>
+        </Box>
     );
 };
 
