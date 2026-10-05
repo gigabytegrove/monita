@@ -13,51 +13,46 @@ interface IProps {
 
 const StatCard = ({label, value, icon, helper}: IProps) => (
     <Paper
-        variant="outlined"
+        elevation={0}
         sx={{
-            p: 2.25,
+            p: 2,
             height: '100%',
-            borderRadius: 3,
-            position: 'relative',
-            overflow: 'hidden',
-            transition: 'transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease',
-            '&:hover': {
-                transform: 'translateY(-2px)',
-                borderColor: 'primary.light',
-                boxShadow: 2,
-            },
+            border: 1,
+            borderColor: 'divider',
+            borderRadius: 2.5,
+            backgroundColor: 'background.paper',
         }}>
-        <Stack
-            direction="row"
-            spacing={2}
-            sx={{justifyContent: 'space-between', alignItems: 'flex-start'}}>
-            <Box>
-                <Typography variant="body2" color="text.secondary">
-                    {label}
-                </Typography>
-                <Typography variant="h4" sx={{mt: 0.25, lineHeight: 1.1}}>
-                    {value}
-                </Typography>
-                {helper && (
-                    <Typography variant="caption" color="text.secondary">
-                        {helper}
-                    </Typography>
-                )}
-            </Box>
+        <Stack direction="row" spacing={1.5} sx={{alignItems: 'center'}}>
             {icon && (
                 <Box
                     sx={{
                         color: 'primary.main',
-                        bgcolor: 'action.hover',
-                        width: 42,
-                        height: 42,
-                        borderRadius: 2.5,
+                        bgcolor: 'action.selected',
+                        width: 40,
+                        height: 40,
+                        borderRadius: 2,
                         display: 'grid',
                         placeItems: 'center',
+                        flexShrink: 0,
                     }}>
                     {icon}
                 </Box>
             )}
+            <Box sx={{minWidth: 0}}>
+                <Typography variant="caption" color="text.secondary" sx={{fontWeight: 700}}>
+                    {label}
+                </Typography>
+                <Stack direction="row" spacing={1} sx={{alignItems: 'baseline', flexWrap: 'wrap'}}>
+                    <Typography variant="h5" sx={{lineHeight: 1.1}}>
+                        {value}
+                    </Typography>
+                    {helper && (
+                        <Typography variant="caption" color="text.secondary">
+                            {helper}
+                        </Typography>
+                    )}
+                </Stack>
+            </Box>
         </Stack>
     </Paper>
 );
