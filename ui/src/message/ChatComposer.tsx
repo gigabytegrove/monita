@@ -257,7 +257,7 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                 mb: 1,
                 border: 1,
                 borderColor: 'divider',
-                borderRadius: 0.75,
+                borderRadius: 0.25,
                 bgcolor: 'background.paper',
                 boxShadow: 'none',
             }}>
@@ -270,7 +270,7 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                                 position: 'relative',
                                 width: 86,
                                 height: 86,
-                                borderRadius: 0.5,
+                                borderRadius: 0.25,
                                 overflow: 'hidden',
                                 border: 1,
                                 borderColor: 'divider',
@@ -315,7 +315,7 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                         mb: 1,
                         maxHeight: 220,
                         overflowY: 'auto',
-                        borderRadius: 0.5,
+                        borderRadius: 0.25,
                         boxShadow: 'none',
                     }}>
                     {mentionMatches.map((user) => (
@@ -402,7 +402,7 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                     slotProps={{
                         input: {
                             sx: {
-                                borderRadius: 0.5,
+                                borderRadius: 0.25,
                                 bgcolor: 'background.paper',
                                 '& fieldset': {borderColor: 'divider'},
                                 '&:hover fieldset': {borderColor: 'text.secondary'},
@@ -422,7 +422,7 @@ const ChatComposer = ({appId, channelName, fOnSubmit, fOnTyping}: IProps) => {
                             sx={{
                                 width: 42,
                                 height: 42,
-                                borderRadius: 0.5,
+                                borderRadius: 0.25,
                                 mb: 0.1,
                                 bgcolor: 'primary.main',
                                 color: 'primary.contrastText',
