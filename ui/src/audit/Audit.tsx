@@ -43,7 +43,6 @@ const Audit = observer(() => {
 
     return (
         <DefaultPage
-            eyebrow="Administration"
             title="Audit Log"
             description="Security-sensitive and administrative changes recorded by Monita.">
             <SurfaceCard
