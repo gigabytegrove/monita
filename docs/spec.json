@@ -11,7 +11,7 @@
   ],
   "swagger": "2.0",
   "info": {
-    "description": "This is the documentation of the Monita REST API.\n\n# Authentication\nMonita uses two primary token types:\n__clientToken__: a client receives messages and manages account resources.\n__appToken__: an application sends messages.\n\nThe token can be transmitted in a header named `X-Monita-Key`, in a query parameter named `token`, or\nthrough an `Authorization` header with the value prefixed with `Bearer` (for example, `Bearer randomtoken`).\nFor Gotify compatibility, `X-Gotify-Key` remains accepted as a legacy alias.\nBasic auth is also available for supported login/elevation flows.\n\n\\---\n\nFound a bug or have some questions? [Create an issue on GitHub](https://github.com/gigabytegrove/monita/issues)",
+    "description": "This is the documentation of the Monita REST API.\n\n# Authentication\nMonita uses two primary token types:\n__clientToken__: a client receives messages and manages account resources.\n__appToken__: an application sends messages.\n\nThe token can be transmitted in a header named `X-Monita-Key`, in a query parameter named `token`, or\nthrough an `Authorization` header with the value prefixed with `Bearer` (for example, `Bearer randomtoken`).\nFor Gotify compatibility, `X-Monita-Key` remains accepted as a legacy alias.\nBasic auth is also available for supported login/elevation flows.\n\n\\---\n\nFound a bug or have some questions? [Create an issue on GitHub](https://github.com/gigabytegrove/monita/issues)",
     "title": "Monita REST API.",
     "license": {
       "name": "MIT",
