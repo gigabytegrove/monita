@@ -275,7 +275,7 @@ const Automation = () => {
                                             p: 1.25,
                                             border: 1,
                                             borderColor: 'divider',
-                                            borderRadius: 0.75,
+                                            borderRadius: 0.25,
                                         }}>
                                         <Stack
                                             direction={{xs: 'column', sm: 'row'}}
@@ -372,7 +372,7 @@ const AutomationRow = ({
     onHistory?: () => Promise<void>;
     onDelete: () => Promise<void>;
 }) => (
-    <Box sx={{p: 1.5, border: 1, borderColor: 'divider', borderRadius: 2}}>
+    <Box sx={{p: 1.5, border: 1, borderColor: 'divider', borderRadius: 0.5}}>
         <Stack
             direction={{xs: 'column', sm: 'row'}}
             spacing={1.5}
