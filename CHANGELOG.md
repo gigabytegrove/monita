@@ -1,3 +1,16 @@
+## 1.3.8 — 2026-10-05
+
+### Updater release channels
+
+- Added full semantic-version support for prerelease builds such as `1.3.9-alpha`, `1.3.9-beta.1`, and `1.3.9-rc.1`.
+- Added explicit **Release channel** reporting in **Settings → Software Update**.
+- The updater now distinguishes **Alpha**, **Beta**, **RC**, **Stable**, and other preview releases.
+- Version comparison now respects prerelease precedence instead of comparing only major/minor/patch.
+- Managed installation now accepts prerelease tags end-to-end while preserving checksum and runtime-version verification.
+- Stable releases continue to display and install normally.
+
+This release is the updater bridge required before installing Monita prerelease builds from the Web UI.
+
 <p align="center">
   <img src="assets/monita-banner.svg" alt="Monita" width="720">
 </p>
