@@ -18,7 +18,249 @@ require-version:
 	if [ -z ${VERSION} ]; then echo "Need to set VERSION" && exit 1; fi;
 
 test-coverage:
-	PACKAGES="$(go list ./... | grep -v '^github.com/gigabytegrove/monita/plugin$' | grep -v '^github.com/gigabytegrove/monita/plugin/compat$')" && \
+	PACKAGES="$(go list ./... | grep -v '^github.com/gigabytegrove/monita/plugin
+	go test --race ./plugin ./plugin/compat
+
+format:
+	goimports -w $(shell find . -type f -name '*.go' -not -path "./vendor/*")
+
+test-js:
+	go build -ldflags="-s -w -X main.Mode=prod" -o removeme/monita app.go
+	(cd ui && CI=true MONITA_EXE=../removeme/monita yarn test)
+	rm -rf removeme
+
+check-go:
+	golangci-lint run
+
+check-js:
+	(cd ui && yarn lint)
+	(cd ui && yarn testformat)
+
+download-tools:
+	go install github.com/go-swagger/go-swagger/cmd/swagger@717e3cb29becaaf00e56953556c6d80f8a01b286
+
+update-swagger:
+	swagger generate spec --scan-models -o docs/spec.json
+	sed -i 's/"uint64"/"int64"/g' docs/spec.json
+
+check-swagger: update-swagger
+## add the docs to git, this changes line endings in git, otherwise this does not work on windows
+	git add docs
+	if [ -n "$(shell git status --porcelain | grep docs)" ]; then \
+        echo Swagger Spec is not up-to-date; \
+        exit 1; \
+    fi
+
+extract-licenses:
+	mkdir ${LICENSE_DIR} || true
+	for LICENSE in $(shell find vendor/* -name LICENSE); do \
+		DIR=`echo $$LICENSE | tr "/" _ | sed -e 's/vendor_//; s/_LICENSE//'` ; \
+        cp $$LICENSE ${LICENSE_DIR}$$DIR ; \
+    done
+
+package-zip: extract-licenses
+	for BUILD in $(shell find ${BUILD_DIR}/*); do \
+       zip -j $$BUILD.zip $$BUILD ./LICENSE; \
+       zip -ur $$BUILD.zip ${LICENSE_DIR}; \
+    done
+
+build-docker-multiarch: require-version
+	docker buildx build --sbom=true --provenance=true \
+		$(if $(DOCKER_BUILD_PUSH),--push) \
+		--label org.opencontainers.image.revision=$(shell git rev-parse HEAD) \
+		--label org.opencontainers.image.version=$(VERSION) \
+		--label org.opencontainers.image.created=$(shell date -u +%Y-%m-%dT%H:%M:%SZ) \
+		-t ghcr.io/gigabytegrove/monita:latest \
+		-t ghcr.io/gigabytegrove/monita:${VERSION} \
+		-t ghcr.io/gigabytegrove/monita:$(shell echo $(VERSION) | cut -d '.' -f -2) \
+		-t ghcr.io/gigabytegrove/monita:$(shell echo $(VERSION) | cut -d '.' -f -1) \
+		--build-arg RUN_TESTS=$(DOCKER_TEST_LEVEL) \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg LD_FLAGS="$$LD_FLAGS" \
+		--platform linux/amd64,linux/arm64 \
+		-f docker/Dockerfile .
+
+build-docker-multiarch-master:
+	docker buildx build --sbom=true --provenance=true \
+		$(if $(DOCKER_BUILD_PUSH),--push) \
+		--label org.opencontainers.image.revision=$(shell git rev-parse HEAD) \
+		--label org.opencontainers.image.version=master-$(shell git rev-parse --short HEAD) \
+		--label org.opencontainers.image.created=$(shell date -u +%Y-%m-%dT%H:%M:%SZ) \
+		-t ghcr.io/gigabytegrove/monita:master \
+		--build-arg RUN_TESTS=$(DOCKER_TEST_LEVEL) \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg LD_FLAGS="-w -s -X main.Version=master-$(shell git rev-parse --short HEAD) -X main.BuildDate=$(shell date "+%F-%T") -X main.Commit=$(shell git rev-parse --verify HEAD) -X main.Mode=prod" \
+		--platform linux/amd64,linux/arm64 \
+		-f docker/Dockerfile .
+build-docker: build-docker-multiarch
+
+_build_within_docker: OUTPUT = monita
+_build_within_docker:
+	go build -mod=readonly -a -ldflags "${LD_FLAGS}" -o ${OUTPUT}
+
+build-js:
+	(cd ui && yarn build)
+
+build-linux-amd64:
+	mkdir -p ${BUILD_DIR}/linux-amd64
+	docker buildx build --platform linux/amd64 --target binary-export \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg LD_FLAGS="${LD_FLAGS}" \
+		--output type=local,dest=${BUILD_DIR}/linux-amd64 \
+		-f docker/Dockerfile .
+	mv ${BUILD_DIR}/linux-amd64/monita ${BUILD_DIR}/monita-linux-amd64
+	rmdir ${BUILD_DIR}/linux-amd64
+
+build-linux-386:
+	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-386 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-386
+
+build-linux-arm-7:
+	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-arm-7 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-arm-7
+
+build-linux-arm64:
+	mkdir -p ${BUILD_DIR}/linux-arm64
+	docker buildx build --platform linux/arm64 --target binary-export \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg LD_FLAGS="${LD_FLAGS}" \
+		--output type=local,dest=${BUILD_DIR}/linux-arm64 \
+		-f docker/Dockerfile .
+	mv ${BUILD_DIR}/linux-arm64/monita ${BUILD_DIR}/monita-linux-arm64
+	rmdir ${BUILD_DIR}/linux-arm64
+
+build-linux-riscv64:
+	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-riscv64 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-riscv64
+
+build-windows-amd64:
+	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-windows-amd64 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-windows-amd64.exe
+
+build-windows-386:
+	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-windows-386 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-windows-386.exe
+
+build: build-linux-arm-7 build-linux-amd64 build-linux-386 build-linux-arm64 build-linux-riscv64 build-windows-amd64 build-windows-386
+
+.PHONY: test-coverage test check-go check-js verify-swagger check download-tools update-swagger package-zip build-docker build-js build
+ | grep -v '^github.com/gigabytegrove/monita/plugin/compat
+	go test --race ./plugin ./plugin/compat
+
+format:
+	goimports -w $(shell find . -type f -name '*.go' -not -path "./vendor/*")
+
+test-js:
+	go build -ldflags="-s -w -X main.Mode=prod" -o removeme/monita app.go
+	(cd ui && CI=true MONITA_EXE=../removeme/monita yarn test)
+	rm -rf removeme
+
+check-go:
+	golangci-lint run
+
+check-js:
+	(cd ui && yarn lint)
+	(cd ui && yarn testformat)
+
+download-tools:
+	go install github.com/go-swagger/go-swagger/cmd/swagger@717e3cb29becaaf00e56953556c6d80f8a01b286
+
+update-swagger:
+	swagger generate spec --scan-models -o docs/spec.json
+	sed -i 's/"uint64"/"int64"/g' docs/spec.json
+
+check-swagger: update-swagger
+## add the docs to git, this changes line endings in git, otherwise this does not work on windows
+	git add docs
+	if [ -n "$(shell git status --porcelain | grep docs)" ]; then \
+        echo Swagger Spec is not up-to-date; \
+        exit 1; \
+    fi
+
+extract-licenses:
+	mkdir ${LICENSE_DIR} || true
+	for LICENSE in $(shell find vendor/* -name LICENSE); do \
+		DIR=`echo $$LICENSE | tr "/" _ | sed -e 's/vendor_//; s/_LICENSE//'` ; \
+        cp $$LICENSE ${LICENSE_DIR}$$DIR ; \
+    done
+
+package-zip: extract-licenses
+	for BUILD in $(shell find ${BUILD_DIR}/*); do \
+       zip -j $$BUILD.zip $$BUILD ./LICENSE; \
+       zip -ur $$BUILD.zip ${LICENSE_DIR}; \
+    done
+
+build-docker-multiarch: require-version
+	docker buildx build --sbom=true --provenance=true \
+		$(if $(DOCKER_BUILD_PUSH),--push) \
+		--label org.opencontainers.image.revision=$(shell git rev-parse HEAD) \
+		--label org.opencontainers.image.version=$(VERSION) \
+		--label org.opencontainers.image.created=$(shell date -u +%Y-%m-%dT%H:%M:%SZ) \
+		-t ghcr.io/gigabytegrove/monita:latest \
+		-t ghcr.io/gigabytegrove/monita:${VERSION} \
+		-t ghcr.io/gigabytegrove/monita:$(shell echo $(VERSION) | cut -d '.' -f -2) \
+		-t ghcr.io/gigabytegrove/monita:$(shell echo $(VERSION) | cut -d '.' -f -1) \
+		--build-arg RUN_TESTS=$(DOCKER_TEST_LEVEL) \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg LD_FLAGS="$$LD_FLAGS" \
+		--platform linux/amd64,linux/arm64 \
+		-f docker/Dockerfile .
+
+build-docker-multiarch-master:
+	docker buildx build --sbom=true --provenance=true \
+		$(if $(DOCKER_BUILD_PUSH),--push) \
+		--label org.opencontainers.image.revision=$(shell git rev-parse HEAD) \
+		--label org.opencontainers.image.version=master-$(shell git rev-parse --short HEAD) \
+		--label org.opencontainers.image.created=$(shell date -u +%Y-%m-%dT%H:%M:%SZ) \
+		-t ghcr.io/gigabytegrove/monita:master \
+		--build-arg RUN_TESTS=$(DOCKER_TEST_LEVEL) \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg LD_FLAGS="-w -s -X main.Version=master-$(shell git rev-parse --short HEAD) -X main.BuildDate=$(shell date "+%F-%T") -X main.Commit=$(shell git rev-parse --verify HEAD) -X main.Mode=prod" \
+		--platform linux/amd64,linux/arm64 \
+		-f docker/Dockerfile .
+build-docker: build-docker-multiarch
+
+_build_within_docker: OUTPUT = monita
+_build_within_docker:
+	go build -mod=readonly -a -ldflags "${LD_FLAGS}" -o ${OUTPUT}
+
+build-js:
+	(cd ui && yarn build)
+
+build-linux-amd64:
+	mkdir -p ${BUILD_DIR}/linux-amd64
+	docker buildx build --platform linux/amd64 --target binary-export \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg LD_FLAGS="${LD_FLAGS}" \
+		--output type=local,dest=${BUILD_DIR}/linux-amd64 \
+		-f docker/Dockerfile .
+	mv ${BUILD_DIR}/linux-amd64/monita ${BUILD_DIR}/monita-linux-amd64
+	rmdir ${BUILD_DIR}/linux-amd64
+
+build-linux-386:
+	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-386 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-386
+
+build-linux-arm-7:
+	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-arm-7 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-arm-7
+
+build-linux-arm64:
+	mkdir -p ${BUILD_DIR}/linux-arm64
+	docker buildx build --platform linux/arm64 --target binary-export \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg LD_FLAGS="${LD_FLAGS}" \
+		--output type=local,dest=${BUILD_DIR}/linux-arm64 \
+		-f docker/Dockerfile .
+	mv ${BUILD_DIR}/linux-arm64/monita ${BUILD_DIR}/monita-linux-arm64
+	rmdir ${BUILD_DIR}/linux-arm64
+
+build-linux-riscv64:
+	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-linux-riscv64 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-linux-riscv64
+
+build-windows-amd64:
+	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-windows-amd64 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-windows-amd64.exe
+
+build-windows-386:
+	${DOCKER_RUN} ${DOCKER_BUILD_IMAGE}:$(GO_VERSION)-windows-386 make _build_within_docker OUTPUT=${BUILD_DIR}/monita-windows-386.exe
+
+build: build-linux-arm-7 build-linux-amd64 build-linux-386 build-linux-arm64 build-linux-riscv64 build-windows-amd64 build-windows-386
+
+.PHONY: test-coverage test check-go check-js verify-swagger check download-tools update-swagger package-zip build-docker build-js build
+)" && \
 	go test --race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./... $PACKAGES
 	go test --race ./plugin ./plugin/compat
 
