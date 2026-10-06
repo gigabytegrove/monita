@@ -1,0 +1,216 @@
+name: Export Android Offline Toolchain
+
+on:
+  push:
+    branches:
+      - build/android-offline-toolchain-0.3.19
+    paths:
+      - ".github/workflows/android-offline-toolchain.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.14.2"
+
+      - name: Ensure Android 36 toolchain
+        shell: bash
+        run: |
+          set -euxo pipefail
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Create dependency warm-up project
+        shell: bash
+        run: |
+          set -euxo pipefail
+          rm -rf /tmp/monita-warmup
+          mkdir -p /tmp/monita-warmup/app/src/main /tmp/monita-warmup/client/src/main/java
+          cat >/tmp/monita-warmup/settings.gradle.kts <<'EOF'
+          @file:Suppress("UnstableApiUsage")
+          pluginManagement {
+              repositories {
+                  gradlePluginPortal()
+                  google()
+              }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+                  maven { url = uri("https://jitpack.io/") }
+              }
+          }
+          rootProject.name = "Monita Offline Warmup"
+          include(":app")
+          include(":client")
+          EOF
+
+          cat >/tmp/monita-warmup/build.gradle.kts <<'EOF'
+          plugins {
+              id("com.android.application") version "8.11.0" apply false
+              id("org.jetbrains.kotlin.android") version "2.2.0" apply false
+              id("org.openapi.generator") version "7.19.0" apply false
+          }
+          EOF
+
+          cat >/tmp/monita-warmup/app/build.gradle.kts <<'EOF'
+          @file:Suppress("UnstableApiUsage")
+          import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+          plugins {
+              id("com.android.application")
+              id("kotlin-android")
+              id("org.jmailen.kotlinter") version "5.1.1"
+          }
+
+          android {
+              namespace = "com.gigabytegrove.monita.warmup"
+              compileSdk = 36
+              defaultConfig {
+                  applicationId = "com.gigabytegrove.monita.warmup"
+                  minSdk = 26
+                  targetSdk = 36
+                  versionCode = 23
+                  versionName = "0.3.19-warmup"
+              }
+              buildTypes {
+                  register("phoneTest") {
+                      initWith(getByName("release"))
+                      isDebuggable = false
+                  }
+              }
+              buildFeatures {
+                  buildConfig = true
+              }
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+              kotlin {
+                  compilerOptions {
+                      jvmTarget.set(JvmTarget.JVM_17)
+                  }
+              }
+              lint {
+                  disable.add("GoogleAppIndexingWarning")
+              }
+          }
+
+          dependencies {
+              testImplementation("junit:junit:4.13.2")
+              val coilVersion = "2.7.0"
+              val markwonVersion = "4.6.2"
+              val tinylogVersion = "2.7.0"
+              implementation(project(":client"))
+              implementation("androidx.appcompat:appcompat:1.7.1")
+              implementation("androidx.biometric:biometric:1.1.0")
+              implementation("androidx.core:core-splashscreen:1.0.1")
+              implementation("com.google.android.material:material:1.12.0")
+              implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+              implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+              implementation("androidx.vectordrawable:vectordrawable:1.2.0")
+              implementation("androidx.preference:preference-ktx:1.2.1")
+              implementation("com.github.cyb3rko:QuickPermissions-Kotlin:1.1.6")
+              implementation("io.coil-kt:coil:$coilVersion")
+              implementation("io.coil-kt:coil-svg:$coilVersion")
+              implementation("io.noties.markwon:core:$markwonVersion")
+              implementation("io.noties.markwon:image-coil:$markwonVersion")
+              implementation("io.noties.markwon:image:$markwonVersion")
+              implementation("io.noties.markwon:ext-tables:$markwonVersion")
+              implementation("io.noties.markwon:ext-strikethrough:$markwonVersion")
+              implementation("org.tinylog:tinylog-api-kotlin:$tinylogVersion")
+              implementation("org.tinylog:tinylog-impl:$tinylogVersion")
+              implementation("com.google.code.gson:gson:2.13.1")
+              implementation("com.squareup.retrofit2:retrofit:3.0.0")
+          }
+          EOF
+
+          cat >/tmp/monita-warmup/client/build.gradle <<'EOF'
+          plugins {
+              id 'java'
+              id 'maven-publish'
+          }
+
+          ext {
+              oltu_version = "1.0.1"
+              retrofit_version = "2.11.0"
+              jakarta_annotation_version = "1.3.5"
+              swagger_annotations_version = "2.2.28"
+              junit_version = "5.10.3"
+              json_fire_version = "1.9.0"
+          }
+
+          dependencies {
+              implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+              implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+              implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+              implementation "io.swagger.core.v3:swagger-annotations:$swagger_annotations_version"
+              implementation "com.google.code.findbugs:jsr305:3.0.2"
+              implementation ("org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:$oltu_version"){
+                  exclude group:'org.apache.oltu.oauth2' , module: 'org.apache.oltu.oauth2.common'
+              }
+              implementation "io.gsonfire:gson-fire:$json_fire_version"
+              implementation "jakarta.annotation:jakarta.annotation-api:$jakarta_annotation_version"
+              testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
+          }
+
+          group = 'org.openapitools'
+          version = '2.0.2'
+          java.sourceCompatibility = JavaVersion.VERSION_11
+          java.targetCompatibility = JavaVersion.VERSION_11
+          EOF
+
+          cat >/tmp/monita-warmup/app/src/main/AndroidManifest.xml <<'EOF'
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+            <application android:label="Warmup" />
+          </manifest>
+          EOF
+
+      - name: Warm all Gradle and Android dependencies
+        working-directory: /tmp/monita-warmup
+        shell: bash
+        run: |
+          set -euxo pipefail
+          gradle wrapper --gradle-version 8.14.2 --distribution-type bin
+          ./gradlew --no-daemon :app:assemblePhoneTest :app:testDebugUnitTest :app:lintPhoneTest --stacktrace
+
+      - name: Package portable offline toolchain
+        shell: bash
+        run: |
+          set -euxo pipefail
+          OUT="$GITHUB_WORKSPACE/offline-toolchain"
+          mkdir -p "$OUT/android-sdk" "$OUT/gradle-home"
+          cp -a "$ANDROID_HOME/licenses" "$OUT/android-sdk/" || true
+          cp -a "$ANDROID_HOME/platform-tools" "$OUT/android-sdk/"
+          mkdir -p "$OUT/android-sdk/platforms" "$OUT/android-sdk/build-tools"
+          cp -a "$ANDROID_HOME/platforms/android-36" "$OUT/android-sdk/platforms/"
+          cp -a "$ANDROID_HOME/build-tools/36.0.0" "$OUT/android-sdk/build-tools/"
+          cp -a "$HOME/.gradle/caches" "$OUT/gradle-home/"
+          cp -a "$HOME/.gradle/wrapper" "$OUT/gradle-home/"
+          printf '%s\n' "Android SDK: $(du -sh "$OUT/android-sdk" | cut -f1)" "Gradle home: $(du -sh "$OUT/gradle-home" | cut -f1)" | tee "$OUT/CONTENTS.txt"
+          tar -C "$OUT" -czf "$GITHUB_WORKSPACE/monita-android-offline-toolchain.tar.gz" android-sdk gradle-home CONTENTS.txt
+          sha256sum "$GITHUB_WORKSPACE/monita-android-offline-toolchain.tar.gz" > "$GITHUB_WORKSPACE/monita-android-offline-toolchain.sha256"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monita-android-offline-toolchain
+          path: |
+            monita-android-offline-toolchain.tar.gz
+            monita-android-offline-toolchain.sha256
+          retention-days: 1
+          if-no-files-found: error
