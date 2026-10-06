@@ -228,12 +228,45 @@ jobs:
           printf '%s\n' "Android SDK: $(du -sh "$OUT/android-sdk" | cut -f1)" "Gradle home: $(du -sh "$OUT/gradle-home" | cut -f1)" | tee "$OUT/CONTENTS.txt"
           tar -C "$OUT" -czf "$GITHUB_WORKSPACE/monita-android-offline-toolchain.tar.gz" android-sdk gradle-home CONTENTS.txt
           sha256sum "$GITHUB_WORKSPACE/monita-android-offline-toolchain.tar.gz" > "$GITHUB_WORKSPACE/monita-android-offline-toolchain.sha256"
+          split -b 240M -d -a 2 "$GITHUB_WORKSPACE/monita-android-offline-toolchain.tar.gz" "$GITHUB_WORKSPACE/toolchain-part-"
+          ls -lh "$GITHUB_WORKSPACE"/toolchain-part-* "$GITHUB_WORKSPACE/monita-android-offline-toolchain.sha256"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: monita-android-offline-toolchain
-          path: |
-            monita-android-offline-toolchain.tar.gz
-            monita-android-offline-toolchain.sha256
+          name: monita-toolchain-part-00
+          path: toolchain-part-00
+          compression-level: 0
+          retention-days: 1
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monita-toolchain-part-01
+          path: toolchain-part-01
+          compression-level: 0
+          retention-days: 1
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monita-toolchain-part-02
+          path: toolchain-part-02
+          compression-level: 0
+          retention-days: 1
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monita-toolchain-part-03
+          path: toolchain-part-03
+          compression-level: 0
+          retention-days: 1
+          if-no-files-found: ignore
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monita-toolchain-sha256
+          path: monita-android-offline-toolchain.sha256
+          compression-level: 0
           retention-days: 1
           if-no-files-found: error
