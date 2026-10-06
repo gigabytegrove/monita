@@ -1,9 +1,98 @@
-name: Temporary Android Build Runner Probe
+name: Temporary Monita Android Build
 on:
   push:
     branches: [tmp-monita-android-build]
+    paths:
+      - ".github/workflows/tmp-android-build.yml"
+permissions:
+  contents: read
 jobs:
-  probe:
+  build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: gigabytegrove/monita-android/.github/actions/android-build-helper@master
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Prepare one-time encrypted source receiver
+        shell: bash
+        run: |
+          set -euo pipefail
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out /tmp/monita-build-private.pem 2>/dev/null
+          openssl pkey -in /tmp/monita-build-private.pem -pubout -out /tmp/monita-build-public.pem
+          echo "MONITA_BUILD_PUBLIC_KEY_B64=$(base64 -w0 /tmp/monita-build-public.pem)"
+          echo "MONITA_BUILD_RECEIVER_READY"
+
+          base="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_REF_NAME}/payload"
+          ready=""
+          for _ in $(seq 1 180); do
+            ready=$(curl -fsSL "${base}/ready?ts=$(date +%s)" 2>/dev/null || true)
+            if [[ "$ready" =~ ^chunks=[0-9]+$ ]]; then
+              break
+            fi
+            sleep 5
+          done
+          [[ "$ready" =~ ^chunks=[0-9]+$ ]] || { echo "Encrypted payload did not arrive in time."; exit 10; }
+          chunks="${ready#chunks=}"
+          echo "Encrypted payload received: ${chunks} chunks"
+
+          : > /tmp/monita-source.enc.b64
+          for i in $(seq 0 $((chunks-1))); do
+            n=$(printf '%03d' "$i")
+            curl -fsSL "${base}/chunk-${n}.txt?ts=$(date +%s)" >> /tmp/monita-source.enc.b64
+          done
+          base64 -d /tmp/monita-source.enc.b64 > /tmp/monita-source.enc
+          curl -fsSL "${base}/key.b64?ts=$(date +%s)" | base64 -d > /tmp/monita-key.enc
+
+          openssl pkeyutl -decrypt             -inkey /tmp/monita-build-private.pem             -in /tmp/monita-key.enc             -out /tmp/monita-keyblob.bin             -pkeyopt rsa_padding_mode:oaep             -pkeyopt rsa_oaep_md:sha256
+
+          test "$(stat -c%s /tmp/monita-keyblob.bin)" -eq 48
+          keyhex=$(head -c 32 /tmp/monita-keyblob.bin | xxd -p -c 256)
+          ivhex=$(tail -c 16 /tmp/monita-keyblob.bin | xxd -p -c 256)
+          openssl enc -d -aes-256-cbc -K "$keyhex" -iv "$ivhex"             -in /tmp/monita-source.enc -out /tmp/monita-source.zip
+
+          mkdir -p "$GITHUB_WORKSPACE/android-src"
+          unzip -q /tmp/monita-source.zip -d "$GITHUB_WORKSPACE/android-src"
+          rm -f /tmp/monita-source.enc /tmp/monita-source.enc.b64 /tmp/monita-source.zip /tmp/monita-key.enc /tmp/monita-keyblob.bin /tmp/monita-build-private.pem
+          echo "MONITA_SOURCE_DECRYPTED"
+
+      - name: Ensure Android SDK 36
+        shell: bash
+        run: |
+          set -euo pipefail
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0" >/dev/null
+
+      - name: Build Monita 0.3.19 phone-test APK
+        shell: bash
+        working-directory: android-src
+        run: |
+          set -euo pipefail
+          chmod +x ./gradlew
+          ./gradlew --no-daemon :app:testDebugUnitTest :app:lintPhoneTest :app:assemblePhoneTest -PreleaseVersion=0.3.19-dev
+          mkdir -p dist
+          apk=$(find app/build/outputs/apk -type f -name '*.apk' | head -n1)
+          test -n "$apk"
+          cp "$apk" dist/Monita-v0.3.19.apk
+          sha256sum dist/Monita-v0.3.19.apk > dist/SHA256SUMS.txt
+
+          badging=$(aapt dump badging dist/Monita-v0.3.19.apk | head -n1)
+          echo "$badging"
+          grep -q "name='com.gigabytegrove.monita'" <<<"$badging"
+          grep -q "versionCode='23'" <<<"$badging"
+          grep -q "versionName='0.3.19-dev-test'" <<<"$badging"
+          apksigner verify --verbose --print-certs dist/Monita-v0.3.19.apk | tee dist/signer.txt
+
+      - name: Upload verified APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Monita-v0.3.19
+          path: |
+            android-src/dist/Monita-v0.3.19.apk
+            android-src/dist/SHA256SUMS.txt
+            android-src/dist/signer.txt
+          if-no-files-found: error
+          retention-days: 7
