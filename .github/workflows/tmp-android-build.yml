@@ -6,4 +6,4 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "public runner works"
+      - uses: gigabytegrove/monita-android/.github/actions/android-build-helper@master
