@@ -17,15 +17,26 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Prepare one-time encrypted source receiver
+      - name: Prepare one-time build key
         shell: bash
         run: |
           set -euo pipefail
           openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out /tmp/monita-build-private.pem 2>/dev/null
           openssl pkey -in /tmp/monita-build-private.pem -pubout -out /tmp/monita-build-public.pem
-          echo "MONITA_BUILD_PUBLIC_KEY_B64=$(base64 -w0 /tmp/monita-build-public.pem)"
-          echo "MONITA_BUILD_RECEIVER_READY"
+          echo "MONITA_BUILD_KEY_READY"
 
+      - name: Upload one-time public key
+        uses: actions/upload-artifact@v4
+        with:
+          name: monita-build-public-key
+          path: /tmp/monita-build-public.pem
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Receive encrypted source
+        shell: bash
+        run: |
+          set -euo pipefail
           base="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_REF_NAME}/payload"
           ready=""
           for _ in $(seq 1 180); do
