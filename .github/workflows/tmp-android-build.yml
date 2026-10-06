@@ -1,0 +1,9 @@
+name: Temporary Android Build Runner Probe
+on:
+  push:
+    branches: [tmp-monita-android-build]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "public runner works"
