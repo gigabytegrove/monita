@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/gigabytegrove/monita/model"
+	"github.com/gigabytegrove/monita/test/testdb"
 )
 
 func TestCanPostToChannelOwnerWithoutMembership(t *testing.T) {
@@ -130,5 +131,51 @@ func TestCanManageMessagePermissionMatrix(t *testing.T) {
 				t.Fatalf("canManageMessage()=%v, want %v", got, tt.allow)
 			}
 		})
+	}
+}
+
+func TestResolveMentionsIncludesMutedMembersButRejectsNonmembers(t *testing.T) {
+	db := testdb.NewDBWithDefaultUser(t)
+	defer db.Close()
+
+	owner := &model.User{ID: 71, Name: "owner-mention"}
+	muted := &model.User{ID: 72, Name: "muted-mention", DisplayName: "Muted User"}
+	outsider := &model.User{ID: 73, Name: "outsider-mention"}
+	for _, user := range []*model.User{owner, muted, outsider} {
+		if err := db.CreateUser(user); err != nil {
+			t.Fatal(err)
+		}
+	}
+	app := &model.Application{
+		UserID: owner.ID,
+		Name: "Family Chat",
+		Token: "MENTIONTESTTOKEN",
+		ChannelType: model.ChannelTypeChat,
+	}
+	if err := db.CreateApplication(app); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.UpsertApplicationMembership(&model.ApplicationMembership{
+		ApplicationID: app.ID,
+		UserID: muted.ID,
+		ReceiveNotifications: false,
+	}); err != nil {
+		t.Fatal(err)
+	}
+
+	api := &CollaborationAPI{DB: db.GormDatabase}
+	ids, err := api.resolveMentions(app.ID, "@muted-mention check this", []uint{outsider.ID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(ids) != 1 || ids[0] != muted.ID {
+		t.Fatalf("wanted only muted member %d, got %v", muted.ID, ids)
+	}
+	ids, err = api.resolveMentions(app.ID, "", []uint{muted.ID, outsider.ID, muted.ID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(ids) != 1 || ids[0] != muted.ID {
+		t.Fatalf("explicit mentions must include valid muted members only, got %v", ids)
 	}
 }
