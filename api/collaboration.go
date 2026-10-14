@@ -268,10 +268,11 @@ func (a *CollaborationAPI) Reply(ctx *gin.Context) {
 		if len(mentions) > 0 {
 			// Delivery reads this metadata to reach explicitly mentioned users,
 			// including members who muted ordinary Channel notifications.
-			extraBytes, err = json.Marshal(map[string]any{"monita::mentionUserIds": mentions})
-			if !successOrAbort(ctx, http.StatusInternalServerError, err) {
+			encoded, encodeErr := json.Marshal(map[string]any{"monita::mentionUserIds": mentions})
+			if !successOrAbort(ctx, http.StatusInternalServerError, encodeErr) {
 				return
 			}
+			extraBytes = encoded
 		}
 		message := &model.Message{
 			ApplicationID:       app.ID,
