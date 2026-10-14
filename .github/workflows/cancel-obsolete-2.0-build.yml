@@ -1,0 +1,38 @@
+name: Cancel obsolete Monita 2.0 build
+on:
+  push:
+    branches:
+      - work/v2.0.0-cancel-stale-build
+    paths:
+      - .github/workflows/cancel-obsolete-2.0-build.yml
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  cancel-obsolete:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Only cancel the known vulnerable pre-remediation release run
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OBSOLETE_RUN: "38581001118"
+          OBSOLETE_HEAD: "15a17d745283bdfe6e9a93a59fbe38d88dd9fcc7"
+        run: |
+          set -euo pipefail
+          RUN_JSON="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$OBSOLETE_RUN")"
+          ACTUAL_SHA="$(jq -r '.head_sha' <<< "$RUN_JSON")"
+          NAME="$(jq -r '.name' <<< "$RUN_JSON")"
+          STATE="$(jq -r '.status' <<< "$RUN_JSON")"
+          test "$NAME" = "build"
+          test "$ACTUAL_SHA" = "$OBSOLETE_HEAD"
+          if [[ "$STATE" == "completed" ]]; then
+            echo "Obsolete build has already completed with no active job to cancel."
+            exit 0
+          fi
+          echo "Cancelling obsolete Monita v2.0.0 build from vulnerable Go toolchain, SHA=$ACTUAL_SHA."
+          gh api --method POST "repos/$GITHUB_REPOSITORY/actions/runs/$OBSOLETE_RUN/cancel"
+          echo "Cancellation requested; patched master build remains untouched."
