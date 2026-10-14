@@ -869,6 +869,10 @@ func (fs *onlyImageFS) Open(name string) (http.File, error) {
 }
 
 func cleanupOrphanAttachments(db *database.GormDatabase, directory string) error {
+	// A message attachment file is written before its database row is committed.
+	// Keep recent unreferenced files long enough for concurrent uploads to finish.
+	const inFlightUploadGracePeriod = 10 * time.Minute
+	cutoff := time.Now().Add(-inFlightUploadGracePeriod)
 	names, err := db.GetAttachmentStorageNames()
 	if err != nil {
 		return err
@@ -890,6 +894,16 @@ func cleanupOrphanAttachments(db *database.GormDatabase, directory string) error
 		}
 		if _, ok := keep[entry.Name()]; ok {
 			continue
+		}
+		info, err := entry.Info()
+		if errors.Is(err, os.ErrNotExist) {
+			continue
+		}
+		if err != nil {
+			return err
+		}
+		if info.ModTime().After(cutoff) {
+			continue // may still be an upload being persisted
 		}
 		if err := os.Remove(filepath.Join(directory, entry.Name())); err != nil && !errors.Is(err, os.ErrNotExist) {
 			return err
