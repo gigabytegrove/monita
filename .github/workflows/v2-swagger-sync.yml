@@ -5,6 +5,12 @@ on:
       - work/v2.0.0-readiness
     paths:
       - .github/workflows/v2-swagger-sync.yml
+      - api/collaboration.go
+      - api/message.go
+      - model/collaboration.go
+      - model/message.go
+      - model/application.go
+      - router/router.go
   workflow_dispatch:
 
 permissions:
