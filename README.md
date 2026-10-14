@@ -16,7 +16,7 @@ Monita is a self-hosted notification and messaging platform for people, teams, h
 
 Companion projects:
 
-- [Monita for Android](https://github.com/gigabytegrove/monita-android) — native Android client; latest published APK: **0.3.17** (0.3.19 is under development)
+- [Monita for Android](https://github.com/gigabytegrove/monita-android) — native Android client. Check its [Releases](https://github.com/gigabytegrove/monita-android/releases) page for published APKs and compatibility information.
 - [Monita for Home Assistant](https://github.com/gigabytegrove/monita-ha) — HACS-compatible Home Assistant integration; latest published release: **1.8.16** (2.0.0 integration release prepared separately)
 
 Release-specific changes are tracked in [CHANGELOG.md](CHANGELOG.md). Installation and update instructions are in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
