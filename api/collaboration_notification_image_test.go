@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/gigabytegrove/monita/model"
+	"github.com/gigabytegrove/monita/test/testdb"
 )
 
 func TestCanPostToChannelOwnerWithoutMembership(t *testing.T) {
@@ -104,5 +105,77 @@ func TestMessageControlEnabledDefaultsOff(t *testing.T) {
 	}
 	if messageControlEnabled(&model.Message{Extras: []byte(`{"monita::controls":"assign"}`)}, "assign") {
 		t.Fatal("malformed control metadata must fail closed")
+	}
+}
+
+func TestCanManageMessagePermissionMatrix(t *testing.T) {
+	app := &model.Application{UserID: 7}
+	message := &model.Message{SenderUserID: 12}
+	tests := []struct {
+		name       string
+		user       *model.User
+		membership *model.ApplicationMembership
+		allow      bool
+	}{
+		{name: "owner without membership", user: &model.User{ID: 7}, allow: true},
+		{name: "admin without membership", user: &model.User{ID: 99, Admin: true}, allow: true},
+		{name: "nonmember", user: &model.User{ID: 13}, allow: false},
+		{name: "sender with membership", user: &model.User{ID: 12}, membership: &model.ApplicationMembership{EffectiveRole: model.ChannelRoleMember}, allow: true},
+		{name: "channel manager", user: &model.User{ID: 13}, membership: &model.ApplicationMembership{EffectiveRole: model.ChannelRoleManager}, allow: true},
+		{name: "unrelated member", user: &model.User{ID: 13}, membership: &model.ApplicationMembership{EffectiveRole: model.ChannelRoleMember}, allow: false},
+		{name: "nil user", user: nil, membership: &model.ApplicationMembership{EffectiveRole: model.ChannelRoleManager}, allow: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := canManageMessage(app, tt.membership, tt.user, message); got != tt.allow {
+				t.Fatalf("canManageMessage()=%v, want %v", got, tt.allow)
+			}
+		})
+	}
+}
+
+func TestResolveMentionsIncludesMutedMembersButRejectsNonmembers(t *testing.T) {
+	db := testdb.NewDBWithDefaultUser(t)
+	defer db.Close()
+
+	owner := &model.User{ID: 71, Name: "owner-mention"}
+	muted := &model.User{ID: 72, Name: "muted-mention", DisplayName: "Muted User"}
+	outsider := &model.User{ID: 73, Name: "outsider-mention"}
+	for _, user := range []*model.User{owner, muted, outsider} {
+		if err := db.CreateUser(user); err != nil {
+			t.Fatal(err)
+		}
+	}
+	app := &model.Application{
+		UserID: owner.ID,
+		Name: "Family Chat",
+		Token: "MENTIONTESTTOKEN",
+		ChannelType: model.ChannelTypeChat,
+	}
+	if err := db.CreateApplication(app); err != nil {
+		t.Fatal(err)
+	}
+	if err := db.UpsertApplicationMembership(&model.ApplicationMembership{
+		ApplicationID: app.ID,
+		UserID: muted.ID,
+		ReceiveNotifications: false,
+	}); err != nil {
+		t.Fatal(err)
+	}
+
+	api := &CollaborationAPI{DB: db.GormDatabase}
+	ids, err := api.resolveMentions(app.ID, "@muted-mention check this", []uint{outsider.ID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(ids) != 1 || ids[0] != muted.ID {
+		t.Fatalf("wanted only muted member %d, got %v", muted.ID, ids)
+	}
+	ids, err = api.resolveMentions(app.ID, "", []uint{muted.ID, outsider.ID, muted.ID})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(ids) != 1 || ids[0] != muted.ID {
+		t.Fatalf("explicit mentions must include valid muted members only, got %v", ids)
 	}
 }

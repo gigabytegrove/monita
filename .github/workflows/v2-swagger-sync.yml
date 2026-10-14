@@ -1,0 +1,64 @@
+name: One-time 2.0 Swagger synchronization
+on:
+  push:
+    branches:
+      - work/v2.0.0-readiness
+    paths:
+      - .github/workflows/v2-swagger-sync.yml
+      - api/collaboration.go
+      - api/message.go
+      - model/collaboration.go
+      - model/message.go
+      - model/application.go
+      - router/router.go
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exactly the 2.0 readiness branch
+        uses: actions/checkout@v4
+        with:
+          ref: work/v2.0.0-readiness
+          persist-credentials: true
+      - name: Install the version of Go used by verification
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.26.x
+      - name: Format Go sources consistently with verification
+        run: go run mvdan.cc/gofumpt@v0.9.2 -w $(find . -type f -name '*.go' -not -path './vendor/*')
+      - name: Install Web UI formatter
+        run: |
+          cd ui
+          corepack enable
+          yarn install --frozen-lockfile
+      - name: Format the two updater sources flagged by verification
+        run: |
+          cd ui
+          yarn prettier src/update/release.ts src/update/UpdateStatus.tsx --write
+      - name: Install Swagger generator
+        run: make download-tools
+      - name: Regenerate tracked Swagger specification
+        run: make update-swagger
+      - name: Show exact generated-file difference
+        run: |
+          git diff --stat
+          git diff -- docs/swagger.go | head -150
+          git status --short
+      - name: Commit only generated documentation on readiness branch
+        run: |
+          set -euo pipefail
+          git add -- docs/spec.json docs/swagger.go ui/src/update/release.ts ui/src/update/UpdateStatus.tsx
+          if git diff --cached --quiet; then
+            echo 'Generated documentation and updater formatting are current.'
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "ci: synchronize Swagger and format updater sources for Monita 2.0"
+          git push origin HEAD:refs/heads/work/v2.0.0-readiness
