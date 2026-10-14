@@ -253,6 +253,19 @@ func (a *CollaborationAPI) Reply(ctx *gin.Context) {
 		if root == 0 {
 			root = parent.ID
 		}
+		mentions, mentionErr := a.resolveMentions(app.ID, params.Message, params.MentionUserIDs)
+		if !successOrAbort(ctx, http.StatusInternalServerError, mentionErr) {
+			return
+		}
+		var extraBytes []byte
+		if len(mentions) > 0 {
+			// Delivery reads this metadata to reach explicitly mentioned users,
+			// including members who muted ordinary Channel notifications.
+			extraBytes, err = json.Marshal(map[string]any{"monita::mentionUserIds": mentions})
+			if !successOrAbort(ctx, http.StatusInternalServerError, err) {
+				return
+			}
+		}
 		message := &model.Message{
 			ApplicationID:       app.ID,
 			Title:               title,
@@ -263,19 +276,18 @@ func (a *CollaborationAPI) Reply(ctx *gin.Context) {
 			SenderName:          displayUserName(user),
 			ReplyToMessageID:    parent.ID,
 			ThreadRootMessageID: root,
+			Extras:               extraBytes,
 		}
-		external, err := a.Dispatcher.StoreAndDeliver(message)
+		// Persist recipient mention state before broadcasting: the Web UI,
+		// Android native notifications and realtime stream then see one state.
+		external, err := a.Dispatcher.StorePreparedAndDeliver(message, func(stored *model.Message) error {
+			if len(mentions) == 0 {
+				return nil
+			}
+			return a.DB.ReplaceMessageMentions(stored.ID, mentions)
+		})
 		if !successOrAbort(ctx, http.StatusInternalServerError, err) {
 			return
-		}
-		mentions, mentionErr := a.resolveMentions(app.ID, params.Message, params.MentionUserIDs)
-		if !successOrAbort(ctx, http.StatusInternalServerError, mentionErr) {
-			return
-		}
-		if len(mentions) > 0 {
-			if !successOrAbort(ctx, http.StatusInternalServerError, a.DB.ReplaceMessageMentions(message.ID, mentions)) {
-				return
-			}
 		}
 		ctx.JSON(http.StatusCreated, external)
 	})
