@@ -1,6 +1,6 @@
 # Monita 2.0.0 — coordinated release gates
 
-**Status: NOT RELEASED.** This document tracks the work required to publish the same `v2.0.0` version for **Monita Server**, **Monita for Home Assistant**, and **Monita for Android**. Do not tag, advertise or publish a stable 2.0.0 component until all three have passed the gates below.
+**Status: staged 2.0 release train.** This document tracks the common `v2.0.0` target for Monita Server, Home Assistant and Android. Server and Home Assistant can be published sequentially once their individual checks pass because Android is being built and tested locally; do not describe the **complete three-component 2.0 rollout** as finished until Android's signed APK and cross-client tests pass. Never imply that one component's CI results validate another.
 
 ## Published baseline (verified 2026-10-14)
 
