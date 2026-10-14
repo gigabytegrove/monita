@@ -1,3 +1,16 @@
+## 2.0.0 — 2026-10-14
+
+### Shared Monita 2.0 server release
+
+- Corrected Channel owner/admin message-workflow authorization while preserving per-message opt-in enforcement for Assign, Resolve and Attach controls.
+- Resolved threaded Chat mentions before message distribution, including muted Channel members and validated recipient membership.
+- Improved attachment cleanup with a grace period for concurrently uploaded files; added orphan-cleanup regression coverage.
+- Fixed the Go race/coverage Makefile recipe, synchronized generated API documentation, and corrected Web updater formatting to restore CI verification.
+- Retains the 24-hour Notification Channel retention migration and unlimited-by-default Chat history and keeps legacy protocol compatibility routes where required for rolling upgrades.
+- Adds coordinated rollout documentation for the Home Assistant and Android 2.0 companions.
+
+**Rolling upgrade:** Back up the Monita database and attachment storage first. Upgrade the server before Home Assistant and Android. Do not infer that Android 2.0 has been published merely because server 2.0 is available.
+
 ## 1.3.9 — 2026-10-05
 
 ### Stable Web UI redesign and update channels
