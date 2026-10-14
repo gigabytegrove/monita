@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
+	"time"
 	"strings"
 	"testing"
 
@@ -507,4 +510,39 @@ func doRequestAndExpect(t *testing.T, req *http.Request, code int, json string) 
 
 	assert.Equal(t, code, res.StatusCode)
 	assert.JSONEq(t, json, buf.String())
+}
+
+func TestCleanupOrphanAttachments(t *testing.T) {
+	db := testdb.NewDBWithDefaultUser(t)
+	defer db.Close()
+
+	directory := t.TempDir()
+	activeName := "active-attachment.bin"
+	orphanName := "expired-attachment.bin"
+	activePath := filepath.Join(directory, activeName)
+	orphanPath := filepath.Join(directory, orphanName)
+
+	assert.NoError(t, os.WriteFile(activePath, []byte("active"), 0o600))
+	assert.NoError(t, os.WriteFile(orphanPath, []byte("expired"), 0o600))
+	assert.NoError(t, db.CreateMessageAttachment(&model.MessageAttachment{
+		MessageID:   1,
+		Filename:    "photo.bin",
+		ContentType: "application/octet-stream",
+		Size:        6,
+		StorageName: activeName,
+	}))
+
+	assert.NoError(t, cleanupOrphanAttachments(db.GormDatabase, directory))
+	assert.FileExists(t, activePath, "referenced attachment must remain")
+	assert.FileExists(t, orphanPath, "an in-flight upload must not be deleted")
+
+	old := time.Now().Add(-15 * time.Minute)
+	assert.NoError(t, os.Chtimes(orphanPath, old, old))
+	assert.NoError(t, cleanupOrphanAttachments(db.GormDatabase, directory))
+	assert.FileExists(t, activePath, "referenced attachment must remain regardless of its age")
+	assert.NoFileExists(t, orphanPath, "expired unreferenced attachment must be removed")
+	assert.NoError(t, cleanupOrphanAttachments(db.GormDatabase, directory), "cleanup must be repeatable")
+
+	missingDir := filepath.Join(directory, "not-created")
+	assert.NoError(t, cleanupOrphanAttachments(db.GormDatabase, missingDir))
 }
