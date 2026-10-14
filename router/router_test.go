@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"time"
 	"strings"
 	"testing"
 
@@ -533,7 +534,13 @@ func TestCleanupOrphanAttachments(t *testing.T) {
 
 	assert.NoError(t, cleanupOrphanAttachments(db.GormDatabase, directory))
 	assert.FileExists(t, activePath, "referenced attachment must remain")
-	assert.NoFileExists(t, orphanPath, "unreferenced/expired attachment must be removed")
+	assert.FileExists(t, orphanPath, "an in-flight upload must not be deleted")
+
+	old := time.Now().Add(-15 * time.Minute)
+	assert.NoError(t, os.Chtimes(orphanPath, old, old))
+	assert.NoError(t, cleanupOrphanAttachments(db.GormDatabase, directory))
+	assert.FileExists(t, activePath, "referenced attachment must remain regardless of its age")
+	assert.NoFileExists(t, orphanPath, "expired unreferenced attachment must be removed")
 	assert.NoError(t, cleanupOrphanAttachments(db.GormDatabase, directory), "cleanup must be repeatable")
 
 	missingDir := filepath.Join(directory, "not-created")
