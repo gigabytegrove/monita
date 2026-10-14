@@ -106,3 +106,29 @@ func TestMessageControlEnabledDefaultsOff(t *testing.T) {
 		t.Fatal("malformed control metadata must fail closed")
 	}
 }
+
+func TestCanManageMessagePermissionMatrix(t *testing.T) {
+	app := &model.Application{UserID: 7}
+	message := &model.Message{SenderUserID: 12}
+	tests := []struct {
+		name       string
+		user       *model.User
+		membership *model.ApplicationMembership
+		allow      bool
+	}{
+		{name: "owner without membership", user: &model.User{ID: 7}, allow: true},
+		{name: "admin without membership", user: &model.User{ID: 99, Admin: true}, allow: true},
+		{name: "nonmember", user: &model.User{ID: 13}, allow: false},
+		{name: "sender with membership", user: &model.User{ID: 12}, membership: &model.ApplicationMembership{EffectiveRole: model.ChannelRoleMember}, allow: true},
+		{name: "channel manager", user: &model.User{ID: 13}, membership: &model.ApplicationMembership{EffectiveRole: model.ChannelRoleManager}, allow: true},
+		{name: "unrelated member", user: &model.User{ID: 13}, membership: &model.ApplicationMembership{EffectiveRole: model.ChannelRoleMember}, allow: false},
+		{name: "nil user", user: nil, membership: &model.ApplicationMembership{EffectiveRole: model.ChannelRoleManager}, allow: false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := canManageMessage(app, tt.membership, tt.user, message); got != tt.allow {
+				t.Fatalf("canManageMessage()=%v, want %v", got, tt.allow)
+			}
+		})
+	}
+}
