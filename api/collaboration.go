@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -30,6 +31,7 @@ type CollaborationDatabase interface {
 	GetApplicationByID(id uint) (*model.Application, error)
 	GetApplicationMembership(applicationID, userID uint) (*model.ApplicationMembership, error)
 	GetApplicationRecipientUserIDs(applicationID uint) ([]uint, error)
+	GetApplicationMemberships(applicationID uint) ([]*model.ApplicationMembership, error)
 	GetUserByID(id uint) (*model.User, error)
 	GetThreadMessagesForUser(userID, rootID uint) ([]*model.Message, error)
 	AddMessageReaction(messageID, userID uint, emoji string) error
@@ -117,13 +119,18 @@ func canPostToChannel(app *model.Application, membership *model.ApplicationMembe
 }
 
 func canManageMessage(app *model.Application, membership *model.ApplicationMembership, user *model.User, message *model.Message) bool {
-	if user == nil || app == nil || membership == nil || message == nil {
+	if user == nil || app == nil || message == nil {
 		return false
 	}
-	if user.Admin || app.UserID == user.ID || message.SenderUserID == user.ID {
+	// messageAccess explicitly grants owners and administrators access even
+	// when no membership row exists. Do not deny those users here.
+	if user.Admin || app.UserID == user.ID {
 		return true
 	}
-	return membership.EffectiveRole == model.ChannelRoleManager
+	if membership == nil {
+		return false
+	}
+	return message.SenderUserID == user.ID || membership.EffectiveRole == model.ChannelRoleManager
 }
 
 func messageControlEnabled(message *model.Message, control string) bool {
@@ -165,9 +172,22 @@ func normalizeMention(value string) string {
 }
 
 func (a *CollaborationAPI) resolveMentions(applicationID uint, body string, explicit []uint) ([]uint, error) {
+	// Muting ordinary notifications must not make a member unmentionable.
+	// The recipient query filters muted accounts; Channel membership does not.
+	memberships, err := a.DB.GetApplicationMemberships(applicationID)
+	if err != nil {
+		return nil, err
+	}
+	members := make(map[uint]struct{}, len(memberships))
+	for _, membership := range memberships {
+		if membership != nil && membership.UserID != 0 {
+			members[membership.UserID] = struct{}{}
+		}
+	}
+
 	selected := make(map[uint]struct{})
 	for _, id := range explicit {
-		if id != 0 {
+		if _, ok := members[id]; ok {
 			selected[id] = struct{}{}
 		}
 	}
@@ -181,30 +201,21 @@ func (a *CollaborationAPI) resolveMentions(applicationID uint, body string, expl
 			wanted[name] = struct{}{}
 		}
 	}
-	if len(wanted) == 0 {
-		out := make([]uint, 0, len(selected))
-		for id := range selected {
-			out = append(out, id)
-		}
-		return out, nil
-	}
-	recipientIDs, err := a.DB.GetApplicationRecipientUserIDs(applicationID)
-	if err != nil {
-		return nil, err
-	}
-	for _, id := range recipientIDs {
-		user, userErr := a.DB.GetUserByID(id)
-		if userErr != nil {
-			return nil, userErr
-		}
-		if user == nil {
-			continue
-		}
-		names := []string{normalizeMention(user.Name), normalizeMention(user.DisplayName)}
-		for _, name := range names {
-			if _, ok := wanted[name]; ok && name != "" {
-				selected[id] = struct{}{}
-				break
+	if len(wanted) > 0 {
+		for id := range members {
+			user, userErr := a.DB.GetUserByID(id)
+			if userErr != nil {
+				return nil, userErr
+			}
+			if user == nil {
+				continue
+			}
+			names := []string{normalizeMention(user.Name), normalizeMention(user.DisplayName)}
+			for _, name := range names {
+				if _, ok := wanted[name]; ok && name != "" {
+					selected[id] = struct{}{}
+					break
+				}
 			}
 		}
 	}
@@ -212,6 +223,7 @@ func (a *CollaborationAPI) resolveMentions(applicationID uint, body string, expl
 	for id := range selected {
 		out = append(out, id)
 	}
+	sort.Slice(out, func(i, j int) bool { return out[i] < out[j] })
 	return out, nil
 }
 
@@ -248,6 +260,20 @@ func (a *CollaborationAPI) Reply(ctx *gin.Context) {
 		if root == 0 {
 			root = parent.ID
 		}
+		mentions, mentionErr := a.resolveMentions(app.ID, params.Message, params.MentionUserIDs)
+		if !successOrAbort(ctx, http.StatusInternalServerError, mentionErr) {
+			return
+		}
+		var extraBytes []byte
+		if len(mentions) > 0 {
+			// Delivery reads this metadata to reach explicitly mentioned users,
+			// including members who muted ordinary Channel notifications.
+			encoded, encodeErr := json.Marshal(map[string]any{"monita::mentionUserIds": mentions})
+			if !successOrAbort(ctx, http.StatusInternalServerError, encodeErr) {
+				return
+			}
+			extraBytes = encoded
+		}
 		message := &model.Message{
 			ApplicationID:       app.ID,
 			Title:               title,
@@ -258,19 +284,18 @@ func (a *CollaborationAPI) Reply(ctx *gin.Context) {
 			SenderName:          displayUserName(user),
 			ReplyToMessageID:    parent.ID,
 			ThreadRootMessageID: root,
+			Extras:               extraBytes,
 		}
-		external, err := a.Dispatcher.StoreAndDeliver(message)
+		// Persist recipient mention state before broadcasting: the Web UI,
+		// Android native notifications and realtime stream then see one state.
+		external, err := a.Dispatcher.StorePreparedAndDeliver(message, func(stored *model.Message) error {
+			if len(mentions) == 0 {
+				return nil
+			}
+			return a.DB.ReplaceMessageMentions(stored.ID, mentions)
+		})
 		if !successOrAbort(ctx, http.StatusInternalServerError, err) {
 			return
-		}
-		mentions, mentionErr := a.resolveMentions(app.ID, params.Message, params.MentionUserIDs)
-		if !successOrAbort(ctx, http.StatusInternalServerError, mentionErr) {
-			return
-		}
-		if len(mentions) > 0 {
-			if !successOrAbort(ctx, http.StatusInternalServerError, a.DB.ReplaceMessageMentions(message.ID, mentions)) {
-				return
-			}
 		}
 		ctx.JSON(http.StatusCreated, external)
 	})

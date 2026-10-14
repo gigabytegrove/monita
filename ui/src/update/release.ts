@@ -119,7 +119,10 @@ export const releaseEligibleForChannel = (
     preference: UpdateChannelPreference
 ): boolean => {
     if (release.draft) return false;
-    const channel = releaseChannel(release.tag_name, release.prerelease).toLowerCase() as UpdateChannelPreference;
+    const channel = releaseChannel(
+        release.tag_name,
+        release.prerelease
+    ).toLowerCase() as UpdateChannelPreference;
     const rank = channelRank[channel] ?? channelRank.preview;
     return rank <= channelRank[preference];
 };

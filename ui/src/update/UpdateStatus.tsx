@@ -406,8 +406,8 @@ const ReleaseUpdateDetails = ({
             {state.classification === 'development' && (
                 <Alert severity="warning">
                     This server is running preview build {currentVersion}. Installing{' '}
-                    {publishedVersion} will switch this server to the published release.
-                    Application data is preserved during the update.
+                    {publishedVersion} will switch this server to the published release. Application
+                    data is preserved during the update.
                 </Alert>
             )}
 

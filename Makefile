@@ -18,8 +18,8 @@ require-version:
 	if [ -z ${VERSION} ]; then echo "Need to set VERSION" && exit 1; fi;
 
 test-coverage:
-	PACKAGES="$(go list ./... | grep -v '^github.com/gigabytegrove/monita/plugin$' | grep -v '^github.com/gigabytegrove/monita/plugin/compat$')" && \
-	go test --race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./... $PACKAGES
+	PACKAGES="$$(go list ./... | grep -v '^github.com/gigabytegrove/monita/plugin$$' | grep -v '^github.com/gigabytegrove/monita/plugin/compat$$')" && \
+	go test --race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./... $$PACKAGES
 	go test --race ./plugin ./plugin/compat
 
 format:
