@@ -117,13 +117,18 @@ func canPostToChannel(app *model.Application, membership *model.ApplicationMembe
 }
 
 func canManageMessage(app *model.Application, membership *model.ApplicationMembership, user *model.User, message *model.Message) bool {
-	if user == nil || app == nil || membership == nil || message == nil {
+	if user == nil || app == nil || message == nil {
 		return false
 	}
-	if user.Admin || app.UserID == user.ID || message.SenderUserID == user.ID {
+	// messageAccess explicitly grants owners and administrators access even
+	// when no membership row exists. Do not deny those users here.
+	if user.Admin || app.UserID == user.ID {
 		return true
 	}
-	return membership.EffectiveRole == model.ChannelRoleManager
+	if membership == nil {
+		return false
+	}
+	return message.SenderUserID == user.ID || membership.EffectiveRole == model.ChannelRoleManager
 }
 
 func messageControlEnabled(message *model.Message, control string) bool {
