@@ -9,12 +9,19 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   remediate:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      - name: Cancel unsafe pre-remediation master release run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/actions/runs/38578998940/cancel" || echo "Existing run has already finished or cancellation is unavailable"
       - uses: actions/checkout@v4
         with:
           ref: work/v2.0.0-security
