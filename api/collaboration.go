@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -30,6 +31,7 @@ type CollaborationDatabase interface {
 	GetApplicationByID(id uint) (*model.Application, error)
 	GetApplicationMembership(applicationID, userID uint) (*model.ApplicationMembership, error)
 	GetApplicationRecipientUserIDs(applicationID uint) ([]uint, error)
+	GetApplicationMemberships(applicationID uint) ([]*model.ApplicationMembership, error)
 	GetUserByID(id uint) (*model.User, error)
 	GetThreadMessagesForUser(userID, rootID uint) ([]*model.Message, error)
 	AddMessageReaction(messageID, userID uint, emoji string) error
@@ -170,9 +172,22 @@ func normalizeMention(value string) string {
 }
 
 func (a *CollaborationAPI) resolveMentions(applicationID uint, body string, explicit []uint) ([]uint, error) {
+	// Muting ordinary notifications must not make a member unmentionable.
+	// The recipient query filters muted accounts; Channel membership does not.
+	memberships, err := a.DB.GetApplicationMemberships(applicationID)
+	if err != nil {
+		return nil, err
+	}
+	members := make(map[uint]struct{}, len(memberships))
+	for _, membership := range memberships {
+		if membership != nil && membership.UserID != 0 {
+			members[membership.UserID] = struct{}{}
+		}
+	}
+
 	selected := make(map[uint]struct{})
 	for _, id := range explicit {
-		if id != 0 {
+		if _, ok := members[id]; ok {
 			selected[id] = struct{}{}
 		}
 	}
@@ -186,30 +201,21 @@ func (a *CollaborationAPI) resolveMentions(applicationID uint, body string, expl
 			wanted[name] = struct{}{}
 		}
 	}
-	if len(wanted) == 0 {
-		out := make([]uint, 0, len(selected))
-		for id := range selected {
-			out = append(out, id)
-		}
-		return out, nil
-	}
-	recipientIDs, err := a.DB.GetApplicationRecipientUserIDs(applicationID)
-	if err != nil {
-		return nil, err
-	}
-	for _, id := range recipientIDs {
-		user, userErr := a.DB.GetUserByID(id)
-		if userErr != nil {
-			return nil, userErr
-		}
-		if user == nil {
-			continue
-		}
-		names := []string{normalizeMention(user.Name), normalizeMention(user.DisplayName)}
-		for _, name := range names {
-			if _, ok := wanted[name]; ok && name != "" {
-				selected[id] = struct{}{}
-				break
+	if len(wanted) > 0 {
+		for id := range members {
+			user, userErr := a.DB.GetUserByID(id)
+			if userErr != nil {
+				return nil, userErr
+			}
+			if user == nil {
+				continue
+			}
+			names := []string{normalizeMention(user.Name), normalizeMention(user.DisplayName)}
+			for _, name := range names {
+				if _, ok := wanted[name]; ok && name != "" {
+					selected[id] = struct{}{}
+					break
+				}
 			}
 		}
 	}
@@ -217,6 +223,7 @@ func (a *CollaborationAPI) resolveMentions(applicationID uint, body string, expl
 	for id := range selected {
 		out = append(out, id)
 	}
+	sort.Slice(out, func(i, j int) bool { return out[i] < out[j] })
 	return out, nil
 }
 
