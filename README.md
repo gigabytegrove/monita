@@ -181,6 +181,8 @@ New installs and current documentation use Monita-native names and identifiers w
 
 Monita is under active development. The latest stable release and release notes are available from the GitHub Releases page.
 
-## License
+## Origins, acknowledgment, and license
 
-Monita is licensed under the MIT License. See [LICENSE](LICENSE) for the full license and required historical attribution.
+Monita is independently developed and maintained by Gigabyte Grove. It began as a fork of an earlier open-source notification server and has since expanded substantially. See [Origins and Credits](CREDITS.md) for the upstream project, contributor acknowledgment, independence statement, and artwork attribution distinctions.
+
+Monita's software is distributed under the MIT License. The original upstream copyright and license notices remain in [LICENSE](LICENSE). The current official Monita logo and icon are identified in [Branding](docs/BRANDING.md).

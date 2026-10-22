@@ -22,8 +22,10 @@ SOFTWARE.
 
 ---
 
-The the original notification platform logo is licensed under the Creative Commons Attribution 4.0 International Public License.
-http://creativecommons.org/licenses/by/4.0/
+Historical upstream artwork notice (separate from the software's MIT License):
+The original Gotify logo is licensed under the Creative Commons Attribution 4.0 International Public License:
+https://creativecommons.org/licenses/by/4.0/
 
-Monita logo notice:
-The Monita logo is a derivative work based on the the original notification platform logo and is distributed under the same Creative Commons Attribution 4.0 International Public License.
+That notice concerns the original upstream artwork and any historical copies or adaptations of it that are redistributed. It does not describe Monita's current official logo or icon. Monita's current canonical brand assets were supplied separately for Monita and are documented in docs/BRANDING.md. The historical MIT software copyright notice above is retained without alteration.
+
+See CREDITS.md for upstream acknowledgment and independent-maintenance information.
