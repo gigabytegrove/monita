@@ -12,12 +12,12 @@ Monita is a self-hosted notification and messaging platform for people, teams, h
 
 ## Current release
 
-**Monita 2.0.0** is the server release prepared in this branch. Once the validated release workflow publishes `v2.0.0`, it will be the current stable server release. Android 2.0 remains separately gated on the locally built APK.
+**Latest published stable server release: [v2.0.1](https://github.com/gigabytegrove/monita/releases/tag/v2.0.1)** (published October 14, 2026). The current development branch may contain changes not yet included in that release. Android builds have a separate test track and release schedule; do not assume server and Android version numbers match.
 
 Companion projects:
 
 - [Monita for Android](https://github.com/gigabytegrove/monita-android) — native Android client; latest published APK: **0.3.17** (0.3.19 is under development)
-- [Monita for Home Assistant](https://github.com/gigabytegrove/monita-ha) — HACS-compatible Home Assistant integration; latest published release: **1.8.16** (2.0.0 integration release prepared separately)
+- [Monita for Home Assistant](https://github.com/gigabytegrove/monita-ha) — HACS-compatible Home Assistant integration; latest published release: **[2.0.1](https://github.com/gigabytegrove/monita-ha/releases/tag/v2.0.1)**
 
 Release-specific changes are tracked in [CHANGELOG.md](CHANGELOG.md). Installation and update instructions are in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
@@ -181,6 +181,8 @@ New installs and current documentation use Monita-native names and identifiers w
 
 Monita is under active development. The latest stable release and release notes are available from the GitHub Releases page.
 
-## License
+## Origins, acknowledgment, and license
 
-Monita is licensed under the MIT License. See [LICENSE](LICENSE) for the full license and required historical attribution.
+Monita is independently developed and maintained by Gigabyte Grove. It began as a fork of an earlier open-source notification server and has since expanded substantially. See [Origins and Credits](CREDITS.md) for the upstream project, contributor acknowledgment, independence statement, and artwork attribution distinctions.
+
+Monita's software is distributed under the MIT License. The original upstream copyright and license notices remain in [LICENSE](LICENSE). The current official Monita logo and icon are identified in [Branding](docs/BRANDING.md).
