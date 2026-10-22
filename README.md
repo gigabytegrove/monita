@@ -6,7 +6,9 @@
 
 <p align="center"><strong>Notifications · Messaging · Automation</strong></p>
 
+<!-- GIGABYTE GROVE REPOSITORY BADGES START -->
 <p align="center">
+  <a href="https://github.com/gigabytegrove/monita"><img alt="GitHub repository" src="https://img.shields.io/badge/GitHub-Repository-181717?logo=github&logoColor=white"></a>
   <a href="https://github.com/gigabytegrove/monita/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/gigabytegrove/monita?style=flat&logo=github&label=Stars"></a>
   <a href="https://github.com/gigabytegrove/monita/forks"><img alt="GitHub forks" src="https://img.shields.io/github/forks/gigabytegrove/monita?style=flat&logo=github&label=Forks"></a>
   <a href="https://github.com/gigabytegrove/monita/issues"><img alt="Open issues" src="https://img.shields.io/github/issues/gigabytegrove/monita?style=flat&logo=github&label=Issues"></a>
@@ -14,6 +16,10 @@
   <a href="https://github.com/gigabytegrove/monita/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/gigabytegrove/monita?style=flat&label=License"></a>
   <a href="https://paypal.me/gigabytegrove"><img alt="Donate via PayPal" src="https://img.shields.io/badge/Donate-PayPal-0070BA?logo=paypal&logoColor=white"></a>
 </p>
+<p align="center">
+  <a href="https://github.com/gigabytegrove/monita">Repository</a> · <a href="https://github.com/gigabytegrove/monita/stargazers">Stars</a> · <a href="https://github.com/gigabytegrove/monita/forks">Forks</a> · <a href="https://github.com/gigabytegrove/monita/issues">Issues</a> · <a href="https://github.com/gigabytegrove/monita/releases">Releases</a> · <a href="https://paypal.me/gigabytegrove">Donate via PayPal</a>
+</p>
+<!-- GIGABYTE GROVE REPOSITORY BADGES END -->
 
 Monita is a self-hosted notification and messaging platform for people, teams, home automation, and connected systems. It combines shared Channels, chat, automation, integrations, and multi-user administration in one platform.
 
