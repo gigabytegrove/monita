@@ -15,3 +15,17 @@ images/
 .env
 
 .updater-token
+
+# Native Android source and Play artifacts belong only in gigabytegrove/monita-android.
+/android/
+/app/src/main/
+/app/src/test/
+/gradle/
+/gradlew
+/gradlew.bat
+*.apk
+*.aab
+*.keystore
+*.jks
+/.github/workflows/android-*.yml
+/.github/workflows/*apk*.yml
