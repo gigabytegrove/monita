@@ -6,6 +6,15 @@
 
 <p align="center"><strong>Notifications · Messaging · Automation</strong></p>
 
+<p align="center">
+  <a href="https://github.com/gigabytegrove/monita/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/gigabytegrove/monita?style=flat&logo=github&label=Stars"></a>
+  <a href="https://github.com/gigabytegrove/monita/forks"><img alt="GitHub forks" src="https://img.shields.io/github/forks/gigabytegrove/monita?style=flat&logo=github&label=Forks"></a>
+  <a href="https://github.com/gigabytegrove/monita/issues"><img alt="Open issues" src="https://img.shields.io/github/issues/gigabytegrove/monita?style=flat&logo=github&label=Issues"></a>
+  <a href="https://github.com/gigabytegrove/monita/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/gigabytegrove/monita?style=flat&label=Release"></a>
+  <a href="https://github.com/gigabytegrove/monita/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/gigabytegrove/monita?style=flat&label=License"></a>
+  <a href="https://paypal.me/gigabytegrove"><img alt="Donate via PayPal" src="https://img.shields.io/badge/Donate-PayPal-0070BA?logo=paypal&logoColor=white"></a>
+</p>
+
 Monita is a self-hosted notification and messaging platform for people, teams, home automation, and connected systems. It combines shared Channels, chat, automation, integrations, and multi-user administration in one platform.
 
 > Monita retains selected legacy protocol routes and identifiers where required for existing clients and non-destructive upgrades.
