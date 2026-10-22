@@ -186,3 +186,7 @@ Monita is under active development. The latest stable release and release notes 
 Monita is independently developed and maintained by Gigabyte Grove. It began as a fork of an earlier open-source notification server and has since expanded substantially. See [Origins and Credits](CREDITS.md) for the upstream project, contributor acknowledgment, independence statement, and artwork attribution distinctions.
 
 Monita's software is distributed under the MIT License. The original upstream copyright and license notices remain in [LICENSE](LICENSE). The current official Monita logo and icon are identified in [Branding](docs/BRANDING.md).
+
+## Support Gigabyte Grove
+
+If this project is useful to you, you can support ongoing Gigabyte Grove development with an optional [PayPal donation](https://paypal.me/gigabytegrove). Donations are appreciated but never required to use this repository.
