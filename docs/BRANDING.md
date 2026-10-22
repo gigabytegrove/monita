@@ -11,6 +11,8 @@ The canonical branding source is the exact SVG artwork supplied on **2026-10-01*
 
 The active aliases in `assets/` and `ui/public/static/` use those same vector masters directly.
 
+These supplied Monita-specific masters define the current product identity; they are not the legacy upstream logo. Historical upstream artwork notices in `LICENSE` do not designate the current Monita artwork as a derivative or replace the canonical source files. If historical third-party artwork is ever redistributed, retain the notices applying to that artwork. See [Origins and Credits](../CREDITS.md).
+
 No alternate palette, reconstructed mark, traced copy, flattened substitute, or regenerated logo is authoritative. Do not change proportions, colors, typography, spacing, gradients, clipping, or any other visual detail in the supplied files.
 
 ## Naming
