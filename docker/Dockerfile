@@ -5,7 +5,7 @@ ARG DEBIAN=sid-slim
 
 # --- JS Builder ---
 
-FROM --platform=${BUILDPLATFORM} node:24 AS js-builder
+FROM --platform=${BUILDPLATFORM} node:24.22.1 AS js-builder
 
 ARG BUILD_JS=0
 
