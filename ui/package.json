@@ -33,7 +33,7 @@
     "remark-gfm": "^4.0.1",
     "remove-markdown": "^0.6.2",
     "tss-react": "^4.9.19",
-    "vite": "^8.0.8",
+    "vite": "^8.1.6",
     "vitest": "^5.0.0"
   },
   "scripts": {
