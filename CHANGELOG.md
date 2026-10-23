@@ -1,3 +1,13 @@
+## 2.0.2 — 2026-10-23
+
+### October 2026 security maintenance
+
+- Rebuild the server and native updater binaries using patched Go 1.27.3, including the October 19 crypto/x509 security update.
+- Pin the frontend build toolchain to Node.js 24.22.1, addressing the October 21 Node.js advisories.
+- Align verify and release toolchain versions and update golangci-lint for Go 1.27 compatibility.
+- Preserve existing notification channels, chat history, authentication, configuration and upgrade behavior.
+- Back up the Monita data directory before applying the release. Native binaries and container images must be rebuilt from the updated source before the runtime patch takes effect.
+
 ## 2.0.0 — 2026-10-14
 
 ### Shared Monita 2.0 server release
