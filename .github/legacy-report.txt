@@ -48,6 +48,217 @@ connectors/manager.go:808:	listen := strings.TrimSpace(connectorEnv("MONITA_SYSL
 router/router.go:32:	"github.com/gotify/location"
 router/router.go:332:	// Legacy Gotify endpoint retained for existing clients.
 router/router.go:333:	g.GET("gotifyinfo", monitaInfoHandler)
+.github/legacy-report.txt:1:CHANGELOG.md:14:- Added canonical `X-Monita-Key`, `X-Monita-MFA-Code`, and Monita webhook signature headers with legacy Gotify header fallbacks.
+.github/legacy-report.txt:2:CHANGELOG.md:16:- Preserved only deliberate compatibility/legal/history references to Gotify.
+.github/legacy-report.txt:3:CHANGELOG.md:20:- Existing Gotify-style headers, compatibility routes, legacy environment variables, legacy config/database/secret paths, and legacy backup bundles remain accepted.
+.github/legacy-report.txt:4:CHANGELOG.md:21:- External `github.com/gotify/plugin-api` and `github.com/gotify/location` dependencies remain because they are upstream compatibility dependencies.
+.github/legacy-report.txt:5:CHANGELOG.md:28:- Replaced remaining active Gotify MU product branding across runtime, configuration, and user-facing surfaces with Monita naming.
+.github/legacy-report.txt:6:CHANGELOG.md:29:- Made `MONITA_*` the primary environment-variable namespace while retaining legacy `GOTIFY_*` and `GOTIFY_MU_*` fallbacks where required for upgrade compatibility.
+.github/legacy-report.txt:7:CHANGELOG.md:30:- Renamed the server environment template to `monita-server.env.example` and updated fresh installs to prefer `data/monita.db` while automatically preserving existing `data/gotify.db` deployments.
+.github/legacy-report.txt:8:CHANGELOG.md:34:- Preserved protocol-level compatibility identifiers such as `/gotifyinfo` and required upstream Go dependency/module references to avoid breaking existing clients.
+.github/legacy-report.txt:9:CHANGELOG.md:38:- Existing deployments using legacy Gotify environment-variable names continue to work through compatibility fallbacks.
+.github/legacy-report.txt:10:CHANGELOG.md:39:- Existing `data/gotify.db` databases are detected automatically and continue to be used in place.
+.github/legacy-report.txt:11:CHANGELOG.md:71:- Removed obsolete Gotify-MU PNG artwork from the active repository tree so stale branding cannot appear through an unused fallback.
+.github/legacy-report.txt:12:CHANGELOG.md:117:- Removed remaining user-facing Gotify MU labels from the active Web experience.
+.github/legacy-report.txt:13:CHANGELOG.md:118:- API descriptions now use Monita terminology while documented Gotify compatibility remains intact where it is technically required.
+.github/legacy-report.txt:14:CHANGELOG.md:215:This changelog highlights user-visible changes in Monita. Older releases may use the previous **Gotify MU** name.
+.github/legacy-report.txt:15:CHANGELOG.md:250:- Renamed the product from Gotify MU to **Monita**
+.github/legacy-report.txt:16:CHANGELOG.md:253:- Kept Gotify compatibility for supported clients and integrations
+.github/legacy-report.txt:17:CHANGELOG.md:291:- continued support for normal Gotify notification delivery
+.github/legacy-report.txt:18:CHANGELOG.md:398:- existing Gotify application tokens remain supported
+.github/legacy-report.txt:19:CHANGELOG.md:400:- normal Gotify-compatible notification delivery remains supported
+.github/legacy-report.txt:20:go.mod:10:	github.com/gotify/location v0.0.0-20170722210143-03bc4ad20437
+.github/legacy-report.txt:21:go.mod:11:	github.com/gotify/plugin-api v1.0.0
+.github/legacy-report.txt:22:monita-server.env.example:2:# Legacy GOTIFY_* variables remain accepted as compatibility fallbacks.
+.github/legacy-report.txt:23:LICENSE:25:The Gotify logo is licensed under the Creative Commons Attribution 4.0 International Public License.
+.github/legacy-report.txt:24:LICENSE:28:Gotify MU logo notice:
+.github/legacy-report.txt:25:LICENSE:29:The Gotify MU logo is a derivative work based on the Gotify logo and is distributed under the same Creative Commons Attribution 4.0 International Public License.
+.github/legacy-report.txt:26:.gitignore:14:/gotify-server.env
+.github/legacy-report.txt:27:renovate.json:31:      "depNameTemplate": "docker.io/gotify/build",
+.github/legacy-report.txt:28:renovate.json:46:      "depNameTemplate": "docker.io/gotify/build",
+.github/legacy-report.txt:29:renovate.json:84:        "github.com/gotify/build"
+.github/legacy-report.txt:30:renovate.json:86:      "groupName": "Bump gotify/build",
+.github/legacy-report.txt:31:renovate.json:87:      "groupSlug": "bump-gotify-build"
+.github/legacy-report.txt:32:go.sum:67:github.com/gotify/location v0.0.0-20170722210143-03bc4ad20437 h1:4qMhogAexRcnvdoY9O1RoCuuuNEhDF25jtbGIWPtcms=
+.github/legacy-report.txt:33:go.sum:68:github.com/gotify/location v0.0.0-20170722210143-03bc4ad20437/go.mod h1:5JgfyQg+71Ck3uXX/4FBHc4YxdKZ9shU8gs2AUj7Nj0=
+.github/legacy-report.txt:34:go.sum:69:github.com/gotify/plugin-api v1.0.0 h1:kab40p2TEPLzjmcafOc7JOz75aTsYQyS2PXtElH8xmI=
+.github/legacy-report.txt:35:go.sum:70:github.com/gotify/plugin-api v1.0.0/go.mod h1:xZfEyqVK/Zvu3RwA/CtpuiwFmzFDxifrrqMaH9BHnyU=
+.github/legacy-report.txt:36:README.md:9:Monita is a self-hosted notification and messaging platform for people, teams, home automation, and connected systems. It expands on Gotify compatibility with shared Channels, chat, automation, integrations, and multi-user administration.
+.github/legacy-report.txt:37:README.md:11:> Monita retains Gotify-compatible protocol routes where required for existing clients and upgrade compatibility.
+.github/legacy-report.txt:38:README.md:37:- continue using compatible Gotify clients and integrations
+.github/legacy-report.txt:39:README.md:43:Monita is designed to remain familiar to Gotify users while adding the features needed for larger and more collaborative installations.
+.github/legacy-report.txt:40:README.md:163:## Gotify compatibility
+.github/legacy-report.txt:41:README.md:165:Monita maintains compatibility with common Gotify clients and integrations wherever practical.
+.github/legacy-report.txt:42:README.md:167:Existing Gotify-style application and client tokens continue to work with supported compatibility routes. Monita-specific features are added on top of that compatibility layer.
+.github/legacy-report.txt:43:README.md:169:Monita is an independent project and is not an official Gotify product.
+.github/legacy-report.txt:44:README.md:188:Monita is licensed under the MIT License inherited from Gotify. See [LICENSE](LICENSE).
+.github/legacy-report.txt:45:.env.example:10:# Legacy GOTIFY_* variables remain accepted for backward compatibility.
+.github/legacy-report.txt:46:connectors/manager.go:614:	listen := strings.TrimSpace(connectorEnv("MONITA_SMTP_LISTEN", "GOTIFY_MU_SMTP_LISTEN"))
+.github/legacy-report.txt:47:connectors/manager.go:808:	listen := strings.TrimSpace(connectorEnv("MONITA_SYSLOG_LISTEN", "GOTIFY_MU_SYSLOG_LISTEN"))
+.github/legacy-report.txt:48:router/router.go:32:	"github.com/gotify/location"
+.github/legacy-report.txt:49:router/router.go:332:	// Legacy Gotify endpoint retained for existing clients.
+.github/legacy-report.txt:50:router/router.go:333:	g.GET("gotifyinfo", monitaInfoHandler)
+.github/legacy-report.txt:51:auth/authentication_test.go:473:	s.assertHeaderRequest("X-Gotify-Key", "clienttoken", s.auth.RequireClient, 200)
+.github/legacy-report.txt:52:auth/cookie.go:10:	LegacyCookieName = "gotify-client-token"
+.github/legacy-report.txt:53:auth/service.go:55:	if token := strings.TrimSpace(ctx.GetHeader("X-Gotify-Key")); strings.HasPrefix(token, "SA.") {
+.github/legacy-report.txt:54:auth/authentication.go:29:	legacyHeaderName    = "X-Gotify-Key"
+.github/legacy-report.txt:55:auth/authentication.go:31:	legacyMFAHeaderName = "X-Gotify-MFA-Code"
+.github/legacy-report.txt:56:ui/vite.config.ts:5:for (const envFile of ['../monita-server.env', '../gotify-server.env']) {
+.github/legacy-report.txt:57:ui/vite.config.ts:14:const MONITA_SERVER_PORT = process.env.MONITA_SERVER_PORT ?? process.env.GOTIFY_SERVER_PORT ?? '80';
+.github/legacy-report.txt:58:operations/backup.go:17:	LegacyManifestName       = "gotify-mu-backup.json"
+.github/legacy-report.txt:59:operations/backup.go:19:	LegacyPendingRestoreName = ".gotify-mu-restore-pending.zip"
+.github/legacy-report.txt:60:operations/backup.go:21:	LegacyBackupProduct      = "Gotify MU"
+.github/legacy-report.txt:61:config/parse.go:15:		candidates = append(candidates, "GOTIFY_"+strings.TrimPrefix(env, "MONITA_"))
+.github/legacy-report.txt:62:config/file.go:16:	if configFile := firstConfigEnv("MONITA_CONFIG_FILE", "GOTIFY_CONFIG_FILE"); configFile != "" {
+.github/legacy-report.txt:63:config/file.go:46:	result := []string{"monita-server.env", "gotify-server.env"}
+.github/legacy-report.txt:64:config/file.go:48:		result = append(result, filepath.Join(configHome, "monita/monita-server.env"), filepath.Join(configHome, "gotify/gotify-server.env"))
+.github/legacy-report.txt:65:config/file.go:50:	return append(result, "/etc/monita/server.env", "/etc/gotify/server.env")
+.github/legacy-report.txt:66:config/config.go:265:	legacy := filepath.Join("data", "gotify.db")
+.github/legacy-report.txt:67:config/config_test.go:158:	t.Setenv("GOTIFY_SERVER_PORT", "9187")
+.github/legacy-report.txt:68:security/secretstore_test.go:48:	t.Setenv("GOTIFY_MU_SECRET_KEY", "")
+.github/legacy-report.txt:69:security/secretstore_test.go:49:	t.Setenv("GOTIFY_MU_SECRET_KEY_FILE", "")
+.github/legacy-report.txt:70:security/secretstore.go:40:	if raw := strings.TrimSpace(envWithLegacy("MONITA_SECRET_KEY", "GOTIFY_MU_SECRET_KEY")); raw != "" {
+.github/legacy-report.txt:71:security/secretstore.go:47:	if override := strings.TrimSpace(envWithLegacy("MONITA_SECRET_KEY_FILE", "GOTIFY_MU_SECRET_KEY_FILE")); override != "" {
+.github/legacy-report.txt:72:security/secretstore.go:52:		legacyPath := filepath.Join("data", ".gotify-mu-secrets.key")
+.github/legacy-report.txt:73:automation/engine.go:272:		raw, ok = extras["gotify::mu::mentionUserIds"]
+.github/legacy-report.txt:74:database/database.go:146:		keyPath := filepath.Join("data", ".gotify-mu-secrets.key")
+.github/legacy-report.txt:75:database/database.go:153:				keyPath = filepath.Join(filepath.Dir(candidate), ".gotify-mu-secrets.key")
+.github/legacy-report.txt:76:plugin/trust.go:55:	for _, raw := range strings.FieldsFunc(pluginEnv("MONITA_PLUGIN_TRUSTED_ED25519_KEYS", "GOTIFY_MU_PLUGIN_TRUSTED_ED25519_KEYS"), func(r rune) bool {
+.github/legacy-report.txt:77:plugin/trust.go:68:	switch strings.ToLower(strings.TrimSpace(pluginEnv("MONITA_PLUGIN_ALLOW_UNSIGNED_INSTALLS", "GOTIFY_MU_PLUGIN_ALLOW_UNSIGNED_INSTALLS"))) {
+.github/legacy-report.txt:78:api/update.go:70:	statusFile := firstUpdateEnv("MONITA_UPDATE_STATUS_FILE", "GOTIFY_MU_UPDATE_STATUS_FILE")
+.github/legacy-report.txt:79:api/update.go:80:	repository := firstUpdateEnv("MONITA_REPOSITORY", "GOTIFY_MU_REPOSITORY")
+.github/legacy-report.txt:80:api/message.go:822:			message.Extras["gotify::mu::mentions"] = mentionNames
+.github/legacy-report.txt:81:api/message.go:823:			message.Extras["gotify::mu::mentionUserIds"] = mentionUserIDs
+.github/legacy-report.txt:82:api/plugin.go:20:	"github.com/gotify/location"
+.github/legacy-report.txt:83:api/plugin.go:99:		rawURL = strings.TrimSpace(os.Getenv("GOTIFY_MU_PLUGIN_CATALOG_URL"))
+.github/legacy-report.txt:84:api/message_test.go:537:	assert.Equal(s.T(), []any{"jennifer"}, external.Extras["gotify::mu::mentions"])
+.github/legacy-report.txt:85:api/collaboration.go:664:			extraValues["gotify::mu::mentionUserIds"] = mentions
+.github/legacy-report.txt:86:docs/package.go:12://	For Gotify compatibility, `X-Gotify-Key` remains accepted as a legacy alias.
+.github/legacy-report.txt:87:docs/spec.json:14:    "description": "This is the documentation of the Monita REST API.\n\n# Authentication\nMonita uses two primary token types:\n__clientToken__: a client receives messages and manages account resources.\n__appToken__: an application sends messages.\n\nThe token can be transmitted in a header named `X-Monita-Key`, in a query parameter named `token`, or\nthrough an `Authorization` header with the value prefixed with `Bearer` (for example, `Bearer randomtoken`).\nFor Gotify compatibility, `X-Gotify-Key` remains accepted as a legacy alias.\nBasic auth is also available for supported login/elevation flows.\n\n\\---\n\nFound a bug or have some questions? [Create an issue on GitHub](https://github.com/gigabytegrove/monita/issues)",
+.github/legacy-report.txt:88:docs/swagger.go:8:	"github.com/gotify/location"
+.github/legacy-report.txt:89:docs/BRANDING.md:22:Gotify may still appear only where it is technically or legally required: protocol/client compatibility, legacy upgrade aliases, persisted migration paths, the upstream plugin ABI/dependencies, the external build image, release history, or license attribution.
+.github/legacy-report.txt:90:docs/BRANDING.md:24:The authoritative file-level inventory is `.github/legacy-identity-allowlist.txt`. CI performs an exhaustive case-insensitive repository scan and fails if a Gotify reference appears in any file that has not been explicitly reviewed and placed on that allowlist. The narrower branding checks still reject the former product name when used as current branding, former internal server module imports, legacy-named active source files, and unexpected Web UI references.
+.github/legacy-report.txt:91:docs/DEPLOYMENT.md:77:Gotify-compatible `GOTIFY_*` settings remain supported where required for compatibility.
+.github/legacy-report.txt:92:docs/ROADMAP.md:19:- continued compatibility with existing Gotify clients
+.github/legacy-report.txt:93:.github/workflows/monita-branding-audit.yml:18:          if git grep -nI -E 'github\.com/gotify/server' -- .             ':!CHANGELOG.md' ':!README.md' ':!docs/releases/**'; then
+.github/legacy-report.txt:94:.github/workflows/monita-branding-audit.yml:27:          matches="$(git grep -nI -E 'Gotify[ -]MU' -- .             ':!CHANGELOG.md' ':!LICENSE' ':!README.md' ':!docs/releases/**'             ':!operations/backup.go' ':!.github/workflows/monita-branding-audit.yml' || true)"
+.github/legacy-report.txt:95:.github/workflows/monita-branding-audit.yml:30:            echo "::error::Stale Gotify MU product branding remains outside approved history/compatibility locations."
+.github/legacy-report.txt:96:.github/workflows/monita-branding-audit.yml:38:          matches="$(find . -path './.git' -prune -o -type f -print             | sed 's#^./##'             | grep -Ei '(^|/)(gotify[-_ ]?mu|mu_)[^/]*$'             | grep -v '^docs/releases/' || true)"
+.github/legacy-report.txt:97:.github/workflows/monita-branding-audit.yml:49:          matches="$(git grep -nIi -E 'gotify' -- ui/src             ':!ui/src/layout/Layout.tsx'             ':!ui/src/message/PushMessageDialog.tsx'             ':!ui/src/message/extras.ts'             ':!ui/src/snack/browserNotification.ts' || true)"
+.github/legacy-report.txt:98:.github/workflows/monita-branding-audit.yml:62:          git grep -Il -i -E 'gotify' -- . ':!.github/legacy-identity-allowlist.txt' | sort > "$actual" || true
+.github/legacy-report.txt:99:.github/workflows/monita-branding-audit.yml:65:            echo "::error::The set of files containing legacy Gotify identifiers changed. Every remaining reference must be explicitly reviewed and declared as compatibility, history, legal attribution, or an upstream dependency."
+.github/legacy-report.txt:100:ui/src/message/extras.ts:32:    const value = (extras?.['monita::display'] ?? extras?.['gotify-mu::display'])?.actions;
+.github/legacy-report.txt:101:ui/src/message/extras.ts:47:    const value = (extras?.['monita::display'] ?? extras?.['gotify-mu::display'])?.fields;
+.github/legacy-report.txt:102:ui/src/message/PushMessageDialog.tsx:67:        const display = item.extras?.['monita::display'] ?? item.extras?.['gotify-mu::display'];
+.github/legacy-report.txt:103:ui/src/snack/browserNotification.ts:20:    const raw = extras['monita::mentionUserIds'] ?? extras['gotify::mu::mentionUserIds'] ?? [];
+.github/legacy-report.txt:104:ui/src/layout/Layout.tsx:44:const legacyThemeKey = 'gotify-theme';
+.github/legacy-report.txt:105:plugin/compat/v1_test.go:6:	papiv1 "github.com/gotify/plugin-api"
+.github/legacy-report.txt:106:plugin/compat/v1.go:7:	papiv1 "github.com/gotify/plugin-api"
+.github/legacy-report.txt:107:plugin/compat/wrap.go:8:	papiv1 "github.com/gotify/plugin-api"
+.github/legacy-report.txt:108:plugin/compat/wrap.go:13:	getInfoHandle, err := p.Lookup("GetGotifyPluginInfo")
+.github/legacy-report.txt:109:plugin/compat/wrap.go:15:		return nil, errors.New("missing GetGotifyPluginInfo symbol")
+.github/legacy-report.txt:110:plugin/compat/wrap.go:22:		newInstanceHandle, err := p.Lookup("NewGotifyPluginInstance")
+.github/legacy-report.txt:111:plugin/compat/wrap.go:24:			return nil, errors.New("missing NewGotifyPluginInstance symbol")
+.github/legacy-report.txt:112:plugin/compat/wrap.go:28:			return nil, fmt.Errorf("NewGotifyPluginInstance signature mismatch, func(ctx plugin.UserContext) plugin.Plugin expected, got %T", newInstanceHandle)
+.github/legacy-report.txt:113:plugin/compat/wrap.go:33:		return nil, fmt.Errorf("unknown plugin version (unrecogninzed GetGotifyPluginInfo signature %T)", getInfoHandle)
+.github/legacy-report.txt:114:plugin/example/minimal/main.go:4:	"github.com/gotify/plugin-api"
+.github/legacy-report.txt:115:plugin/example/minimal/main.go:7:// GetGotifyPluginInfo returns the legacy plugin ABI information
+.github/legacy-report.txt:116:plugin/example/minimal/main.go:8:func GetGotifyPluginInfo() plugin.Info {
+.github/legacy-report.txt:117:plugin/example/minimal/main.go:28:// NewGotifyPluginInstance is the legacy ABI entrypoint for creating a plugin instance.
+.github/legacy-report.txt:118:plugin/example/minimal/main.go:29:func NewGotifyPluginInstance(ctx plugin.UserContext) plugin.Plugin {
+.github/legacy-report.txt:119:plugin/example/echo/echo.go:10:	"github.com/gotify/plugin-api"
+.github/legacy-report.txt:120:plugin/example/echo/echo.go:13:// GetGotifyPluginInfo returns the legacy plugin ABI information.
+.github/legacy-report.txt:121:plugin/example/echo/echo.go:14:func GetGotifyPluginInfo() plugin.Info {
+.github/legacy-report.txt:122:plugin/example/echo/echo.go:112:// NewGotifyPluginInstance is the legacy ABI entrypoint for creating a plugin instance.
+.github/legacy-report.txt:123:plugin/example/echo/echo.go:113:func NewGotifyPluginInstance(ctx plugin.UserContext) plugin.Plugin {
+.github/legacy-report.txt:124:plugin/example/clock/main.go:6:	"github.com/gotify/plugin-api"
+.github/legacy-report.txt:125:plugin/example/clock/main.go:10:// GetGotifyPluginInfo returns the legacy plugin ABI information
+.github/legacy-report.txt:126:plugin/example/clock/main.go:11:func GetGotifyPluginInfo() plugin.Info {
+.github/legacy-report.txt:127:plugin/example/clock/main.go:54:// NewGotifyPluginInstance is the legacy ABI entrypoint for creating a plugin instance.
+.github/legacy-report.txt:128:plugin/example/clock/main.go:55:func NewGotifyPluginInstance(ctx plugin.UserContext) plugin.Plugin {
+.github/legacy-report.txt:129:plugin/testing/broken/unknowninfo/main.go:3:// GetGotifyPluginInfo returns the legacy plugin ABI information
+.github/legacy-report.txt:130:plugin/testing/broken/unknowninfo/main.go:4:func GetGotifyPluginInfo() string {
+.github/legacy-report.txt:131:plugin/testing/broken/cantinstantiate/main.go:6:	"github.com/gotify/plugin-api"
+.github/legacy-report.txt:132:plugin/testing/broken/cantinstantiate/main.go:9:// GetGotifyPluginInfo returns the legacy plugin ABI information
+.github/legacy-report.txt:133:plugin/testing/broken/cantinstantiate/main.go:10:func GetGotifyPluginInfo() plugin.Info {
+.github/legacy-report.txt:134:plugin/testing/broken/cantinstantiate/main.go:29:// NewGotifyPluginInstance is the legacy ABI entrypoint for creating a plugin instance.
+.github/legacy-report.txt:135:plugin/testing/broken/cantinstantiate/main.go:30:func NewGotifyPluginInstance(ctx plugin.UserContext) plugin.Plugin {
+.github/legacy-report.txt:136:plugin/testing/broken/noinstance/main.go:4:	"github.com/gotify/plugin-api"
+.github/legacy-report.txt:137:plugin/testing/broken/noinstance/main.go:7:// GetGotifyPluginInfo returns the legacy plugin ABI information
+.github/legacy-report.txt:138:plugin/testing/broken/noinstance/main.go:8:func GetGotifyPluginInfo() plugin.Info {
+.github/legacy-report.txt:139:plugin/testing/broken/malformedconstructor/main.go:4:	"github.com/gotify/plugin-api"
+.github/legacy-report.txt:140:plugin/testing/broken/malformedconstructor/main.go:7:// GetGotifyPluginInfo returns the legacy plugin ABI information
+.github/legacy-report.txt:141:plugin/testing/broken/malformedconstructor/main.go:8:func GetGotifyPluginInfo() plugin.Info {
+.github/legacy-report.txt:142:plugin/testing/broken/malformedconstructor/main.go:27:// NewGotifyPluginInstance is the legacy ABI entrypoint for creating a plugin instance.
+.github/legacy-report.txt:143:plugin/testing/broken/malformedconstructor/main.go:28:func NewGotifyPluginInstance(ctx plugin.UserContext) any {
+.github/legacy-report.txt:144:docs/releases/v0.5.0.md:1:# Gotify MU v0.5.0
+.github/legacy-report.txt:145:docs/releases/v0.5.0.md:6:Gotify MU v0.5.0 is the security, reliability, integration, collaboration, plugin, and operations completion release following the v0.3 native-automation preview.
+.github/legacy-report.txt:146:docs/releases/v0.5.0.md:8:It keeps the existing Gotify REST/WebSocket and application/client-token compatibility model while substantially expanding the Gotify MU server and Web UI.
+.github/legacy-report.txt:147:docs/releases/v0.5.0.md:27:The persistent secret-encryption key is created in the data directory with restrictive permissions unless an administrator supplies a stable key using `GOTIFY_MU_SECRET_KEY` or `GOTIFY_MU_SECRET_KEY_FILE`.
+.github/legacy-report.txt:148:docs/releases/v0.5.0.md:46:These fields remain additive. Existing Gotify clients may ignore Gotify MU-specific collaboration data and continue normal notification reception.
+.github/legacy-report.txt:149:docs/releases/v0.5.0.md:175:The Docker Compose deployment binds SMTP and Syslog receiver ports to loopback by default. Administrators must deliberately set `GOTIFY_MU_RECEIVER_BIND` to a trusted host/LAN address when remote devices need access.
+.github/legacy-report.txt:150:docs/releases/v0.5.0.md:192:Native Go plugins execute in the Gotify MU server process and therefore remain trusted extensions rather than sandboxed code. Only install plugins from trusted publishers.
+.github/legacy-report.txt:151:docs/releases/v0.5.0.md:248:- existing Gotify application tokens
+.github/legacy-report.txt:152:docs/releases/v0.5.0.md:253:- normal official Gotify Android receive/display workflows
+.github/legacy-report.txt:153:docs/releases/v1.3.3.md:12:- Removed stale legacy Gotify-MU PNG artwork from the active repository tree.
+.github/legacy-report.txt:154:docs/releases/v1.3.1.md:28:- Existing Gotify-compatible clients remain supported.
+.github/legacy-report.txt:155:docs/releases/v1.1.0.md:7:Monita 1.1.0 is the full product rebrand of Gotify MU.
+.github/legacy-report.txt:156:docs/releases/v1.1.0.md:39:The local migration from the old container identity to Monita requires rebuilding from the current repository and replacing the old `gotify-mu` container. The persistent host data directory is reused unchanged.
+.github/legacy-report.txt:157:docs/releases/v1.1.0.md:43:Monita remains compatible with Gotify protocol clients. Compatibility routes such as `/application`, `/message`, and `/stream`, the upstream Go module identity, and required upstream `GOTIFY_*` configuration remain intact where changing them would break existing clients.
+.github/legacy-report.txt:158:docs/releases/v1.1.0.md:45:Legacy Gotify MU updater environment names remain accepted as compatibility aliases during migration.
+.github/legacy-report.txt:159:docs/releases/v1.0.2.md:2:  <img src="../../assets/gotify-mu-banner.png" alt="Gotify MU" width="720">
+.github/legacy-report.txt:160:docs/releases/v1.0.2.md:5:# Gotify MU v1.0.2
+.github/legacy-report.txt:161:docs/releases/v1.0.2.md:7:Gotify MU 1.0.2 simplifies managed updates and returns Docker deployment to one persistent Gotify MU container.
+.github/legacy-report.txt:162:docs/releases/v1.0.2.md:13:1. Gotify MU checks GitHub for the latest published release.
+.github/legacy-report.txt:163:docs/releases/v1.0.2.md:16:4. Gotify MU restarts into the new version and the browser reloads.
+.github/legacy-report.txt:164:docs/releases/v1.0.2.md:22:Docker Compose now defines only the `gotify-mu` service.
+.github/legacy-report.txt:165:docs/releases/v1.0.2.md:24:There is no persistent `gotify-mu-updater` service and no updater shared token. The main container has controlled access to the Docker socket for managed self-updates. When an update is requested, it launches a short-lived `gotify-mu-update-worker` container from the currently installed Gotify MU image. That worker exists only for the update operation, preserves the current runtime configuration and persistent data mount, verifies the replacement container, performs automatic rollback when necessary, and removes itself when finished.
+.github/legacy-report.txt:166:docs/releases/v1.0.2.md:29:gotify-mu
+.github/legacy-report.txt:167:docs/releases/v1.0.1.md:2:  <img src="../../assets/gotify-mu-banner.png" alt="Gotify MU" width="720">
+.github/legacy-report.txt:168:docs/releases/v1.0.1.md:5:# Gotify MU v1.0.1
+.github/legacy-report.txt:169:docs/releases/v1.0.1.md:7:Gotify MU 1.0.1 fixes the managed updater transition from preview/development builds to a published release.
+.github/legacy-report.txt:170:docs/releases/v1.3.6.md:9:- Legacy `GOTIFY_*` and `GOTIFY_MU_*` environment variables remain accepted where required for upgrade compatibility.
+.github/legacy-report.txt:171:docs/releases/v1.3.6.md:10:- Fresh installations now prefer `data/monita.db`; existing `data/gotify.db` installations are detected and retained automatically.
+.github/legacy-report.txt:172:docs/releases/v1.3.6.md:16:Protocol-level compatibility identifiers that would break existing clients if renamed, including `/gotifyinfo` and required upstream Go package references, remain intentionally available. These are compatibility internals rather than active Monita branding.
+.github/legacy-report.txt:173:docs/releases/v0.2.2.md:1:# Gotify MU v0.2.2
+.github/legacy-report.txt:174:docs/releases/v0.2.2.md:6:Gotify MU v0.2.2 fixes the update-screen refresh loop introduced in v0.2.1 and makes the update process visible from start to finish.
+.github/legacy-report.txt:175:docs/releases/v0.2.2.md:44:The multi-user data model and Gotify-compatible client/API behavior are unchanged.
+.github/legacy-report.txt:176:docs/releases/v0.2.0.md:1:# Gotify MU v0.2.0
+.github/legacy-report.txt:177:docs/releases/v0.2.0.md:6:Gotify MU v0.2.0 is the first formal release baseline for the fork as its own multi-user notification platform while retaining Gotify protocol and client compatibility.
+.github/legacy-report.txt:178:docs/releases/v0.2.0.md:12:A Gotify application can now function as a shared Channel with a canonical owner plus multiple assigned users. Shared users can receive and read the same stored message without duplicating it per account.
+.github/legacy-report.txt:179:docs/releases/v0.2.0.md:20:### Gotify MU Web UI
+.github/legacy-report.txt:180:docs/releases/v0.2.0.md:22:The inherited Gotify interface has been replaced with a Gotify MU-oriented Web UI featuring:
+.github/legacy-report.txt:181:docs/releases/v0.2.0.md:42:Administrators can upload a compatible Gotify plugin `.so` directly from **Plugins → Install Plugin** after re-authentication. Plugins are stored in the persistent plugin directory and loaded immediately.
+.github/legacy-report.txt:182:docs/releases/v0.2.0.md:44:Because Gotify plugins execute native code in the server process, only trusted binaries should be installed.
+.github/legacy-report.txt:183:docs/releases/v0.2.0.md:56:The official Gotify Android client still remains receive-only for this feature. A dedicated Gotify MU Android fork is planned before Chat Channels are treated as a complete mobile feature.
+.github/legacy-report.txt:184:docs/releases/v0.2.0.md:60:Gotify MU v0.2.0 intentionally retains:
+.github/legacy-report.txt:185:docs/releases/v0.2.0.md:62:- Gotify application tokens
+.github/legacy-report.txt:186:docs/releases/v0.2.0.md:63:- Gotify client tokens
+.github/legacy-report.txt:187:docs/releases/v0.2.0.md:67:- normal Gotify Android notification reception
+.github/legacy-report.txt:188:docs/releases/v0.2.0.md:82:- Chat sending is not available from the stock Gotify Android app.
+.github/legacy-report.txt:189:docs/releases/v0.2.1.md:1:# Gotify MU v0.2.1
+.github/legacy-report.txt:190:docs/releases/v0.2.1.md:6:Gotify MU v0.2.1 adds the managed update workflow that turns release discovery into an actual in-app updater.
+.github/legacy-report.txt:191:docs/releases/v0.2.1.md:10:Administrators can now open **Settings → Software Update** and install a published Gotify MU release directly from the Web UI.
+.github/legacy-report.txt:192:docs/releases/v0.2.1.md:15:2. Gotify MU sends the selected semantic release version to the private updater helper.
+.github/legacy-report.txt:193:docs/releases/v0.2.1.md:18:5. The current Gotify MU container is stopped and preserved as a rollback container.
+.github/legacy-report.txt:194:docs/releases/v0.2.1.md:51:- it communicates with Gotify MU over a private Docker network
+.github/legacy-report.txt:195:docs/releases/v0.2.1.md:63:Gotify protocol/client compatibility and the v0.2.0 multi-user database model are unchanged.
+.github/legacy-report.txt:196:docs/releases/v1.3.0.md:38:User-facing Web labels now identify the product as Monita. Compatibility names remain only where they are required for existing Gotify-compatible clients, environment variables, persisted data, or protocol continuity.
+.github/legacy-report.txt:197:docs/releases/v1.3.0.md:43:- Existing Gotify-compatible clients remain supported.
+.github/legacy-report.txt:198:docs/releases/v0.3.0.md:1:# Gotify MU v0.3.0
+.github/legacy-report.txt:199:docs/releases/v0.3.0.md:6:Gotify MU v0.3.0 adds native integrations and notification automation while retaining Gotify-compatible message delivery.
+.github/legacy-report.txt:200:docs/releases/v0.3.0.md:40:Gotify MU can connect directly to MQTT brokers and subscribe to configured topics.
+.github/legacy-report.txt:201:docs/releases/v0.3.0.md:53:Gotify MU can connect directly to Home Assistant using a long-lived access token.
+.github/legacy-report.txt:202:docs/releases/v0.3.0.md:91:The existing Gotify-compatible application-token, client-token, REST, WebSocket, and Android notification workflows remain supported. Existing data is migrated additively.
+.github/legacy-report.txt:203:docs/releases/v1.0.0.md:2:  <img src="../../assets/gotify-mu-banner.png" alt="Gotify MU" width="720">
+.github/legacy-report.txt:204:docs/releases/v1.0.0.md:5:# Gotify MU v1.0.0
+.github/legacy-report.txt:205:docs/releases/v1.0.0.md:7:Gotify MU 1.0.0 is the first stable release of the multi-user Gotify server fork.
+.github/legacy-report.txt:206:docs/releases/v1.0.0.md:16:- Typing presence for Chat Channels without changing the stock Gotify message stream.
+.github/legacy-report.txt:207:docs/releases/v1.0.0.md:17:- Home Assistant connections through either a Long-Lived Access Token or native `gotify-mu-ha` pairing.
+.github/legacy-report.txt:208:docs/releases/v1.0.0.md:26:Existing Gotify application tokens, client tokens, `/message`, `/application`, and `/stream` behavior remain supported. MU-aware client features are additive and use separate discovery/realtime endpoints.
+.github/legacy-report.txt:209:docs/releases/v1.0.0.md:28:Database changes remain additive. Back up the persistent data directory and the Gotify MU encryption key before upgrading.
+.github/legacy-report.txt:210:docs/releases/v1.3.7.md:11:- Current user-facing strings and active workflow text no longer present Gotify MU as the product.
+.github/legacy-report.txt:211:docs/releases/v1.3.7.md:15:A small number of Gotify references remain intentionally because removing them would break compatibility or legal attribution. These include legacy request headers/routes/config names, legacy on-disk migration paths, the upstream `github.com/gotify/plugin-api` and `github.com/gotify/location` dependencies, required plugin ABI entrypoint names, license attribution, and historical release notes.
 auth/authentication_test.go:473:	s.assertHeaderRequest("X-Gotify-Key", "clienttoken", s.auth.RequireClient, 200)
 auth/cookie.go:10:	LegacyCookieName = "gotify-client-token"
 auth/service.go:55:	if token := strings.TrimSpace(ctx.GetHeader("X-Gotify-Key")); strings.HasPrefix(token, "SA.") {
