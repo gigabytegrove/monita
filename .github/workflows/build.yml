@@ -239,6 +239,19 @@ jobs:
           file_glob: true
 
       - if: steps.release.outputs.release == 'true'
+        name: Publish complete release notes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.release.outputs.version }}"
+          NOTES="docs/releases/v${VERSION}.md"
+          test -s "${NOTES}" || { echo "Missing full release notes: ${NOTES}" >&2; exit 1; }
+          gh release edit "v${VERSION}" --notes-file "${NOTES}"
+          gh release view "v${VERSION}" --json body --jq '.body' | grep -q '^# Monita'
+
+      - if: steps.release.outputs.release == 'true'
         name: Attach canonical branding assets when missing
         shell: bash
         env:

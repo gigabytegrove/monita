@@ -1,3 +1,14 @@
+## 2.0.3 — 2026-10-23
+
+### High-severity third-party dependency security fixes
+
+- Update Vite to 8.1.6, fixing CVE-2026-112942 in its launch-editor middleware.
+- Update follow-redirects to 1.16.1, fixing CVE-2026-111755 and CVE-2026-111756.
+- Update Rolldown to 1.1.5 and compatible @oxc-project/types/native bindings; lock all 19 affected npm packages to verified npm registry SHA512 checksums.
+- Preserve the Go 1.27.3 and Node.js 24.22.1 runtime patches introduced in v2.0.2.
+- Keep notification, chat, authentication, and updater compatibility unchanged.
+- Rebuild Monita server/container images before treating installed systems as updated.
+
 ## 2.0.2 — 2026-10-23
 
 ### October 2026 security maintenance
